@@ -13,7 +13,7 @@ namespace Ads {
   }
 } */
 
-namespace Ads {
+namespace Adze {
   
   abstract public class AdServer : CustomAsset<AdServer> {
 
@@ -50,9 +50,7 @@ namespace Ads {
       return null;
     }
 
-    public override void OnEnable() {
-      base.OnEnable();
-
+    public void OnEnable() {
       string key = null;
       foreach (Key appKey in appKeys) {
         if (Application.platform == appKey.platform) {

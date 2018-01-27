@@ -1,4 +1,5 @@
 declare -- framework="Unity"
-declare -- packages=""
+declare -- packages="Appodeal-Unity-2.8.18-261017-all.unitypackage"
+declare -- local_packages="Askowl-Lib Askowl-Decoupler"
 declare -- quote_count="50"
 declare -- joke_count="200"

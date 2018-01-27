@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Permissions;
 
-namespace Ads {
+namespace Adze {
 
   public enum Mode {
     interstitial,
@@ -23,9 +23,10 @@ namespace Ads {
     [HideInInspector]
     public bool adShown, adActionTaken, error;
 
-    private int currentServer, lastServer;
-    private int[] usages;
-    private Mode currentMode;
+    int currentServer, lastServer;
+    int[] usages;
+    Mode currentMode;
+    Decoupled.Analytics.Play analytics;
 
     new public static Advertisement Asset(string name = "Distributor") {
       return CustomAsset<Advertisement>.Asset("Advertisements/" + name);
@@ -38,7 +39,8 @@ namespace Ads {
       return reshow();
     }
 
-    public override void OnEnable() {
+    public void OnEnable() {
+      analytics = Decoupled.Analytics.Play.Instance;
       if (servers == null) {
         servers = new AdServer[0];
       }
@@ -60,18 +62,18 @@ namespace Ads {
             if ((usages [currentServer] % servers [currentServer].usageBalance) == 0) {
               prepareNextServer(); // ready for next time we show an advertisement
             }
-            Answers.LogContentView("Advertisement", adActionTaken ? "Ad action taken" : "Ad video watched");
-            Debug.Log("**** Advertisement - " + (adActionTaken ? "Ad action taken" : "Ad video watched"));
+            string actionText = adActionTaken ? "Ad action taken" : "Ad video watched";
+            analytics.Event("Advertisement", "Action", actionText);
+            Debug.Log("**** Advertisement - " + actionText);
             break;
           } else if (!prepareNextServer()) {
             Debug.LogWarning("**** Ad servers not responding");
-            Answers.LogContentView("Advertisement", "Ad servers not responding");
+            analytics.Event("Advertisement", "Error", "Ad servers not responding");
             yield return After.Realtime.ms(500);
           }
         }
       }
       yield return null;
-      Debug.Log("**** error=" + error); //#### DELETE ME! Thu, Dec 14, 2017 9:52
     }
 
     bool prepareNextServer() {

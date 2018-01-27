@@ -8,7 +8,7 @@ using AppodealAds.Unity.Common;
 using System.Net.Configuration;
 
 
-namespace Ads {
+namespace Adze {
   [CreateAssetMenu(
     menuName = "Advertisements/Appodeal",
     fileName = "Appodeal")]
