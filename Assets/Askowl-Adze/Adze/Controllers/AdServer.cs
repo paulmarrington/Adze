@@ -25,7 +25,7 @@ namespace Adze {
 
     public List<Key> appKeys;
 
-    public Mode mode = Mode.reward;
+    public Mode mode = Mode.Reward;
     public int priority = 1;
     public int usageBalance = 1;
 

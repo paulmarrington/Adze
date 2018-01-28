@@ -8,14 +8,12 @@ using System.Security.Permissions;
 namespace Adze {
 
   public enum Mode {
-    interstitial,
-    banner,
-    reward
+    Banner,
+    Interstitial,
+    Reward
   }
 
-  [CreateAssetMenu(
-    menuName = "Advertisements/Distributor",
-    fileName = "Distributor")]
+  [CreateAssetMenu(menuName = "Advertisements/Distributor", fileName = "Distributor")]
   public class Advertisement : CustomAsset<Advertisement> {
 
     public AdServer[] servers;

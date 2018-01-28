@@ -9,9 +9,7 @@ using System.Net.Configuration;
 
 
 namespace Adze {
-  [CreateAssetMenu(
-    menuName = "Advertisements/Appodeal",
-    fileName = "Appodeal")]
+  [CreateAssetMenu(menuName = "Advertisements/Appodeal", fileName = "Appodeal")]
   public class AppodealAds : AdServer, IInterstitialAdListener, INonSkippableVideoAdListener {
 
     private static Dictionary<Mode,int> appodealModes;
@@ -25,9 +23,9 @@ namespace Adze {
       int NON_SKIPPABLE_VIDEO = 256;
       #endif
       appodealModes = new Dictionary<Mode,int> () {
-        { Mode.interstitial, Appodeal.INTERSTITIAL },
-        { Mode.banner, Appodeal.BANNER },
-        { Mode.reward, NON_SKIPPABLE_VIDEO },
+        { Mode.Interstitial, Appodeal.INTERSTITIAL },
+        { Mode.Banner, Appodeal.BANNER },
+        { Mode.Reward, NON_SKIPPABLE_VIDEO },
       };
       appodealMode = appodealModes [mode];
       Appodeal.setAutoCache(appodealMode, true);
