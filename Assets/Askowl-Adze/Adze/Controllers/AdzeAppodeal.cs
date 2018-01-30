@@ -30,9 +30,6 @@ namespace Adze {
       int NON_SKIPPABLE_VIDEO = 256;
       #endif
       appodealModes = new Dictionary<Mode,int> () {
-        { Mode.Interstitial, Appodeal.INTERSTITIAL },
-        { Mode.Banner, Appodeal.BANNER },
-        { Mode.Reward, NON_SKIPPABLE_VIDEO },
         { Mode.interstitial, Appodeal.INTERSTITIAL },
         { Mode.banner, Appodeal.BANNER },
         { Mode.reward, NON_SKIPPABLE_VIDEO },

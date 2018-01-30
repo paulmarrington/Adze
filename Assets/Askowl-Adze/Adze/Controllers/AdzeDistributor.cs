@@ -8,9 +8,6 @@ using System.Security.Permissions;
 namespace Adze {
 
   public enum Mode {
-    Banner,
-    Interstitial,
-    Reward
     interstitial,
     banner,
     reward
