@@ -9,8 +9,8 @@ using System.Net.Configuration;
 
 
 namespace Adze {
-  [CreateAssetMenu(menuName = "Advertisements/Appodeal", fileName = "Appodeal")]
-  public class AppodealAds : AdServer, IInterstitialAdListener, INonSkippableVideoAdListener {
+  [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
+  public class AdzeAppodeal : AdServer, IInterstitialAdListener, INonSkippableVideoAdListener {
 
     private static Dictionary<Mode,int> appodealModes;
     private int appodealMode = -1;

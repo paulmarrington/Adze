@@ -6,7 +6,7 @@ using System;
 namespace Adze {
 
   [CreateAssetMenu(menuName = "Advertisements/Rewarded", fileName = "Reward")]
-  public class Reward : CustomAsset<Reward> {
+  public class AdzeReward : CustomAsset<Reward> {
 
     [Serializable]
     public struct Prompt {

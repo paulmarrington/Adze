@@ -13,8 +13,8 @@ namespace Adze {
     Reward
   }
 
-  [CreateAssetMenu(menuName = "Advertisements/Distributor", fileName = "Distributor")]
-  public class Advertisement : CustomAsset<Advertisement> {
+  [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "Distributor")]
+  public class AdzeDistributor : CustomAsset<AdzeDistributor> {
 
     public AdServer[] servers;
 
@@ -27,7 +27,7 @@ namespace Adze {
     Decoupled.Analytics.Play analytics;
 
     new public static Advertisement Asset(string name = "Distributor") {
-      return CustomAsset<Advertisement>.Asset("Advertisements/" + name);
+      return CustomAsset<Advertisement>.Asset("Adze/" + name);
     }
 
     public IEnumerator Show(Mode mode) {
@@ -60,13 +60,13 @@ namespace Adze {
             if ((usages [currentServer] % servers [currentServer].usageBalance) == 0) {
               prepareNextServer(); // ready for next time we show an advertisement
             }
-            string actionText = adActionTaken ? "Ad action taken" : "Ad video watched";
-            analytics.Event("Advertisement", "Action", actionText);
-            Debug.Log("**** Advertisement - " + actionText);
+            string actionText = adActionTaken ? "Adze action taken" : "Adze video watched";
+            analytics.Event("Adze", "Action", actionText);
+            Debug.Log("**** Adze - " + actionText);
             break;
           } else if (!prepareNextServer()) {
-            Debug.LogWarning("**** Ad servers not responding");
-            analytics.Event("Advertisement", "Error", "Ad servers not responding");
+            Debug.LogWarning("**** Adze Ad servers not responding");
+            analytics.Event("Adze", "Error", "Ad servers not responding");
             yield return After.Realtime.ms(500);
           }
         }

@@ -15,7 +15,7 @@ namespace Ads {
 
 namespace Adze {
   
-  abstract public class AdServer : CustomAsset<AdServer> {
+  abstract public class AdzeController : CustomAsset<AdzeController> {
 
     [Serializable]
     public struct Key {
@@ -32,13 +32,27 @@ namespace Adze {
     [HideInInspector]
     public bool adActionTaken, error, loaded;
 
-    abstract public void initialise(string key);
+    public class Service : Decoupled.Service {
 
-    abstract public IEnumerator showNow();
+      public IEnumerator showNow() {
+        Debug.LogError("No Adze Services registered");
+        yield return null;
+      }
+
+      public override IEnumerator Initialise() {
+        yield return null;
+      }
+
+      public override IEnumerator Destroy() {
+        yield return null;
+      }
+    }
+
+    Service services;
 
     public IEnumerator Show() {
       adActionTaken = error = false;
-      return showNow();
+      return services.showNow();
     }
 
     public IEnumerator Show(Mode mode) {
