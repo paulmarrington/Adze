@@ -82,7 +82,7 @@ namespace Adze {
           yield return showQuote(dialog);
           analytics.Error("Advertisement server not set");
         } else {
-          yield return advertisement.Show(Mode.Reward);
+          yield return advertisement.Show(Mode.reward);
           if (adWatched = advertisement.adShown) {
             yield return showDialog(dialog, thank);
           } else {

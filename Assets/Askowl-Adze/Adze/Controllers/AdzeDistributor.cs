@@ -11,10 +11,20 @@ namespace Adze {
     Banner,
     Interstitial,
     Reward
+    interstitial,
+    banner,
+    reward
   }
 
+<<<<<<< HEAD:Assets/Askowl-Adze/Adze/Controllers/AdzeDistributor.cs
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "Distributor")]
   public class AdzeDistributor : CustomAsset<AdzeDistributor> {
+=======
+  [CreateAssetMenu(
+    menuName = "Advertisements/Distributor",
+    fileName = "Distributor")]
+  public class Advertisement : CustomAsset<Advertisement> {
+>>>>>>> parent of 17468e6... 28/01/2018:Assets/Askowl-Adze/Adze/Controllers/Advertisement.cs
 
     public AdServer[] servers;
 
