@@ -6,7 +6,7 @@ using System;
 namespace Adze {
 
   [CreateAssetMenu(menuName = "Advertisements/Rewarded", fileName = "Reward")]
-  public class AdzeReward : CustomAsset<Reward> {
+  public class Reward : CustomAsset<Reward> {
 
     [Serializable]
     public struct Prompt {
@@ -82,7 +82,7 @@ namespace Adze {
           yield return showQuote(dialog);
           analytics.Error("Advertisement server not set");
         } else {
-          yield return advertisement.Show(Mode.reward);
+          yield return advertisement.Show(Mode.Reward);
           if (adWatched = advertisement.adShown) {
             yield return showDialog(dialog, thank);
           } else {

@@ -9,15 +9,8 @@ using System.Net.Configuration;
 
 
 namespace Adze {
-<<<<<<< HEAD:Assets/Askowl-Adze/Adze/Controllers/AdzeAppodeal.cs
-  [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
-  public class AdzeAppodeal : AdServer, IInterstitialAdListener, INonSkippableVideoAdListener {
-=======
-  [CreateAssetMenu(
-    menuName = "Advertisements/Appodeal",
-    fileName = "Appodeal")]
+  [CreateAssetMenu(menuName = "Advertisements/Appodeal", fileName = "Appodeal")]
   public class AppodealAds : AdServer, IInterstitialAdListener, INonSkippableVideoAdListener {
->>>>>>> parent of 17468e6... 28/01/2018:Assets/Askowl-Adze/Adze/Controllers/AppodealAds.cs
 
     private static Dictionary<Mode,int> appodealModes;
     private int appodealMode = -1;
@@ -30,9 +23,9 @@ namespace Adze {
       int NON_SKIPPABLE_VIDEO = 256;
       #endif
       appodealModes = new Dictionary<Mode,int> () {
-        { Mode.interstitial, Appodeal.INTERSTITIAL },
-        { Mode.banner, Appodeal.BANNER },
-        { Mode.reward, NON_SKIPPABLE_VIDEO },
+        { Mode.Interstitial, Appodeal.INTERSTITIAL },
+        { Mode.Banner, Appodeal.BANNER },
+        { Mode.Reward, NON_SKIPPABLE_VIDEO },
       };
       appodealMode = appodealModes [mode];
       Appodeal.setAutoCache(appodealMode, true);
