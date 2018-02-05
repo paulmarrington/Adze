@@ -15,7 +15,7 @@ namespace Ads {
 
 namespace Adze {
   
-  abstract public class AdServer : CustomAsset<AdServer> {
+  abstract public class AdzeServer : CustomAsset<AdzeServer> {
 
     [Serializable]
     public struct Key {
@@ -31,14 +31,19 @@ namespace Adze {
 
     [HideInInspector]
     public bool adActionTaken, error, loaded;
+    protected string appKey;
 
-    abstract public void initialise(string key);
+    public virtual void Initialise(string key) {
+    }
 
-    abstract public IEnumerator showNow();
+    public virtual void Destroy() {
+    }
 
-    public IEnumerator Show() {
+    abstract public IEnumerator showNow(string location);
+
+    public IEnumerator Show(string location = "Default") {
       adActionTaken = error = false;
-      return showNow();
+      return showNow(location);
     }
 
     public IEnumerator Show(Mode mode) {
@@ -50,7 +55,7 @@ namespace Adze {
       return null;
     }
 
-    public void OnEnable() {
+    public virtual void OnEnable() {
       string key = null;
       foreach (Key appKey in appKeys) {
         if (Application.platform == appKey.platform) {
@@ -58,7 +63,11 @@ namespace Adze {
           break;
         }
       }
-      initialise(key);
+      Initialise(this.appKey = key);
+    }
+
+    public virtual void OnDisable() {
+      Destroy();
     }
   }
 }

@@ -5,8 +5,8 @@ using System;
 
 namespace Adze {
 
-  [CreateAssetMenu(menuName = "Advertisements/Rewarded", fileName = "Reward")]
-  public class Reward : CustomAsset<Reward> {
+  [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "Reward")]
+  public class AdzeReward : CustomAsset<AdzeReward> {
 
     [Serializable]
     public struct Prompt {
@@ -20,7 +20,7 @@ namespace Adze {
     public int adsShownBetweenQuotes = 2;
     public string advertisementDistributor = "Distributor";
 
-    private Advertisement advertisement;
+    private AdzeDistributor advertisement;
     private Selector<Prompt> prompt, thank;
     private Quotes quotes;
     private int count;
@@ -30,8 +30,8 @@ namespace Adze {
     [HideInInspector]
     public bool adWatched, adRequested;
 
-    public static Reward Asset() {
-      return CustomAsset<Reward>.Asset("Advertisements/Reward");
+    public static AdzeReward Asset() {
+      return CustomAsset<AdzeReward>.Asset("Advertisements/Reward");
     }
 
     /*
@@ -49,7 +49,7 @@ namespace Adze {
 
     public void OnEnable() {
       analytics = Decoupled.Analytics.Play.Instance;
-      advertisement = Advertisement.Asset(advertisementDistributor);
+      advertisement = AdzeDistributor.Asset(advertisementDistributor);
       prompt = new Selector<Prompt> (prompts);
       thank = new Selector<Prompt> (thanks);
       quotes = new Quotes ();
@@ -83,7 +83,7 @@ namespace Adze {
           analytics.Error("Advertisement server not set");
         } else {
           yield return advertisement.Show(Mode.Reward);
-          if (adWatched = advertisement.adShown) {
+          if (adWatched = advertisement.adActionTaken) {
             yield return showDialog(dialog, thank);
           } else {
             yield return showQuote(dialog);

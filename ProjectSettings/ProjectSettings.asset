@@ -550,7 +550,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: MYCOMPANY;MYCOMPANY_MYPACKAGE
+    1: AdzeAppodeal;AskowlLib;AdzeChartboost
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}

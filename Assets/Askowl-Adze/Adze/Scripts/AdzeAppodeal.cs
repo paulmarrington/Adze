@@ -1,27 +1,28 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
-
-using AppodealAds.Unity.Api;
 using System.Collections.Generic;
 
+#if AdzeAppodeal
+using AppodealAds.Unity.Api;
 using AppodealAds.Unity.Common;
-using System.Net.Configuration;
-
 
 namespace Adze {
-  [CreateAssetMenu(menuName = "Advertisements/Appodeal", fileName = "Appodeal")]
-  public class AppodealAds : AdServer, IInterstitialAdListener, INonSkippableVideoAdListener {
+  [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
+  public class AdzeAppodeal : AdzeServer, IInterstitialAdListener, INonSkippableVideoAdListener {
 
     private static Dictionary<Mode,int> appodealModes;
     private int appodealMode = -1;
     private bool complete;
 
-    public override void initialise(string appKey) {
-      #if UNITY_ANDROID || UNITY_EDITOR || UNITY_IPHONE
+    public override void Initialise(string appKey) {
+
+#if UNITY_ANDROID || UNITY_EDITOR || UNITY_IPHONE
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
-      #else
+
+#else
       int NON_SKIPPABLE_VIDEO = 256;
-      #endif
+#endif
       appodealModes = new Dictionary<Mode,int> () {
         { Mode.Interstitial, Appodeal.INTERSTITIAL },
         { Mode.Banner, Appodeal.BANNER },
@@ -37,12 +38,12 @@ namespace Adze {
       Appodeal.setNonSkippableVideoCallbacks(this);
     }
 
-    public override IEnumerator showNow() {
+    public override IEnumerator showNow(string location) {
       complete = false;
-      if (!Debug.isDebugBuild && !Appodeal.isLoaded(appodealMode)) {
-        yield return After.Realtime.seconds(1);
-      }
-      Appodeal.show(appodealMode);
+//      if (!Debug.isDebugBuild && !Appodeal.isLoaded(appodealMode)) {
+//        yield return After.Realtime.seconds(1);
+//      }
+      Appodeal.show(appodealMode, location);
       while (!complete) {
         yield return null;
       }
@@ -62,6 +63,7 @@ namespace Adze {
     }
 
     public void onNonSkippableVideoFinished() {
+      adActionTaken = true;
     }
 
     public void onNonSkippableVideoClosed(bool finished) {
@@ -91,3 +93,21 @@ namespace Adze {
     }
   }
 }
+
+#else
+namespace Adze {
+  // so we can create asset and still install Appodeal later
+  [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
+  public class AdzeAppodeal : AdzeServer {
+
+    public override void Initialise(string appKey) {
+      Debug.LogWarning("Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
+    }
+
+    public override IEnumerator showNow() {
+      Debug.LogWarning("Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
+      yield return null;
+    }
+  }
+}
+#endif
