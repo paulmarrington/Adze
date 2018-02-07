@@ -24,7 +24,7 @@ namespace Adze {
       switch (mode) {
         case Mode.Banner:
           analytics.Error("Chartboost does not show banner advertisements");
-          chartboostShow = (location) => complete = error = true;
+          chartboostShow = (loc) => complete = initialised = error = true;
           break;
         case Mode.Interstitial:
           chartboostShow = (loc) => Chartboost.showInterstitial(CBLocation.locationFromName(loc));
@@ -44,6 +44,7 @@ namespace Adze {
     }
 
     public override IEnumerator showNow(string location) {
+      analytics.Event("Adze", "Show Chartboost", location);
       while (!initialised) {
         yield return null;
       }
@@ -86,6 +87,9 @@ namespace Adze {
 
 
 
+
+
+
 #if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow += didCompleteAppStoreSheetFlow;
 #endif
@@ -114,6 +118,9 @@ namespace Adze {
 
 
 
+
+
+
 #if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow -= didCompleteAppStoreSheetFlow;
 #endif
@@ -122,14 +129,14 @@ namespace Adze {
     void cbError(string what, string location, string errorText) {
       complete = error = true;
       loaded = false;
-      string msg = string.Format("{0}: {1} at location {2}", what, errorText, location);
-      analytics.Event("Chartboost", msg);
+      string msg = string.Format("Chartboost: {0} -- {1} at location {2}", what, errorText, location);
+      analytics.Event("Adze", msg);
     }
 
     void cbDismiss(string which, string location) {
       complete = adActionTaken = true;
       loaded = false;
-      analytics.Event("Chartboost", string.Format("{0} dismissed at location {1}", which, location));
+      analytics.Event("Adze", string.Format("Chartboost: {0} dismissed at location {1}", which, location));
     }
 
     void didInitialize(bool status) {
@@ -208,11 +215,17 @@ namespace Adze {
 
 
 
+
+
+
     #if UNITY_IPHONE
     #endif
 
     void willDisplayVideo(CBLocation location) {
     }
+
+
+
 
 
 
@@ -226,6 +239,9 @@ namespace Adze {
 
 
 
+
+
+
 #else
 namespace Adze {
   // so we can create asset and still install Appodeal later
@@ -236,7 +252,8 @@ namespace Adze {
       Debug.LogWarning("Install Chartboost unity package from http://www.chartboo.st/sdk/unity");
     }
 
-    public override IEnumerator showNow() {
+    public override IEnumerator showNow(string location) {
+      Debug.Log("Show Chartboost Advertisement for '" + location + "'");
       Debug.LogWarning("Show requires Chartboost unity package from http://www.chartboo.st/sdk/unity");
       yield return null;
     }

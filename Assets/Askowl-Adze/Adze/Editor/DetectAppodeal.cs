@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 [InitializeOnLoad]
-public class DetectAppodeal : AddDefineSymbols {
+public class DetectAppodeal : DefineSymbols {
   static DetectAppodeal() {
-    if (HasFolder("Appodeal")) {
-      AddDefines("AdzeAppodeal");
-    }
+    bool usable = HasFolder("Appodeal") && Target(iOS, Android);
+    AddOrRemoveDefines(usable, "AdzeAppodeal");
   }
 }

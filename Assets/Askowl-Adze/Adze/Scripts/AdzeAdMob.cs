@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-//#if AdzeAdMob
+#if AdzeAdMob
 using GoogleMobileAds.Api;
 
 namespace Adze {
@@ -41,6 +41,7 @@ namespace Adze {
     }
 
     public override IEnumerator showNow(string location) {
+      analytics.Event("Adze", "Show AdMob", location);
       complete = false;
       while (!loaded && !error) {
         yield return null;
@@ -95,7 +96,7 @@ namespace Adze {
 
     void OnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args) {
       error = true;
-      analytics.Error("AdMob did not initialise correctly: " + args.Message);
+      analytics.Event("Adze", "AdMob: Failed To Load -- " + args.Message);
     }
 
     void OnBannerAdOpening(object sender, EventArgs args) {
@@ -121,22 +122,26 @@ namespace Adze {
     }
   }
 }
-//
-//
-//#else
-//namespace Adze {
-//  // so we can create asset and still install Appodeal later
-//  [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
-//  public class AdMobController : AdzeServer {
-//
-//    public override void Initialise(string appKey) {
-//      Debug.LogWarning("Install AdMob unity package from https://github.com/googleads/googleads-mobile-plugins/releases/latest");
-//    }
-//
-//    public override IEnumerator showNow() {
-//      Debug.LogWarning("Show requires AdMob unity package from https://github.com/googleads/googleads-mobile-plugins/releases/latest");
-//      yield return null;
-//    }
-//  }
-//}
-//#endif
+
+
+
+
+#else
+namespace Adze {
+  // so we can create asset and still install Appodeal later
+  [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
+  public class AdMobController : AdzeServer {
+
+    public override void Initialise(string appKey) {
+      Debug.LogWarning("Install AdMob unity package from https://github.com/googleads/googleads-mobile-plugins/releases/latest");
+    }
+
+    public override IEnumerator showNow(string location) {
+      Debug.Log("Show AdMob Advertisement for '" + location + "'");
+      Debug.LogWarning("Show requires AdMob unity package from https://github.com/googleads/googleads-mobile-plugins/releases/latest");
+      adActionTaken = true;
+      yield return null;
+    }
+  }
+}
+#endif

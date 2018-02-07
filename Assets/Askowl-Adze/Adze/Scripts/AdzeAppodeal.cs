@@ -11,11 +11,14 @@ namespace Adze {
   [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
   public class AdzeAppodeal : AdzeServer, IInterstitialAdListener, INonSkippableVideoAdListener {
 
-    private static Dictionary<Mode,int> appodealModes;
-    private int appodealMode = -1;
-    private bool complete;
+    static Dictionary<Mode,int> appodealModes;
+    int appodealMode = -1;
+    bool complete;
+    Decoupled.Analytics.Play analytics;
+
 
     public override void Initialise(string appKey) {
+      analytics = Decoupled.Analytics.Play.Instance;
 
 #if UNITY_ANDROID || UNITY_EDITOR || UNITY_IPHONE
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
@@ -39,6 +42,7 @@ namespace Adze {
     }
 
     public override IEnumerator showNow(string location) {
+      analytics.Event("Adze", "Show", "Appodeal " + location);
       complete = false;
 //      if (!Debug.isDebugBuild && !Appodeal.isLoaded(appodealMode)) {
 //        yield return After.Realtime.seconds(1);
@@ -56,6 +60,7 @@ namespace Adze {
     public void onNonSkippableVideoFailedToLoad() {
       complete = error = true;
       loaded = false;
+      analytics.Event("Adze", "Appodeal Non-Skippable Video Failed To Load");
     }
 
     public void onNonSkippableVideoShown() {
@@ -82,6 +87,7 @@ namespace Adze {
     public void onInterstitialFailedToLoad() {
       loaded = false;
       complete = error = true;
+      analytics.Event("Adze", "Appodeal Interstitial Failed To Load");
     }
 
     public void onInterstitialShown() {
@@ -104,7 +110,8 @@ namespace Adze {
       Debug.LogWarning("Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
     }
 
-    public override IEnumerator showNow() {
+    public override IEnumerator showNow(string location) {
+      Debug.Log("Show Appodeal Advertisement for '" + location + "'");
       Debug.LogWarning("Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       yield return null;
     }

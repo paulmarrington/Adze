@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 [InitializeOnLoad]
-public class DetectAdMob : AddDefineSymbols {
+public class DetectAdMob : DefineSymbols {
   static DetectAdMob() {
-    if (HasFolder("GoogleMobileAds")) {
-      AddDefines("AdzeAdMob");
-    }
+    bool usable = HasFolder("GoogleMobileAds") && Target(iOS, Android);
+    AddOrRemoveDefines(usable, "AdzeAdMob");
   }
 }
