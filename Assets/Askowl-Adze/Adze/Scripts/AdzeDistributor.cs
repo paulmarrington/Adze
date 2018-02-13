@@ -15,6 +15,7 @@ namespace Adze {
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "Distributor")]
   public class AdzeDistributor : CustomAsset<AdzeDistributor> {
 
+    public bool roundRobin = true;
     public AdzeServer[] servers;
 
     [HideInInspector]
@@ -32,6 +33,9 @@ namespace Adze {
     public IEnumerator Show(Mode mode) {
       currentMode = mode;
       adShown = adActionTaken = error = false;
+      if (!roundRobin) {
+        currentServer = 0; // alway start with the primary server
+      }
       lastServer = currentServer; // set so we only try each server once
       return reshow();
     }

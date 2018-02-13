@@ -13,7 +13,6 @@ namespace Adze {
     Decoupled.Analytics.Play analytics;
     Action showAd;
 
-
     BannerView bannerView;
     InterstitialAd interstitialAd;
     RewardBasedVideoAd rewardBasedVideoAd;
@@ -123,14 +122,11 @@ namespace Adze {
   }
 }
 
-
-
-
 #else
 namespace Adze {
   // so we can create asset and still install Appodeal later
   [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
-  public class AdMobController : AdzeServer {
+  public class AdzeAdMob : AdzeServer {
 
     public override void Initialise(string appKey) {
       Debug.LogWarning("Install AdMob unity package from https://github.com/googleads/googleads-mobile-plugins/releases/latest");
