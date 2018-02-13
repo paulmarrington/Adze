@@ -11,10 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e6d73a4002542faaae5e3ed9ffda31, type: 3}
   m_Name: Appodeal
   m_EditorClassIdentifier: 
-  appKeys: []
+  appKeys:
+  - platform: 8
+    value: ea5c54fb46260fb6de3cdc782da2f0b066c3a8058d98c393
   mode: 2
   priority: 1
   usageBalance: 1
   adActionTaken: 0
   error: 0
   loaded: 0
+  disabledNetworks: 150000000600000008000000

@@ -41,18 +41,14 @@ namespace Adze {
 
     abstract public IEnumerator showNow(string location);
 
-    public IEnumerator Show(string location = "Default") {
-      adActionTaken = error = false;
-      return showNow(location);
-    }
-
-    public IEnumerator Show(Mode mode) {
-      if (this.mode == mode) {
-        return Show();
+    public IEnumerator Show(Mode modeRequested, string location) {
+      if (modeRequested == mode) {
+        adActionTaken = error = false;
+        yield return showNow(location);
+      } else {
+        error = true;
+        yield return null;
       }
-      Debug.LogWarning("*** AdServer mode " + this.mode + "!=" + mode + " expected");
-      error = true;
-      return null;
     }
 
     public virtual void OnEnable() {

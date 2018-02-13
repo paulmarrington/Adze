@@ -11,7 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d30a239b6674caba70ab6781988e2e, type: 3}
   m_Name: AdMob
   m_EditorClassIdentifier: 
-  appKeys: []
+  appKeys:
+  - platform: 8
+    value: ca-app-pub-9888417618584929~3660804760
   mode: 2
   priority: 1
   usageBalance: 1

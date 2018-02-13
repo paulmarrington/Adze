@@ -77,13 +77,17 @@ Round Robin mode is on by default. Each network is used ***Usage Balance*** time
 
 ## Current Networks
 ### [Appodeal](http://appodeal.com)
-For an Appodeal asset you can disable any number of networks you don't want used. Just add a new row to the ***Disabled Networks*** field and select the network to be ignored.
+For an Appodeal asset you can disable any number of networks you don't want used. Just add a new row to the ***Disabled Networks*** field and select the network to be ignored. In Appodeal, *location* is called *placement*. Placements can be created on the dashboard under a relevent segment. Give it a name and use that in `Show(string placement)`.
 
 ### [Chartboost](http://www.chartboost.com)
-Chartboost is a games specific advertising network.
+Chartboost is a games specific advertising network. Locations in `Show(string location)` has a special meaning. The pre-specified locations are:
+
+> Default, Startup, Home Screen, Main Menu, Game Screen, Achievements, Quests, Pause, Level Start, Level Complete, Turn Complete, IAP Store, Item Store, Game Over, Leaderboard, Settings, Quit
+
+You can also add your own, but it is then unlikely to improved future eCPM.
 
 ### [Google AdMob](https://www.google.com/admob/)
-Admob is the granddaddy of them all thanks to Google support. It can also mediate between many networks. In this case it is all online and requires you to set the technical data required.
+Admob is the granddaddy of them all thanks to Google support. It can also mediate between many networks. In this case it is all online and requires you to set the technical data required. Location is set as a keyword in an add request. Options in the dashboard can change targeting based on keywords.
 
 ## Adding a new advertising Network
 At last count, there are over 40 networks, not including special and regional ones. Here is a partial list:

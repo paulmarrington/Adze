@@ -11,7 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a6cd93d3c9c4db590780637f66e706, type: 3}
   m_Name: Chartboost
   m_EditorClassIdentifier: 
-  appKeys: []
+  appKeys:
+  - platform: 8
+    value: 5a8175bd57a2dd0c356a268b;4160d1aa36df777fe5a0be28364af302f50a0bf2
   mode: 2
   priority: 1
   usageBalance: 1

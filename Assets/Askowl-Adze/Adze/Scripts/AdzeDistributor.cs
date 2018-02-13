@@ -30,33 +30,18 @@ namespace Adze {
       return CustomAsset<AdzeDistributor>.Asset("Adze/" + name);
     }
 
-    public IEnumerator Show(Mode mode) {
+    public IEnumerator Show(Mode mode, string location = "Default") {
       currentMode = mode;
       adShown = adActionTaken = error = false;
       if (!roundRobin) {
         currentServer = 0; // alway start with the primary server
       }
       lastServer = currentServer; // set so we only try each server once
-      return reshow();
-    }
-
-    public void OnEnable() {
-      analytics = Decoupled.Analytics.Play.Instance;
-      if (servers == null) {
-        analytics.Error("Set advertising servers in Adze Distributor Custom Asset");
-        servers = new AdzeServer[0];
-      }
-      Array.Sort(servers, (x, y) => x.priority.CompareTo(y.priority));
-
-      currentServer = 0;
-      usages = new int[servers.Length];
-    }
-
-    IEnumerator reshow() {
+    
       error = true;
       if (servers.Length != 0) {
         for (int i = 0; i < 3; i++) {
-          yield return servers [currentServer].Show(currentMode);
+          yield return servers [currentServer].Show(currentMode, location);
           if (!(error = servers [currentServer].error)) {
             adShown = true;
             adActionTaken = servers [currentServer].adActionTaken;
@@ -76,6 +61,18 @@ namespace Adze {
         }
       }
       yield return null;
+    }
+
+    public void OnEnable() {
+      analytics = Decoupled.Analytics.Play.Instance;
+      if (servers == null) {
+        analytics.Error("Set advertising servers in Adze Distributor Custom Asset");
+        servers = new AdzeServer[0];
+      }
+      Array.Sort(servers, (x, y) => x.priority.CompareTo(y.priority));
+
+      currentServer = 0;
+      usages = new int[servers.Length];
     }
 
     bool prepareNextServer() {

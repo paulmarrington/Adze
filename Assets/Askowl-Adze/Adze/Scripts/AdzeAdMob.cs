@@ -49,11 +49,11 @@ namespace Adze {
       while (!complete) {
         yield return null;
       }
-      loadNextAd();
+loadNextAd(location);
     }
 
-    void loadNextAd() {
-      AdRequest adRequest = new AdRequest.Builder ().Build();
+void loadNextAd(string location) {
+      AdRequest adRequest = new AdRequest.Builder ().AddKeyword(location).Build();
       loaded = error = false;
 
       switch (mode) {
@@ -121,6 +121,8 @@ namespace Adze {
     }
   }
 }
+
+
 
 #else
 namespace Adze {
