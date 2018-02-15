@@ -34,19 +34,6 @@ namespace Adze {
       return CustomAsset<AdzeReward>.Asset("Advertisements/Reward");
     }
 
-    /*
-     * When I try and cache dialog loaded in OnEnable, the reference becomes destroyed.
-     * Peculiar since it has the same ID. Probably something to do with it being a prefab.
-     * The solution/workaround I chose was to find it when I need it.
-     */
-    Dialog getDialog() {
-      GameObject go = GameObject.Find("Reward");
-      if (go == null) {
-        Debug.LogError("Drag Marrington/Ads/Reward prefab into the scene");
-      }
-      return go.GetComponent<Dialog>();
-    }
-
     public void OnEnable() {
       analytics = Decoupled.Analytics.Play.Instance;
       advertisement = AdzeDistributor.Asset(advertisementDistributor);
@@ -70,7 +57,12 @@ namespace Adze {
 
 
     public IEnumerator Show() {
-      Dialog dialog = getDialog();
+    /*
+     * When I try and cache dialog loaded in OnEnable, the reference becomes destroyed.
+     * Peculiar since it has the same ID. Probably something to do with it being a prefab.
+     * The solution/workaround I chose was to find it when I need it.
+     */
+      Dialog dialog = Dialog.Instance("Reward");
       adWatched = adRequested = false;
       yield return showDialog(dialog, prompt);
       if (dialog.action.Equals(("Yes"))) {
