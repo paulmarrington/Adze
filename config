@@ -1,5 +1,5 @@
 declare -- framework="Unity"
-declare -- packages="Appodeal-Unity-2.8.18-261017-all.unitypackage CBUnityPlugin_7_0_1.unitypackage GoogleMobileAds.unitypackage"
-declare -- local_packages="Askowl-Lib Askowl-Decoupler"
+declare -- packages=""
+declare -- local_packages="Askowl-Build Askowl-Assets Askowl-UI Askowl-Decoupler Askowl-Coroutines"
 declare -- quote_count="50"
 declare -- joke_count="200"

@@ -553,7 +553,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: AskowlLib
+    1: AskowlLib;Askowl
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}

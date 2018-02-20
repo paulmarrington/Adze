@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf8e45f5bea5416bb4ae7bb31554b96, type: 3}
+  m_Name: AdMobRewardServer
+  m_EditorClassIdentifier: 
+  appKeys:
+  - platform: 8
+    value: ca-app-pub-9888417618584929/4978111087
+  mode: 2
+  priority: 1
+  usageBalance: 1
+  adActionTaken: 0
+  error: 0
+  loaded: 0

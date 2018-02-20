@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b124d072eb849a8ac83d9bb58a94dd, type: 3}
+  m_Name: RewardedVideoAllNetworks
+  m_EditorClassIdentifier: 
+  prompts:
+  - message: Here is where you tell your player that you are going to give them a
+      reward if they watch a message from your sponsor.
+    acceptButton: Go Ahead
+    refuseButton: Not Now
+  - message: You can have multiple messages to spice things up. Make it clear that
+      they will get a reward at the cost of a little of their time. For this example,
+      every second message is a quote to keep them on their toes.
+    acceptButton: I'll watch
+    refuseButton: Let me play on
+  thanks: []
+  adsShownBetweenQuotes: 1
+  advertisementDistributor: AllNetworksDistributor
+  adWatched: 0
+  adRequested: 0
