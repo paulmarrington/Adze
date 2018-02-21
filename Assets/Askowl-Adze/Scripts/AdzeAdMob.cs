@@ -49,7 +49,7 @@ namespace Adze {
       while (!complete) {
         yield return null;
       }
-loadNextAd(location);
+      loadNextAd(location);
     }
 
 void loadNextAd(string location) {
@@ -57,19 +57,6 @@ void loadNextAd(string location) {
       loaded = error = false;
 
       switch (mode) {
-        case Mode.Banner:
-          if (bannerView != null) {
-            bannerView.Destroy();
-          }
-          bannerView = new BannerView (appKey, AdSize.SmartBanner, AdPosition.Top);
-          bannerView.OnAdLoaded += OnAdLoaded;
-          bannerView.OnAdFailedToLoad += OnAdFailedToLoad;
-          bannerView.OnAdOpening += OnBannerAdOpening;
-          bannerView.OnAdClosed += OnAdClosed;
-          bannerView.OnAdLeavingApplication += OnAdLeavingApplication;
-          bannerView.LoadAd(adRequest);
-          showAd = bannerView.Show;
-          break;
         case Mode.Interstitial:
           if (interstitialAd != null) {
             interstitialAd.Destroy();
@@ -124,14 +111,22 @@ void loadNextAd(string location) {
 
 
 
+
+
+
 #else
 namespace Adze {
   // so we can create asset and still install Appodeal later
   [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
   public class AdzeAdMob : AdzeServer {
 
+    static bool first = true;
+
     public override void Initialise(string appKey) {
-      Debug.LogWarning("Install AdMob unity package from https://github.com/googleads/googleads-mobile-plugins/releases/latest");
+      if (first) {
+        Debug.LogWarning("Install AdMob unity package from https://github.com/googleads/googleads-mobile-plugins/releases/latest");
+        first = false;
+      }
     }
 
     public override IEnumerator showNow(string location) {

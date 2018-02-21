@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Adze {
 
   public enum Mode {
-    Banner,
+    //    Banner,
     Interstitial,
     Reward
   }

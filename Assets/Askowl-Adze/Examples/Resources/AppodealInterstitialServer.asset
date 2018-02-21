@@ -14,7 +14,7 @@ MonoBehaviour:
   appKeys:
   - platform: 8
     value: ea5c54fb46260fb6de3cdc782da2f0b066c3a8058d98c393
-  mode: 1
+  mode: 0
   priority: 2
   usageBalance: 1
   adActionTaken: 0

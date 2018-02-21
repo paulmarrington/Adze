@@ -15,7 +15,6 @@ MonoBehaviour:
   servers:
   - {fileID: 11400000, guid: ba9d6ecd055734dd999d9acd80b21e08, type: 2}
   - {fileID: 11400000, guid: 5bf01b6be56624c1d9eb93c0d838e168, type: 2}
-  - {fileID: 11400000, guid: 22985f4a092cf4dd8b198e6f174b0be5, type: 2}
-  adShown: 0
-  adActionTaken: 0
+  adShown: 1
+  adActionTaken: 1
   error: 0

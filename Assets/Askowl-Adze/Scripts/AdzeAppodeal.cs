@@ -15,6 +15,7 @@ namespace Adze {
     int appodealMode = -1;
   #else
   public class AdzeAppodeal : AdzeServer {
+    static bool first = true;
     #endif
 
     static Dictionary<Mode,int> appodealModes;
@@ -31,7 +32,6 @@ namespace Adze {
       #endif
       appodealModes = new Dictionary<Mode,int> () {
         { Mode.Interstitial, Appodeal.INTERSTITIAL },
-        { Mode.Banner, Appodeal.BANNER },
         { Mode.Reward, NON_SKIPPABLE_VIDEO },
       };
       appodealMode = appodealModes [mode];
@@ -46,7 +46,10 @@ namespace Adze {
       Appodeal.setInterstitialCallbacks(this);
       Appodeal.setNonSkippableVideoCallbacks(this);
       #else
-      Debug.LogWarning("Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
+      if (first) {
+        Debug.LogWarning("Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
+        first = false;
+      }
       #endif
     }
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   appKeys:
   - platform: 8
     value: ca-app-pub-9888417618584929/7830192059
-  mode: 1
+  mode: 0
   priority: 2
   usageBalance: 1
   adActionTaken: 0

@@ -22,10 +22,6 @@ namespace Adze {
       analytics = Decoupled.Analytics.Play.Instance;
 
       switch (mode) {
-        case Mode.Banner:
-          analytics.Error("Chartboost does not show banner advertisements");
-          chartboostShow = (loc) => complete = initialised = error = true;
-          break;
         case Mode.Interstitial:
           chartboostShow = (loc) => Chartboost.showInterstitial(CBLocation.locationFromName(loc));
           break;
@@ -86,10 +82,6 @@ namespace Adze {
       Chartboost.willDisplayVideo += willDisplayVideo;
 
 
-
-
-
-
 #if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow += didCompleteAppStoreSheetFlow;
 #endif
@@ -115,10 +107,6 @@ namespace Adze {
       Chartboost.didDisplayRewardedVideo -= didDisplayRewardedVideo;
       Chartboost.didPauseClickForConfirmation -= didPauseClickForConfirmation;
       Chartboost.willDisplayVideo -= willDisplayVideo;
-
-
-
-
 
 
 #if UNITY_IPHONE
@@ -213,33 +201,13 @@ namespace Adze {
     void didPauseClickForConfirmation() {
     }
 
-
-
-
-
-
-    #if UNITY_IPHONE
-    #endif
-
     void willDisplayVideo(CBLocation location) {
     }
 
-
-
-
-
-
-
-    #if UNITY_IPHONE
     void didCompleteAppStoreSheetFlow() {
     }
-#endif
   }
 }
-
-
-
-
 
 
 #else
@@ -248,8 +216,13 @@ namespace Adze {
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "Chartboost")]
   public class AdzeChartboost : AdzeServer {
 
+    static bool first = true;
+
     public override void Initialise(string appKey) {
-      Debug.LogWarning("Install Chartboost unity package from http://www.chartboo.st/sdk/unity");
+      if (first) {
+        Debug.LogWarning("Install Chartboost unity package from http://www.chartboo.st/sdk/unity");
+        first = false;
+      }
     }
 
     public override IEnumerator showNow(string location) {

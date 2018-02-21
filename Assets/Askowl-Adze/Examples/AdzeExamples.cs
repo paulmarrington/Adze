@@ -29,10 +29,6 @@ public class AdzeExamples : MonoBehaviour {
     showResults(distributor);
   }
     
-  public void ShowAdMobBanner() {
-    StartCoroutine(Show(AdMobDistributor, Mode.Banner, "Default"));
-  }
-
   public void ShowAdMobInterstitial() {
     StartCoroutine(Show(AdMobDistributor, Mode.Interstitial, "Startup"));
   }
@@ -41,21 +37,12 @@ public class AdzeExamples : MonoBehaviour {
     StartCoroutine(Show(AdMobDistributor, Mode.Reward, "Main Menu"));
   }
 
-  public void ShowAppodealBanner() {
-    StartCoroutine(Show(AppodealDistributor, Mode.Banner, "Game Screen"));
-  }
-
   public void ShowAppodealInterstitial() {
     StartCoroutine(Show(AppodealDistributor, Mode.Interstitial, "Achievements"));
   }
 
   public void ShowAppodealRewarded() {    
     StartCoroutine(Show(AppodealDistributor, Mode.Reward, "Quests"));
-  }
-
-  public void ShowChartboostBanner() {
-    Debug.Log("**** Chartboost does not support banners so you can expect an error");
-    StartCoroutine(Show(ChartboostDistributor, Mode.Banner, "Pause"));
   }
 
   public void ShowChartboostInterstitial() {
