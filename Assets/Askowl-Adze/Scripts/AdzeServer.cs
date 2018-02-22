@@ -61,6 +61,7 @@ namespace Adze {
           break;
         }
       }
+      Debug.Log("appKey=" + this.appKey + "  for " + Application.platform);
       Initialise(this.appKey = key);
     }
 

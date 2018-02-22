@@ -11,7 +11,7 @@ namespace Adze {
   public class AdzeChartboost : AdzeServer {
 
     bool complete, initialised;
-    Decoupled.Analytics.Play analytics;
+    Decoupled.Analytics.GameLog analytics;
     Action<string> chartboostShow;
 
     public override void Initialise(string appKey) {
@@ -19,7 +19,7 @@ namespace Adze {
       string[] separators = { ";", " ", ",", ":" };
       string[] keyPair = appKey.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-      analytics = Decoupled.Analytics.Play.Instance;
+      analytics = Decoupled.Analytics.GameLog.Instance;
 
       switch (mode) {
         case Mode.Interstitial:

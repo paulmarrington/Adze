@@ -13,7 +13,7 @@ namespace Adze {
   #if AdzeAppodeal
   public class AdzeAppodeal : AdzeServer, IInterstitialAdListener, INonSkippableVideoAdListener, IBannerAdListener {
     int appodealMode = -1;
-  #else
+    #else
   public class AdzeAppodeal : AdzeServer {
     static bool first = true;
     #endif
@@ -63,7 +63,7 @@ namespace Adze {
       if (location == "Default" || Appodeal.canShow(appodealMode, location)) {
         Appodeal.show(appodealMode, location);
       } else {
-      log.Event("Adze", "Appodeal ad not shown for location '"+location+"'");
+        log.Event("Adze", "Appodeal ad not shown for location '" + location + "'");
         complete = true;
       }
 
@@ -177,7 +177,7 @@ namespace Adze {
     void disableNetworks() {
       foreach (Network disabledNetwork in disabledNetworks) {
         #if AdzeAppodeal
-        Appodeal.disableNetwork(disabledNetwork.toString());
+        Appodeal.disableNetwork(disabledNetwork.ToString());
         #endif
       }
     }

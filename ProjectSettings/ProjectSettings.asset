@@ -554,6 +554,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
     1: AskowlLib;Askowl
+    4: AdzeAdMob;AdzeAppodeal;AdzeChartboost;Askowl
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}

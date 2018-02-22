@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Decoupled.Analytics;
 
 #if AdzeAdMob
 using GoogleMobileAds.Api;
@@ -10,7 +11,7 @@ namespace Adze {
   [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
   public class AdzeAdMob : AdzeServer {
     bool complete, initialised;
-    Decoupled.Analytics.Play analytics;
+    Decoupled.Analytics.GameLog analytics;
     Action showAd;
 
     BannerView bannerView;
@@ -18,7 +19,7 @@ namespace Adze {
     RewardBasedVideoAd rewardBasedVideoAd;
 
     public override void Initialise(string appKey) {
-      analytics = Decoupled.Analytics.Play.Instance;
+      analytics = Decoupled.Analytics.GameLog.Instance;
       MobileAds.Initialize(appKey);
 
       if (mode == Mode.Reward) {
@@ -33,7 +34,7 @@ namespace Adze {
         showAd = rewardBasedVideoAd.Show;
       }
 
-      loadNextAd();
+      loadNextAd("Default");
     }
 
     public override void Destroy() {
@@ -52,7 +53,7 @@ namespace Adze {
       loadNextAd(location);
     }
 
-void loadNextAd(string location) {
+    void loadNextAd(string location) {
       AdRequest adRequest = new AdRequest.Builder ().AddKeyword(location).Build();
       loaded = error = false;
 
