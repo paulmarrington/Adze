@@ -54,15 +54,12 @@ namespace Adze {
     }
 
     public virtual void OnEnable() {
-      string key = null;
       foreach (Key appKey in appKeys) {
         if (Application.platform == appKey.platform) {
-          key = appKey.value;
-          break;
+          Initialise(this.appKey = appKey.value);
+          return;
         }
       }
-      Debug.Log("appKey=" + this.appKey + "  for " + Application.platform);
-      Initialise(this.appKey = key);
     }
 
     public virtual void OnDisable() {
