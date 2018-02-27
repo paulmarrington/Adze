@@ -43,6 +43,7 @@ namespace Adze {
     public override IEnumerator showNow(string location) {
       analytics.Event("Adze", "Show AdMob", location);
       complete = false;
+Debug.Log("#### showNow loaded="+loaded+", error="+error);
       while (!loaded && !error) {
         yield return null;
       }
@@ -78,10 +79,12 @@ namespace Adze {
     }
     /* ******************************************************************* */
     void OnAdLoaded(object sender, EventArgs args) {
+Debug.Log("######## Loaded for "+mode);
       loaded = true;
     }
 
     void OnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args) {
+Debug.Log("######## Error for "+mode);
       error = true;
       analytics.Event("Adze", "AdMob: Failed To Load -- " + args.Message);
     }
@@ -109,7 +112,6 @@ namespace Adze {
     }
   }
 }
-
 
 
 
