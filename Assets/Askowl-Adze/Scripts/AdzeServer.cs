@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Events;
 
 /*
  * Usage:
@@ -14,56 +13,55 @@ namespace Ads {
 } */
 
 namespace Adze {
+  using JetBrains.Annotations;
 
-  abstract public class AdzeServer : CustomAsset<AdzeServer> {
-
+  public abstract class AdzeServer : CustomAsset<AdzeServer> {
     [Serializable]
     public struct Key {
-      public RuntimePlatform platform;
-      public string value;
+      #pragma warning disable 649
+      internal RuntimePlatform Platform;
+      internal string          Value;
+      #pragma warning restore 649
     }
 
-    public List<Key> appKeys;
+    public List<Key> AppKeys;
 
-    public Mode mode = Mode.Reward;
-    public int priority = 1;
-    public int usageBalance = 1;
+    public Mode Mode         = Mode.Reward;
+    public int  Priority     = 1;
+    public int  UsageBalance = 1;
 
-    [HideInInspector]
-    public bool adActionTaken, error, loaded;
-    protected string appKey;
+    [HideInInspector] public bool   AdActionTaken, Error, Loaded;
+    protected                string AppKey;
 
-    public string Name { get { return this.GetType().Name; } }
+    [NotNull]
+    internal string Name { get { return GetType().Name; } }
 
-    public virtual void Initialise() {
-    }
+    protected virtual void Initialise() { }
 
-    public virtual void Destroy() {
-    }
+    protected virtual void Destroy() { }
 
-    abstract public IEnumerator showNow(string location);
+    protected abstract IEnumerator ShowNow(string location);
 
-    public IEnumerator Show(Mode modeRequested, string location) {
-      if (modeRequested == mode) {
-        adActionTaken = error = false;
-        yield return showNow(location);
+    internal IEnumerator Show(Mode modeRequested, string location) {
+      if (modeRequested == Mode) {
+        AdActionTaken = Error = false;
+        yield return ShowNow(location);
       } else {
-        error = true;
+        Error = true;
         yield return null;
       }
     }
 
-    public virtual void OnEnable() {
-      foreach (Key appKey in appKeys) {
-        if (Application.platform == appKey.platform) {
-          Initialise(this.appKey = appKey.value);
+    public void OnEnable() {
+      foreach (Key appKey in AppKeys) {
+        if (Application.platform == appKey.Platform) {
+          AppKey = appKey.Value;
+          Initialise();
           return;
         }
       }
     }
 
-    public virtual void OnDisable() {
-      Destroy();
-    }
+    public void OnDisable() { Destroy(); }
   }
 }

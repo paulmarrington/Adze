@@ -18,10 +18,10 @@ namespace Adze {
     #endif
 
     static Dictionary<Mode,int> appodealModes;
-    bool complete;
+    private bool complete;
     private Decoupled.Analytics.GameLog log;
 
-    public override void Initialise() {
+    protected override void Initialise() {
       log = Decoupled.Analytics.GameLog.Instance;
       #if AdzeAppodeal
       #if (UNITY_ANDROID || UNITY_IPHONE)
@@ -52,7 +52,7 @@ namespace Adze {
       #endif
     }
 
-    public override IEnumerator showNow(string location) {
+    protected override IEnumerator ShowNow(string location) {
       #if AdzeAppodeal
       log.Event("Adze", "Show", "Appodeal " + location);
       complete = false;

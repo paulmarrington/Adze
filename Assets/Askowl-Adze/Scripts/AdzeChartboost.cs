@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 #if AdzeChartboost
 using ChartboostSDK;
@@ -117,7 +115,8 @@ namespace Adze {
     void cbError(string what, string location, string errorText) {
       complete = error = true;
       loaded = false;
-      string msg = string.Format("Chartboost: {0} -- {1} at location {2}", what, errorText, location);
+      string msg =
+ string.Format("Chartboost: {0} -- {1} at location {2}", what, errorText, location);
       analytics.Event("Adze", msg);
     }
 
@@ -214,20 +213,24 @@ namespace Adze {
 namespace Adze {
   // so we can create asset and still install Appodeal later
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "Chartboost")]
-  public class AdzeChartboost : AdzeServer {
+  public sealed class AdzeChartboost : AdzeServer {
+    private static bool first = true;
 
-    static bool first = true;
-
-    public override void Initialise(string appKey) {
+    protected override void Initialise() {
       if (first) {
-        Debug.LogWarning("Install Chartboost unity package from http://www.chartboo.st/sdk/unity");
+        Debug.LogWarning(
+          message: "Install Chartboost unity package from http://www.chartboo.st/sdk/unity");
+
         first = false;
       }
     }
 
-    public override IEnumerator showNow(string location) {
-      Debug.Log("Show Chartboost Advertisement for '" + location + "'");
-      Debug.LogWarning("Show requires Chartboost unity package from http://www.chartboo.st/sdk/unity");
+    protected override IEnumerator ShowNow(string location) {
+      Debug.Log(message: "Show Chartboost Advertisement for '" + location + "'");
+
+      Debug.LogWarning(
+        message: "Show requires Chartboost unity package from http://www.chartboo.st/sdk/unity");
+
       yield return null;
     }
   }

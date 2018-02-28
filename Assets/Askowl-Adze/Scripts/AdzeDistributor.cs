@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Adze {
-
   public enum Mode {
     //    Banner,
     Interstitial,
@@ -13,75 +10,84 @@ namespace Adze {
   }
 
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "Distributor")]
-  public class AdzeDistributor : CustomAsset<AdzeDistributor> {
+  public sealed class AdzeDistributor : CustomAsset<AdzeDistributor> {
+    public bool         RoundRobin = true;
+    public AdzeServer[] Servers;
 
-    public bool roundRobin = true;
-    public AdzeServer[] servers;
+    [HideInInspector] public bool AdShown, AdActionTaken, Error;
 
-    [HideInInspector]
-    public bool adShown, adActionTaken, error;
-    public string serverName { get { return servers [currentServer].Name; } }
+    internal string ServerName { get { return Servers[currentServer].Name; } }
 
-    int currentServer, lastServer;
-    int[] usages;
-    Mode currentMode;
-    Decoupled.Analytics.GameLog log;
+    private int                         currentServer, lastServer;
+    private int[]                       usages;
+    private Mode                        currentMode;
+    private Decoupled.Analytics.GameLog log;
 
-    new public static AdzeDistributor Asset(string name = "Distributor") {
-      return CustomAsset<AdzeDistributor>.Asset(name);
+    internal new static AdzeDistributor Asset(string name = "Distributor") {
+      return CustomAsset<AdzeDistributor>.Asset(name: name);
     }
 
-    public IEnumerator Show(Mode mode, string location = "Default") {
+    internal IEnumerator Show(Mode mode, string location = "Default") {
       currentMode = mode;
-      adShown = adActionTaken = error = false;
-      if (!roundRobin) {
+      AdShown     = AdActionTaken = Error = false;
+
+      if (!RoundRobin) {
         currentServer = 0; // alway start with the primary server
       }
+
       lastServer = currentServer; // set so we only try each server once
-    
-      error = true;
-      if (servers.Length != 0) {
+
+      Error = true;
+
+      if (Servers.Length != 0) {
         for (int i = 0; i < 3; i++) {
-          yield return servers [currentServer].Show(currentMode, location);
-          if (!(error = servers [currentServer].error)) {
-            adShown = true;
-            adActionTaken = servers [currentServer].adActionTaken;
-            usages [currentServer] += 1;
-            if ((usages [currentServer] % servers [currentServer].usageBalance) == 0) {
-              prepareNextServer(); // ready for next time we show an advertisement
+          yield return Servers[currentServer].Show(modeRequested: currentMode, location: location);
+
+          if (!(Error = Servers[currentServer].Error)) {
+            AdShown               =  true;
+            AdActionTaken         =  Servers[currentServer].AdActionTaken;
+            usages[currentServer] += 1;
+
+            if ((usages[currentServer] % Servers[currentServer].UsageBalance) == 0) {
+              PrepareNextServer(); // ready for next time we show an advertisement
             }
-            string actionText = adActionTaken ? "Ad action taken" : "Ad video watched";
+
+            string actionText = AdActionTaken ? "Ad action taken" : "Ad video watched";
             log.Event("Adze", "Action", actionText);
-            Debug.Log("**** Adze - " + actionText);
+            Debug.Log(message: "**** Adze - " + actionText);
             break;
-          } else if (!prepareNextServer()) {
-            Debug.LogWarning("**** Adze servers not responding");
+          } else if (!PrepareNextServer()) {
+            Debug.LogWarning(message: "**** Adze servers not responding");
             log.Event("Adze", "Error", "Ad servers not responding");
-            yield return After.Realtime.ms(500);
+            yield return After.Realtime.ms(ms: 500);
           }
         }
       }
+
       yield return null;
     }
 
     public void OnEnable() {
       log = Decoupled.Analytics.GameLog.Instance;
-      if (servers == null) {
-        log.Error("Set advertising servers in Adze Distributor Custom Asset");
-        servers = new AdzeServer[0];
+
+      if (Servers == null) {
+        log.Error(message: "Set advertising servers in Adze Distributor Custom Asset");
+        Servers = new AdzeServer[0];
       }
-      Array.Sort(servers, (x, y) => x.priority.CompareTo(y.priority));
+
+      Array.Sort(array: Servers, comparison: (x, y) => x.Priority.CompareTo(value: y.Priority));
 
       currentServer = 0;
-      usages = new int[servers.Length];
+      usages        = new int[Servers.Length];
     }
 
-    bool prepareNextServer() {
-      while ((currentServer = (currentServer + 1) % servers.Length) != lastServer) {
-        if (servers [currentServer].usageBalance != 0) {
+    private bool PrepareNextServer() {
+      while ((currentServer = (currentServer + 1) % Servers.Length) != lastServer) {
+        if (Servers[currentServer].UsageBalance != 0) {
           return true; // only allow if this ad server is meant to serve in the loop
         }
       }
+
       return false; // will always use the first/only server
     }
   }

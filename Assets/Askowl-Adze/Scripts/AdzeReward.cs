@@ -1,85 +1,91 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
 namespace Adze {
+  using JetBrains.Annotations;
 
   [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "Reward")]
-  public class AdzeReward : CustomAsset<AdzeReward> {
-
+  public sealed class AdzeReward : CustomAsset<AdzeReward> {
     [Serializable]
     public struct Prompt {
-      [TextArea]
-      public string message;
-      public string acceptButton;
-      public string refuseButton;
+      [TextArea] internal string Message;
+      #pragma warning disable 649
+      internal string AcceptButton;
+      internal string RefuseButton;
+      #pragma warning restore 649
     }
 
-    public Prompt[] prompts, thanks;
-    public int adsShownBetweenQuotes = 2;
-    public string advertisementDistributor = "Distributor";
+    public Prompt[] Prompts, Thanks;
+    public int      AdsShownBetweenQuotes    = 2;
+    public string   AdvertisementDistributor = "Distributor";
 
-    private Selector<Prompt> prompt, thank;
-    private Quotes quotes;
-    private int count;
-    Decoupled.Analytics.GameLog log;
+    private Selector<Prompt>            prompt, thank;
+    private Quotes                      quotes;
+    private int                         count;
+    private Decoupled.Analytics.GameLog log;
 
+    [HideInInspector] public bool            AdWatched, AdRequested;
+    [HideInInspector] public AdzeDistributor Distributor;
 
-    [HideInInspector]
-    public bool adWatched, adRequested;
-    [HideInInspector]
-    public AdzeDistributor distributor;
-
-    new public static AdzeReward Asset(string assetName) {
-      return CustomAsset<AdzeReward>.Asset(assetName);
+    [UsedImplicitly]
+    public new static AdzeReward Asset(string assetName) {
+      return CustomAsset<AdzeReward>.Asset(name: assetName);
     }
 
     public void OnEnable() {
-      log = Decoupled.Analytics.GameLog.Instance;
-      distributor = AdzeDistributor.Asset(advertisementDistributor);
-      prompt = new Selector<Prompt> (prompts);
-      thank = new Selector<Prompt> (thanks);
-      quotes = new Quotes ();
-      count = 0;
+      log         = Decoupled.Analytics.GameLog.Instance;
+      Distributor = AdzeDistributor.Asset(name: AdvertisementDistributor);
+      prompt      = new Selector<Prompt>(choices: Prompts);
+      thank       = new Selector<Prompt>(choices: Thanks);
+      quotes      = new Quotes();
+      count       = 0;
     }
 
-    private IEnumerator showDialog(Dialog dialog, Pick<Prompt> prompter) {
-      Prompt prompt = prompter.Pick();
+    private IEnumerator ShowDialog([NotNull] Dialog dialog, [NotNull] Pick<Prompt> prompter) {
+      Prompt dialogContent = prompter.Pick();
+
       return dialog.Activate(
-        prompt.message,
-        prompt.refuseButton,
-        prompt.acceptButton);
+        dialogContent.Message,
+        dialogContent.RefuseButton,
+        dialogContent.AcceptButton);
     }
 
-    private IEnumerator showQuote(Dialog dialog) {
-      return dialog.Activate(quotes.Pick(), "", thank.Pick().acceptButton);
+    private IEnumerator ShowQuote([NotNull] Dialog dialog) {
+      return dialog.Activate(quotes.Pick(), "", thank.Pick().AcceptButton);
     }
 
-
+    [UsedImplicitly]
     public IEnumerator Show(string location = "Default") {
       /*
-     * When I try and cache dialog loaded in OnEnable, the reference becomes destroyed.
-     * Peculiar since it has the same ID. Probably something to do with it being a prefab.
-     * The solution/workaround I chose was to find it when I need it.
-     */
-      Dialog dialog = Dialog.Instance("Reward");
-      adWatched = adRequested = false;
-      yield return showDialog(dialog, prompt);
-      if (dialog.action.Equals(("Yes"))) {
-        adRequested = true;
-        if ((++count % (adsShownBetweenQuotes + 1)) == 0) {
-          yield return showQuote(dialog);
+       * When I try and cache dialog loaded in OnEnable, the reference becomes destroyed.
+       * Peculiar since it has the same ID. Probably something to do with it being a prefab.
+       * The solution/workaround I chose was to find it when I need it.
+       */
+      Dialog dialog           = Dialog.Instance(gameObjectName: "Reward");
+      AdWatched = AdRequested = false;
+      yield return ShowDialog(dialog: dialog, prompter: prompt);
+
+      if (dialog.action.Equals(value: "Yes")) {
+        AdRequested = true;
+
+        if ((++count % (AdsShownBetweenQuotes + 1)) == 0) {
+          yield return ShowQuote(dialog: dialog);
+
           log.Event("Advertisement", "Content", "Quote displayed");
-        } else if (distributor == null) {
-          yield return showQuote(dialog);
-          log.Error("Advertisement server not set");
+        } else if (Distributor == null) {
+          yield return ShowQuote(dialog: dialog);
+
+          log.Error(message: "Advertisement server not set");
         } else {
-          yield return distributor.Show(Mode.Reward, location);
-          if (adWatched = distributor.adActionTaken) {
-            yield return showDialog(dialog, thank);
+          yield return Distributor.Show(mode: Mode.Reward, location: location);
+
+          AdWatched = Distributor.AdActionTaken;
+
+          if (AdWatched) {
+            yield return ShowDialog(dialog: dialog, prompter: thank);
           } else {
-            yield return showQuote(dialog);
+            yield return ShowQuote(dialog: dialog);
           }
         }
       } else {

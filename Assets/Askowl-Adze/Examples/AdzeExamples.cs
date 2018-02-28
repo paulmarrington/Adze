@@ -20,12 +20,12 @@ public sealed class AdzeExamples : MonoBehaviour {
   }
 
   void showResults([NotNull] AdzeDistributor distributor) {
-    Debug.Log(message: "%%%% After Show: adShown=" + distributor.adShown       +
-              ", adActionTaken="          + distributor.adActionTaken + ", error=" + distributor.error);
+    Debug.Log(message: "%%%% After Show: adShown=" + distributor.AdShown       +
+              ", adActionTaken="          + distributor.AdActionTaken + ", error=" + distributor.Error);
   }
 
   IEnumerator Show([NotNull] AdzeDistributor distributor, Mode mode, string location) {
-    Debug.Log("%%%% Showing " + distributor.serverName + ", mode=" + mode + ", location=" + location);
+    Debug.Log("%%%% Showing " + distributor.ServerName + ", mode=" + mode + ", location=" + location);
     yield return distributor.Show(mode, location); // location is optional - defaults to "Default"
 
     showResults(distributor);
