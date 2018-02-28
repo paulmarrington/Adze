@@ -1,121 +1,102 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Decoupled.Analytics;
-
 #if AdzeAdMob
 using GoogleMobileAds.Api;
 
 namespace Adze {
+  using JetBrains.Annotations;
+
   [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
-  public class AdzeAdMob : AdzeServer {
-    bool complete, initialised;
-    Decoupled.Analytics.GameLog analytics;
-    Action showAd;
+  public sealed class AdzeAdMob : AdzeServer {
+    private bool                        complete, initialised;
+    private Decoupled.Analytics.GameLog analytics;
+    private Action                      showAd;
+    private BannerView                  bannerView;
+    private InterstitialAd              interstitialAd;
+    private RewardBasedVideoAd          rewardBasedVideoAd;
 
-    BannerView bannerView;
-    InterstitialAd interstitialAd;
-    RewardBasedVideoAd rewardBasedVideoAd;
-
-    public override void Initialise(string appKey) {
+    public override void Initialise() {
       analytics = Decoupled.Analytics.GameLog.Instance;
-      MobileAds.Initialize(appKey);
+      MobileAds.Initialize(appId: appKey);
 
       if (mode == Mode.Reward) {
-        rewardBasedVideoAd = RewardBasedVideoAd.Instance;
-        rewardBasedVideoAd.OnAdLoaded += OnAdLoaded;
-        rewardBasedVideoAd.OnAdFailedToLoad += OnAdFailedToLoad;
-        rewardBasedVideoAd.OnAdOpening += OnAdOpening;
-        rewardBasedVideoAd.OnAdStarted += OnAdStarted;
-        rewardBasedVideoAd.OnAdRewarded += OnAdRewarded;
-        rewardBasedVideoAd.OnAdClosed += OnAdClosed;
+        rewardBasedVideoAd                        =  RewardBasedVideoAd.Instance;
+        rewardBasedVideoAd.OnAdLoaded             += OnAdLoaded;
+        rewardBasedVideoAd.OnAdFailedToLoad       += OnAdFailedToLoad;
+        rewardBasedVideoAd.OnAdRewarded           += OnAdRewarded;
+        rewardBasedVideoAd.OnAdClosed             += OnAdClosed;
         rewardBasedVideoAd.OnAdLeavingApplication += OnAdLeavingApplication;
-        showAd = rewardBasedVideoAd.Show;
+        showAd                                    =  rewardBasedVideoAd.Show;
       }
 
-      loadNextAd("Default");
+      LoadNextAd(location: "Default");
     }
 
-    public override void Destroy() {
-    }
+    public override void Destroy() { }
 
     public override IEnumerator showNow(string location) {
       analytics.Event("Adze", "Show AdMob", location);
       complete = false;
-Debug.Log("#### showNow loaded="+loaded+", error="+error);
+      Debug.Log(message: "#### showNow loaded=" + loaded + ", error=" + error);
+
       while (!loaded && !error) {
         yield return null;
       }
+
       showAd();
+
       while (!complete) {
         yield return null;
       }
-      loadNextAd(location);
+
+      LoadNextAd(location: location);
     }
 
-    void loadNextAd(string location) {
-      AdRequest adRequest = new AdRequest.Builder ().AddKeyword(location).Build();
-      loaded = error = false;
+    private void LoadNextAd(string location) {
+      AdRequest adRequest = new AdRequest.Builder().AddKeyword(keyword: location).Build();
+      loaded = error      = false;
 
       switch (mode) {
         case Mode.Interstitial:
+
           if (interstitialAd != null) {
             interstitialAd.Destroy();
           }
-          interstitialAd = new InterstitialAd (appKey);
-          interstitialAd.OnAdLoaded += OnAdLoaded;
-          interstitialAd.OnAdFailedToLoad += OnAdFailedToLoad;
-          interstitialAd.OnAdOpening += OnAdOpening;
-          interstitialAd.OnAdClosed += OnAdClosed;
+
+          interstitialAd                        =  new InterstitialAd(adUnitId: appKey);
+          interstitialAd.OnAdLoaded             += OnAdLoaded;
+          interstitialAd.OnAdFailedToLoad       += OnAdFailedToLoad;
+          interstitialAd.OnAdClosed             += OnAdClosed;
           interstitialAd.OnAdLeavingApplication += OnAdLeavingApplication;
-          interstitialAd.LoadAd(adRequest);
+          interstitialAd.LoadAd(request: adRequest);
           showAd = interstitialAd.Show;
           break;
         case Mode.Reward:
-          rewardBasedVideoAd.LoadAd(adRequest, appKey);
+          rewardBasedVideoAd.LoadAd(request: adRequest, adUnitId: appKey);
           break;
       }
     }
+
     /* ******************************************************************* */
-    void OnAdLoaded(object sender, EventArgs args) {
-Debug.Log("######## Loaded for "+mode);
+    private void OnAdLoaded(object sender, EventArgs args) {
+      Debug.Log(message: "######## Loaded for " + mode);
       loaded = true;
     }
 
-    void OnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args) {
-Debug.Log("######## Error for "+mode);
+    private void OnAdFailedToLoad(object sender, [NotNull] AdFailedToLoadEventArgs args) {
+      Debug.Log(message: "######## Error for " + mode);
       error = true;
       analytics.Event("Adze", "AdMob: Failed To Load -- " + args.Message);
     }
 
-    void OnBannerAdOpening(object sender, EventArgs args) {
-      adActionTaken = true;
-    }
+    private void OnAdRewarded(object sender, Reward args) { adActionTaken = true; }
 
-    void OnAdOpening(object sender, EventArgs args) {
-    }
+    private void OnAdClosed(object sender, EventArgs args) { complete = true; }
 
-    void OnAdStarted(object sender, EventArgs args) {
-    }
-
-    void OnAdRewarded(object sender, Reward args) {
-      adActionTaken = true;
-    }
-
-    void OnAdClosed(object sender, EventArgs args) {
-      complete = true;
-    }
-
-    void OnAdLeavingApplication(object sender, EventArgs args) {
-      adActionTaken = true;
-    }
+    private void OnAdLeavingApplication(object sender, EventArgs args) { adActionTaken = true; }
   }
 }
-
-
-
-
 
 #else
 namespace Adze {

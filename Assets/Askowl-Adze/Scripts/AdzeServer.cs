@@ -14,7 +14,7 @@ namespace Ads {
 } */
 
 namespace Adze {
-  
+
   abstract public class AdzeServer : CustomAsset<AdzeServer> {
 
     [Serializable]
@@ -35,7 +35,7 @@ namespace Adze {
 
     public string Name { get { return this.GetType().Name; } }
 
-    public virtual void Initialise(string key) {
+    public virtual void Initialise() {
     }
 
     public virtual void Destroy() {

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,15 +13,15 @@ namespace Adze {
   public class AdzeAppodeal : AdzeServer, IInterstitialAdListener, INonSkippableVideoAdListener, IBannerAdListener {
     int appodealMode = -1;
     #else
-  public class AdzeAppodeal : AdzeServer {
+  public sealed class AdzeAppodeal : AdzeServer {
     static bool first = true;
     #endif
 
     static Dictionary<Mode,int> appodealModes;
     bool complete;
-    Decoupled.Analytics.GameLog log;
+    private Decoupled.Analytics.GameLog log;
 
-    public override void Initialise(string appKey) {
+    public override void Initialise() {
       log = Decoupled.Analytics.GameLog.Instance;
       #if AdzeAppodeal
       #if (UNITY_ANDROID || UNITY_IPHONE)
@@ -36,7 +35,7 @@ namespace Adze {
       };
       appodealMode = appodealModes [mode];
 
-      disableNetworks();
+      DisableNetworks();
       Appodeal.setAutoCache(appodealMode, true);
 //      Appodeal.disableLocationPermissionCheck();
       Appodeal.initialize(appKey, appodealMode);
@@ -78,6 +77,7 @@ namespace Adze {
       }
     }
 
+  #if AdzeAppodeal
     public void onNonSkippableVideoLoaded() {
       loaded = true;
     }
@@ -140,8 +140,10 @@ namespace Adze {
     public void onBannerClicked() {
       adActionTaken = true;
     }
+    #endif
 
     public enum Network {
+      // ReSharper disable InconsistentNaming
       adcolony,
       admob,
       amazon_ads,
@@ -170,12 +172,14 @@ namespace Adze {
       unity_ads,
       vungle,
       yandex
+      // ReSharper restore InconsistentNaming
     }
 
-    public Network[] disabledNetworks = new Network[] { Network.pubnative };
+    public Network[] DisabledNetworks = { Network.pubnative };
 
-    void disableNetworks() {
-      foreach (Network disabledNetwork in disabledNetworks) {
+    private void DisableNetworks() {
+      // ReSharper disable once UnusedVariable
+      foreach (Network disabledNetwork in DisabledNetworks) {
         #if AdzeAppodeal
         Appodeal.disableNetwork(disabledNetwork.ToString());
         #endif
