@@ -1,5 +1,5 @@
 ---
 redirect_to:
-  - /Assets/Askowl-Decoupler/Documentation/Askowl-Adze
+  - /Assets/Askowl-Adze/Documentation/Askowl-Adze
 ---
 
