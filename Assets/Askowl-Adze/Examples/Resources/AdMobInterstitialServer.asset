@@ -11,12 +11,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaf8e45f5bea5416bb4ae7bb31554b96, type: 3}
   m_Name: AdMobInterstitialServer
   m_EditorClassIdentifier: 
-  appKeys:
-  - platform: 8
-    value: ca-app-pub-3940256099942544/1033173712
-  mode: 0
-  priority: 2
-  usageBalance: 1
-  adActionTaken: 0
-  error: 0
-  loaded: 0
+  AppKeys:
+  - Platform: 8
+    Value: ca-app-pub-3940256099942544/1033173712
+  Mode: 0
+  Priority: 1
+  UsageBalance: 1
+  AdActionTaken: 0
+  Error: 1
+  Loaded: 0

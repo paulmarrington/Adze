@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 
 namespace Adze {
+  using JetBrains.Annotations;
+
   public enum Mode {
     //    Banner,
     Interstitial,
@@ -16,6 +18,7 @@ namespace Adze {
 
     [HideInInspector] public bool AdShown, AdActionTaken, Error;
 
+    [NotNull]
     internal string ServerName { get { return Servers[currentServer].Name; } }
 
     private int                         currentServer, lastServer;

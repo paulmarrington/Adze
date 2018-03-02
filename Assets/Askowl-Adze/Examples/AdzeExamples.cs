@@ -24,16 +24,16 @@ public sealed class AdzeExamples : MonoBehaviour {
               ", adActionTaken="          + distributor.AdActionTaken + ", error=" + distributor.Error);
   }
 
-  IEnumerator Show([NotNull] AdzeDistributor distributor, Mode mode, string location) {
-    Debug.Log("%%%% Showing " + distributor.ServerName + ", mode=" + mode + ", location=" + location);
-    yield return distributor.Show(mode, location); // location is optional - defaults to "Default"
+  private IEnumerator Show([NotNull] AdzeDistributor distributor, Mode mode, string location) {
+    Debug.Log(message: "%%%% Showing " + distributor.ServerName + ", mode=" + mode + ", location=" + location);
+    yield return distributor.Show(mode: mode, location: location); // location is optional - defaults to "Default"
 
-    showResults(distributor);
+    showResults(distributor: distributor);
   }
 
-  public void ShowAdMobInterstitial() { StartCoroutine(Show(adMobDistributor, Mode.Interstitial, "Startup")); }
+  public void ShowAdMobInterstitial() { StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Interstitial, location: "Startup")); }
 
-  public void ShowAdMobRewarded() { StartCoroutine(Show(adMobDistributor, Mode.Reward, "Main Menu")); }
+  public void ShowAdMobRewarded() { StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Reward, location: "Main Menu")); }
 
   public void ShowAppodealInterstitial() {
 //    StartCoroutine(Show(AppodealDistributor, Mode.Interstitial, "Achievements"));

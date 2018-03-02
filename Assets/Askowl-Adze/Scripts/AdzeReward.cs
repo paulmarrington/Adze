@@ -9,16 +9,18 @@ namespace Adze {
   public sealed class AdzeReward : CustomAsset<AdzeReward> {
     [Serializable]
     public struct Prompt {
-      [TextArea] internal string Message;
-      #pragma warning disable 649
-      internal string AcceptButton;
-      internal string RefuseButton;
-      #pragma warning restore 649
+      // ReSharper disable MemberCanBeInternal
+      // ReSharper disable UnassignedField.Global
+      [TextArea] public string Message;
+      public string AcceptButton;
+      public string RefuseButton;
+      // ReSharper restore UnassignedField.Global
+      // ReSharper restore MemberCanBeInternal
     }
 
     public Prompt[] Prompts, Thanks;
     public int      AdsShownBetweenQuotes    = 2;
-    public string   AdvertisementDistributor = "Distributor";
+    public AdzeDistributor Distributor;
 
     private Selector<Prompt>            prompt, thank;
     private Quotes                      quotes;
@@ -26,7 +28,6 @@ namespace Adze {
     private Decoupled.Analytics.GameLog log;
 
     [HideInInspector] public bool            AdWatched, AdRequested;
-    [HideInInspector] public AdzeDistributor Distributor;
 
     [UsedImplicitly]
     public new static AdzeReward Asset(string assetName) {
@@ -35,14 +36,13 @@ namespace Adze {
 
     public void OnEnable() {
       log         = Decoupled.Analytics.GameLog.Instance;
-      Distributor = AdzeDistributor.Asset(name: AdvertisementDistributor);
       prompt      = new Selector<Prompt>(choices: Prompts);
       thank       = new Selector<Prompt>(choices: Thanks);
       quotes      = new Quotes();
       count       = 0;
     }
 
-    private IEnumerator ShowDialog([NotNull] Dialog dialog, [NotNull] Pick<Prompt> prompter) {
+    private IEnumerator ShowDialog([NotNull] Dialog dialog, [NotNull] IPick<Prompt> prompter) {
       Prompt dialogContent = prompter.Pick();
 
       return dialog.Activate(
@@ -64,9 +64,11 @@ namespace Adze {
        */
       Dialog dialog           = Dialog.Instance(gameObjectName: "Reward");
       AdWatched = AdRequested = false;
+      if (dialog == null) yield break;
+
       yield return ShowDialog(dialog: dialog, prompter: prompt);
 
-      if (dialog.action.Equals(value: "Yes")) {
+      if (dialog.Action.Equals(value: "Yes")) {
         AdRequested = true;
 
         if ((++count % (AdsShownBetweenQuotes + 1)) == 0) {

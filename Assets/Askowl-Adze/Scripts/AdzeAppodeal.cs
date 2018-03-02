@@ -8,22 +8,24 @@ using AppodealAds.Unity.Common;
 #endif
 
 namespace Adze {
+  using JetBrains.Annotations;
+
   [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
   #if AdzeAppodeal
   public class AdzeAppodeal : AdzeServer, IInterstitialAdListener, INonSkippableVideoAdListener, IBannerAdListener {
     int appodealMode = -1;
     #else
   public sealed class AdzeAppodeal : AdzeServer {
-    static bool first = true;
+    private static bool first = true;
     #endif
 
-    static Dictionary<Mode,int> appodealModes;
+    private static Dictionary<Mode,int> appodealModes;
     private bool complete;
     private Decoupled.Analytics.GameLog log;
 
     protected override void Initialise() {
-      log = Decoupled.Analytics.GameLog.Instance;
       #if AdzeAppodeal
+      log = Decoupled.Analytics.GameLog.Instance;
       #if (UNITY_ANDROID || UNITY_IPHONE)
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
       #else
@@ -46,7 +48,7 @@ namespace Adze {
       Appodeal.setNonSkippableVideoCallbacks(this);
       #else
       if (first) {
-        Debug.LogWarning("Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
+        Debug.LogWarning(message: "Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
         first = false;
       }
       #endif
@@ -67,8 +69,8 @@ namespace Adze {
       }
 
       #else
-      Debug.Log("Show Appodeal Advertisement for '" + location + "'");
-      Debug.LogWarning("Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
+      Debug.Log(message: "Show Appodeal Advertisement for '" + location + "'");
+      Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       complete = true;
       #endif
 
@@ -144,6 +146,7 @@ namespace Adze {
 
     public enum Network {
       // ReSharper disable InconsistentNaming
+      // ReSharper disable UnusedMember.Global
       adcolony,
       admob,
       amazon_ads,
@@ -172,11 +175,13 @@ namespace Adze {
       unity_ads,
       vungle,
       yandex
+      // ReSharper restore UnusedMember.Global
       // ReSharper restore InconsistentNaming
     }
 
     public Network[] DisabledNetworks = { Network.pubnative };
 
+    [UsedImplicitly]
     private void DisableNetworks() {
       // ReSharper disable once UnusedVariable
       foreach (Network disabledNetwork in DisabledNetworks) {

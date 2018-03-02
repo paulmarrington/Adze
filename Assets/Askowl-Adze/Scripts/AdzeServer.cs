@@ -18,10 +18,8 @@ namespace Adze {
   public abstract class AdzeServer : CustomAsset<AdzeServer> {
     [Serializable]
     public struct Key {
-      #pragma warning disable 649
-      internal RuntimePlatform Platform;
-      internal string          Value;
-      #pragma warning restore 649
+      [UsedImplicitly] public RuntimePlatform Platform;
+      [UsedImplicitly] public string          Value;
     }
 
     public List<Key> AppKeys;
@@ -33,6 +31,8 @@ namespace Adze {
     [HideInInspector] public bool   AdActionTaken, Error, Loaded;
     protected                string AppKey;
 
+    private bool enabled;
+
     [NotNull]
     internal string Name { get { return GetType().Name; } }
 
@@ -43,9 +43,9 @@ namespace Adze {
     protected abstract IEnumerator ShowNow(string location);
 
     internal IEnumerator Show(Mode modeRequested, string location) {
-      if (modeRequested == Mode) {
+      if (enabled && (modeRequested == Mode)) {
         AdActionTaken = Error = false;
-        yield return ShowNow(location);
+        yield return ShowNow(location: location);
       } else {
         Error = true;
         yield return null;
@@ -54,12 +54,21 @@ namespace Adze {
 
     public void OnEnable() {
       foreach (Key appKey in AppKeys) {
-        if (Application.platform == appKey.Platform) {
+        enabled = (Application.platform == appKey.Platform);
+
+        if (enabled) {
           AppKey = appKey.Value;
           Initialise();
           return;
         }
       }
+
+      if (Application.platform != RuntimePlatform.OSXEditor) {
+        Debug.LogWarning(message: "**** No viable platform to enable " + Name +
+                                  " on "                               + Application.platform);
+      }
+
+      Error = true;
     }
 
     public void OnDisable() { Destroy(); }

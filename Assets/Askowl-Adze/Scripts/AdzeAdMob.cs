@@ -38,7 +38,6 @@ namespace Adze {
     protected override IEnumerator ShowNow(string location) {
       analytics.Event("Adze", "Show AdMob", location);
       complete = false;
-      Debug.Log(message: "#### showNow loaded=" + Loaded + ", error=" + Error);
 
       while (!Loaded && !Error) {
         yield return null;
@@ -60,9 +59,7 @@ namespace Adze {
       switch (Mode) {
         case Mode.Interstitial:
 
-          if (interstitialAd != null) {
-            interstitialAd.Destroy();
-          }
+          if (interstitialAd != null) interstitialAd.Destroy();
 
           interstitialAd                        =  new InterstitialAd(adUnitId: AppKey);
           interstitialAd.OnAdLoaded             += OnAdLoaded;
@@ -73,21 +70,18 @@ namespace Adze {
           showAd = interstitialAd.Show;
           break;
         case Mode.Reward:
+          Debug.LogWarning(message: "**** AppKey="+AppKey+"  #### DELETE-ME ####");
           rewardBasedVideoAd.LoadAd(request: adRequest, adUnitId: AppKey);
           break;
       }
     }
 
     /* ******************************************************************* */
-    private void OnAdLoaded(object sender, EventArgs args) {
-      Debug.Log(message: "######## Loaded for " + Mode);
-      Loaded = true;
-    }
+    private void OnAdLoaded(object sender, EventArgs args) { Loaded = true; }
 
     private void OnAdFailedToLoad(object sender, [NotNull] AdFailedToLoadEventArgs args) {
-      Debug.Log(message: "######## Error for " + Mode);
       Error = true;
-      analytics.Event("Adze", "AdMob: Failed To Load -- " + args.Message);
+      analytics.Event("Adze", "AdMob " + Mode + ": Failed To Load -- " + args.Message);
     }
 
     private void OnAdRewarded(object sender, Reward args) { AdActionTaken = true; }
