@@ -11,10 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2a34ad0300d44458438ff2410e0737, type: 3}
   m_Name: AppodealDistributor
   m_EditorClassIdentifier: 
-  roundRobin: 1
-  servers:
+  RoundRobin: 1
+  Servers:
   - {fileID: 11400000, guid: 7fa94eb891b734b3188164bb6ed4cacf, type: 2}
   - {fileID: 11400000, guid: c8a681fc84a4b41ceb524f7ff4f828d8, type: 2}
-  adShown: 0
-  adActionTaken: 0
-  error: 0
+  AdShown: 0
+  AdActionTaken: 0
+  Error: 0

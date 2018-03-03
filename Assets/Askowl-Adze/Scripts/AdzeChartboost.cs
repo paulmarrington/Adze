@@ -1,213 +1,203 @@
-﻿using UnityEngine;
-using System.Collections;
-
-#if AdzeChartboost
+﻿#if AdzeChartboost
 using ChartboostSDK;
 
 namespace Adze {
+  using System;
+  using System.Collections;
+  using Decoupled.Analytics;
+  using JetBrains.Annotations;
+  using UnityEngine;
+
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "Chartboost")]
-  public class AdzeChartboost : AdzeServer {
+  public sealed class AdzeChartboost : AdzeServer {
+    private bool                        complete, initialised;
+    private GameLog analytics;
+    private Action<string>              chartboostShow;
 
-    bool complete, initialised;
-    Decoupled.Analytics.GameLog analytics;
-    Action<string> chartboostShow;
-
-    public override void Initialise(string appKey) {
+    protected override void Initialise() {
       // appKey is made up of AppId and AppSignature separated by ; or similar
-      string[] separators = { ";", " ", ",", ":" };
-      string[] keyPair = appKey.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+      string[] separators = {";", " ", ",", ":"};
 
-      analytics = Decoupled.Analytics.GameLog.Instance;
+      string[] keyPair = AppKey.Split(separator: separators,
+                                      options: StringSplitOptions.RemoveEmptyEntries);
 
-      switch (mode) {
+      analytics = GameLog.Instance;
+
+      switch (Mode) {
         case Mode.Interstitial:
-          chartboostShow = (loc) => Chartboost.showInterstitial(CBLocation.locationFromName(loc));
+
+          chartboostShow = (loc) =>
+            Chartboost.showInterstitial(location: CBLocation.locationFromName(name: loc));
+
           break;
         case Mode.Reward:
-          chartboostShow = (loc) => Chartboost.showRewardedVideo(CBLocation.locationFromName(loc));
+
+          chartboostShow = (loc) =>
+            Chartboost.showRewardedVideo(location: CBLocation.locationFromName(name: loc));
+
           break;
       }
 
       SetupDelegates();
-      Chartboost.CreateWithAppId(keyPair [0], keyPair [1]);
-      Chartboost.setAutoCacheAds(true);
+      Chartboost.CreateWithAppId(appId: keyPair[0], appSignature: keyPair[1]);
+      Chartboost.setAutoCacheAds(autoCacheAds: true);
     }
 
-    public override void Destroy() {
-      RemoveDelegates();
-    }
+    protected override void Destroy() { RemoveDelegates(); }
 
-    public override IEnumerator showNow(string location) {
+    protected override IEnumerator ShowNow(string location) {
       analytics.Event("Adze", "Show Chartboost", location);
+
       while (!initialised) {
         yield return null;
       }
+
       complete = false;
-      chartboostShow(location);
+      chartboostShow(obj: location);
+
       while (!complete) {
         yield return null;
       }
     }
 
-    void showInterstitial(string location) {
-      Chartboost.showInterstitial(CBLocation.locationFromName(location));
-    }
-
-    void showRewarded(string location) {
-      Chartboost.showRewardedVideo(CBLocation.locationFromName(location));
-    }
     /* ******************************************************************* */
-    void SetupDelegates() {
+    private void SetupDelegates() {
       // Listen to all impression-related events
-      Chartboost.didInitialize += didInitialize;
-      Chartboost.didFailToLoadInterstitial += didFailToLoadInterstitial;
-      Chartboost.didDismissInterstitial += didDismissInterstitial;
-      Chartboost.didCloseInterstitial += didCloseInterstitial;
-      Chartboost.didClickInterstitial += didClickInterstitial;
-      Chartboost.didCacheInterstitial += didCacheInterstitial;
-      Chartboost.shouldDisplayInterstitial += shouldDisplayInterstitial;
-      Chartboost.didDisplayInterstitial += didDisplayInterstitial;
-      Chartboost.didFailToRecordClick += didFailToRecordClick;
-      Chartboost.didFailToLoadRewardedVideo += didFailToLoadRewardedVideo;
-      Chartboost.didDismissRewardedVideo += didDismissRewardedVideo;
-      Chartboost.didCloseRewardedVideo += didCloseRewardedVideo;
-      Chartboost.didClickRewardedVideo += didClickRewardedVideo;
-      Chartboost.didCacheRewardedVideo += didCacheRewardedVideo;
-      Chartboost.shouldDisplayRewardedVideo += shouldDisplayRewardedVideo;
-      Chartboost.didCompleteRewardedVideo += didCompleteRewardedVideo;
-      Chartboost.didDisplayRewardedVideo += didDisplayRewardedVideo;
-      Chartboost.didPauseClickForConfirmation += didPauseClickForConfirmation;
-      Chartboost.willDisplayVideo += willDisplayVideo;
+      Chartboost.didInitialize                += DidInitialize;
+      Chartboost.didFailToLoadInterstitial    += DidFailToLoadInterstitial;
+      Chartboost.didDismissInterstitial       += DidDismissInterstitial;
+      Chartboost.didCloseInterstitial         += DidCloseInterstitial;
+      Chartboost.didClickInterstitial         += DidClickInterstitial;
+      Chartboost.didCacheInterstitial         += DidCacheInterstitial;
+      Chartboost.shouldDisplayInterstitial    += ShouldDisplayInterstitial;
+      Chartboost.didDisplayInterstitial       += DidDisplayInterstitial;
+      Chartboost.didFailToRecordClick         += DidFailToRecordClick;
+      Chartboost.didFailToLoadRewardedVideo   += DidFailToLoadRewardedVideo;
+      Chartboost.didDismissRewardedVideo      += DidDismissRewardedVideo;
+      Chartboost.didCloseRewardedVideo        += DidCloseRewardedVideo;
+      Chartboost.didClickRewardedVideo        += DidClickRewardedVideo;
+      Chartboost.didCacheRewardedVideo        += DidCacheRewardedVideo;
+      Chartboost.shouldDisplayRewardedVideo   += ShouldDisplayRewardedVideo;
+      Chartboost.didCompleteRewardedVideo     += DidCompleteRewardedVideo;
+      Chartboost.didDisplayRewardedVideo      += DidDisplayRewardedVideo;
+      Chartboost.didPauseClickForConfirmation += DidPauseClickForConfirmation;
+      Chartboost.willDisplayVideo             += WillDisplayVideo;
 
-
-#if UNITY_IPHONE
-      Chartboost.didCompleteAppStoreSheetFlow += didCompleteAppStoreSheetFlow;
-#endif
+      #if UNITY_IPHONE
+      Chartboost.didCompleteAppStoreSheetFlow += DidCompleteAppStoreSheetFlow;
+      #endif
     }
 
-    void RemoveDelegates() {
-      Chartboost.didInitialize -= didInitialize;
-      Chartboost.didFailToLoadInterstitial -= didFailToLoadInterstitial;
-      Chartboost.didDismissInterstitial -= didDismissInterstitial;
-      Chartboost.didCloseInterstitial -= didCloseInterstitial;
-      Chartboost.didClickInterstitial -= didClickInterstitial;
-      Chartboost.didCacheInterstitial -= didCacheInterstitial;
-      Chartboost.shouldDisplayInterstitial -= shouldDisplayInterstitial;
-      Chartboost.didDisplayInterstitial -= didDisplayInterstitial;
-      Chartboost.didFailToRecordClick -= didFailToRecordClick;
-      Chartboost.didFailToLoadRewardedVideo -= didFailToLoadRewardedVideo;
-      Chartboost.didDismissRewardedVideo -= didDismissRewardedVideo;
-      Chartboost.didCloseRewardedVideo -= didCloseRewardedVideo;
-      Chartboost.didClickRewardedVideo -= didClickRewardedVideo;
-      Chartboost.didCacheRewardedVideo -= didCacheRewardedVideo;
-      Chartboost.shouldDisplayRewardedVideo -= shouldDisplayRewardedVideo;
-      Chartboost.didCompleteRewardedVideo -= didCompleteRewardedVideo;
-      Chartboost.didDisplayRewardedVideo -= didDisplayRewardedVideo;
-      Chartboost.didPauseClickForConfirmation -= didPauseClickForConfirmation;
-      Chartboost.willDisplayVideo -= willDisplayVideo;
+    private void RemoveDelegates() {
+      Chartboost.didInitialize                -= DidInitialize;
+      Chartboost.didFailToLoadInterstitial    -= DidFailToLoadInterstitial;
+      Chartboost.didDismissInterstitial       -= DidDismissInterstitial;
+      Chartboost.didCloseInterstitial         -= DidCloseInterstitial;
+      Chartboost.didClickInterstitial         -= DidClickInterstitial;
+      Chartboost.didCacheInterstitial         -= DidCacheInterstitial;
+      Chartboost.shouldDisplayInterstitial    -= ShouldDisplayInterstitial;
+      Chartboost.didDisplayInterstitial       -= DidDisplayInterstitial;
+      Chartboost.didFailToRecordClick         -= DidFailToRecordClick;
+      Chartboost.didFailToLoadRewardedVideo   -= DidFailToLoadRewardedVideo;
+      Chartboost.didDismissRewardedVideo      -= DidDismissRewardedVideo;
+      Chartboost.didCloseRewardedVideo        -= DidCloseRewardedVideo;
+      Chartboost.didClickRewardedVideo        -= DidClickRewardedVideo;
+      Chartboost.didCacheRewardedVideo        -= DidCacheRewardedVideo;
+      Chartboost.shouldDisplayRewardedVideo   -= ShouldDisplayRewardedVideo;
+      Chartboost.didCompleteRewardedVideo     -= DidCompleteRewardedVideo;
+      Chartboost.didDisplayRewardedVideo      -= DidDisplayRewardedVideo;
+      Chartboost.didPauseClickForConfirmation -= DidPauseClickForConfirmation;
+      Chartboost.willDisplayVideo             -= WillDisplayVideo;
 
-
-#if UNITY_IPHONE
-      Chartboost.didCompleteAppStoreSheetFlow -= didCompleteAppStoreSheetFlow;
-#endif
+      #if UNITY_IPHONE
+      Chartboost.didCompleteAppStoreSheetFlow -= DidCompleteAppStoreSheetFlow;
+      #endif
     }
 
-    void cbError(string what, string location, string errorText) {
-      complete = error = true;
-      loaded = false;
+    private void CbError(string what, string location, string errorText) {
+      complete = Error = true;
+      Loaded   = false;
+
       string msg =
- string.Format("Chartboost: {0} -- {1} at location {2}", what, errorText, location);
+        string.Format(format: "Chartboost: {0} -- {1} at location {2}", arg0: what, arg1: errorText,
+                      arg2: location);
+
       analytics.Event("Adze", msg);
     }
 
-    void cbDismiss(string which, string location) {
-      complete = adActionTaken = true;
-      loaded = false;
-      analytics.Event("Adze", string.Format("Chartboost: {0} dismissed at location {1}", which, location));
+    private void CbDismiss(string which, string location) {
+      complete = AdActionTaken = true;
+      Loaded   = false;
+
+      analytics.Event(
+        "Adze",
+        string.Format(format: "Chartboost: {0} dismissed at location {1}", arg0: which,
+                      arg1: location));
     }
 
-    void didInitialize(bool status) {
+    private void DidInitialize(bool status) {
       initialised = true;
-      if (!(error = status)) {
-        analytics.Error("Chartboost did not initialise correctly");
+
+      if (!(Error = status)) {
+        analytics.Error(message: "Chartboost did not initialise correctly");
       }
     }
 
-    void didFailToLoadInterstitial(CBLocation location, CBImpressionError error) {
-      cbError("Interstitial failed to load", location.ToString(), error.ToString());
+    private void DidFailToLoadInterstitial([NotNull] CBLocation location, CBImpressionError error) {
+      CbError(what: "Interstitial failed to load", location: location.ToString(),
+              errorText: error.ToString());
     }
 
-    void didDismissInterstitial(CBLocation location) {
-      cbDismiss("Interstitial", location.ToString());
+    private void DidDismissInterstitial([NotNull] CBLocation location) {
+      CbDismiss(which: "Interstitial", location: location.ToString());
     }
 
-    void didCloseInterstitial(CBLocation location) {
-      complete = true;
+    private void DidCloseInterstitial(CBLocation location) { complete = true; }
+
+    private void DidClickInterstitial(CBLocation location) { AdActionTaken = true; }
+
+    private void DidCacheInterstitial(CBLocation location) { Loaded = true; }
+
+    private bool ShouldDisplayInterstitial(CBLocation location) { return true; }
+
+    private void DidDisplayInterstitial(CBLocation location) { Loaded = false; }
+
+    private void DidFailToRecordClick([NotNull] CBLocation location, CBClickError error) {
+      CbError(what: "Failed to record click", location: location.ToString(),
+              errorText: error.ToString());
     }
 
-    void didClickInterstitial(CBLocation location) {
-      adActionTaken = true;
+    private void
+      DidFailToLoadRewardedVideo([NotNull] CBLocation location, CBImpressionError error) {
+      CbError(what: "Rewarded video failed to load", location: location.ToString(),
+              errorText: error.ToString());
     }
 
-    void didCacheInterstitial(CBLocation location) {
-      loaded = true;
+    private void DidDismissRewardedVideo([NotNull] CBLocation location) {
+      CbDismiss(which: "Rewarded video", location: location.ToString());
     }
 
-    bool shouldDisplayInterstitial(CBLocation location) {
-      return true;
+    private void DidCloseRewardedVideo(CBLocation location) { complete = true; }
+
+    private void DidClickRewardedVideo(CBLocation location) { AdActionTaken = true; }
+
+    private void DidCacheRewardedVideo(CBLocation location) { Loaded = true; }
+
+    private bool ShouldDisplayRewardedVideo(CBLocation location) { return true; }
+
+    private void DidCompleteRewardedVideo(CBLocation location, int reward) {
+      complete = AdActionTaken = true;
     }
 
-    void didDisplayInterstitial(CBLocation location) {
-      loaded = false;
-    }
+    private void DidDisplayRewardedVideo(CBLocation location) { Loaded = false; }
 
-    void didFailToRecordClick(CBLocation location, CBClickError error) {
-      cbError("Failed to record click", location.ToString(), error.ToString());
-    }
+    private void DidPauseClickForConfirmation() { }
 
-    void didFailToLoadRewardedVideo(CBLocation location, CBImpressionError error) {
-      cbError("Rewarded video failed to load", location.ToString(), error.ToString());
-    }
+    private void WillDisplayVideo(CBLocation location) { }
 
-    void didDismissRewardedVideo(CBLocation location) {
-      cbDismiss("Rewarded video", location.ToString());
-    }
-
-    void didCloseRewardedVideo(CBLocation location) {
-      complete = true;
-    }
-
-    void didClickRewardedVideo(CBLocation location) {
-      adActionTaken = true;
-    }
-
-    void didCacheRewardedVideo(CBLocation location) {
-      loaded = true;
-    }
-
-    bool shouldDisplayRewardedVideo(CBLocation location) {
-      return true;
-    }
-
-    void didCompleteRewardedVideo(CBLocation location, int reward) {
-      complete = adActionTaken = true;
-    }
-
-    void didDisplayRewardedVideo(CBLocation location) {
-      loaded = false;
-    }
-
-    void didPauseClickForConfirmation() {
-    }
-
-    void willDisplayVideo(CBLocation location) {
-    }
-
-    void didCompleteAppStoreSheetFlow() {
-    }
+    private void DidCompleteAppStoreSheetFlow() { }
   }
 }
-
 
 #else
 namespace Adze {

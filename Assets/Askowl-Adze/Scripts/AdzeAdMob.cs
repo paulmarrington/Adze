@@ -39,17 +39,23 @@ namespace Adze {
       analytics.Event("Adze", "Show AdMob", location);
       complete = false;
 
-      while (!Loaded && !Error) {
+      if (Error && !Loaded) LoadNextAd(location);
+
+      while (!Loaded) {
+        if (Error) yield break;
+
         yield return null;
       }
 
       showAd();
 
       while (!complete) {
+        if (Error) yield break;
+
         yield return null;
       }
 
-      LoadNextAd(location: location);
+      LoadNextAd(location);
     }
 
     private void LoadNextAd(string location) {
@@ -70,7 +76,6 @@ namespace Adze {
           showAd = interstitialAd.Show;
           break;
         case Mode.Reward:
-          Debug.LogWarning(message: "**** AppKey="+AppKey+"  #### DELETE-ME ####");
           rewardBasedVideoAd.LoadAd(request: adRequest, adUnitId: AppKey);
           break;
       }

@@ -6,65 +6,84 @@ using JetBrains.Annotations;
 public sealed class AdzeExamples : MonoBehaviour {
   private AdzeDistributor adMobDistributor;
 
-  //  AdzeDistributor AppodealDistributor;
-  //  AdzeDistributor ChartboostDistributor;
-  //  AdzeReward RewardedVideoAllNetworks;
+  private AdzeDistributor appodealDistributor;
+  private AdzeDistributor chartboostDistributor;
+  private AdzeReward      rewardedVideoAllNetworks;
 
   private void Start() {
     adMobDistributor = AdzeDistributor.Asset(name: "AdMobDistributor");
 
-//    AppodealDistributor = AdzeDistributor.Asset("AppodealDistributor");
-//    ChartboostDistributor = AdzeDistributor.Asset("ChartboostDistributor");
+    appodealDistributor   = AdzeDistributor.Asset(name: "AppodealDistributor");
+    chartboostDistributor = AdzeDistributor.Asset(name: "ChartboostDistributor");
 
-//    RewardedVideoAllNetworks = AdzeReward.Asset("RewardedVideoAllNetworks");
+    rewardedVideoAllNetworks = AdzeReward.Asset(assetName: "RewardedVideoAllNetworks");
   }
 
   void showResults([NotNull] AdzeDistributor distributor) {
     Debug.Log(message: "%%%% After Show: adShown=" + distributor.AdShown       +
-              ", adActionTaken="          + distributor.AdActionTaken + ", error=" + distributor.Error);
+                       ", adActionTaken="          + distributor.AdActionTaken + ", error=" +
+                       distributor.Error);
   }
 
   private IEnumerator Show([NotNull] AdzeDistributor distributor, Mode mode, string location) {
-    Debug.Log(message: "%%%% Showing " + distributor.ServerName + ", mode=" + mode + ", location=" + location);
-    yield return distributor.Show(mode: mode, location: location); // location is optional - defaults to "Default"
+    Debug.Log(message: "%%%% Showing " + distributor.ServerName + ", mode=" + mode + ", location=" +
+                       location);
+
+    yield return
+      distributor.Show(mode: mode,
+                       location: location); // location is optional - defaults to "Default"
 
     showResults(distributor: distributor);
   }
 
-  public void ShowAdMobInterstitial() { StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Interstitial, location: "Startup")); }
+  [UsedImplicitly]
+  public void ShowAdMobInterstitial() {
+    StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Interstitial,
+                                 location: "Startup"));
+  }
 
-  public void ShowAdMobRewarded() { StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Reward, location: "Main Menu")); }
+  [UsedImplicitly]
+  public void ShowAdMobRewarded() {
+    StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Reward,
+                                 location: "Main Menu"));
+  }
 
+  [UsedImplicitly]
   public void ShowAppodealInterstitial() {
-//    StartCoroutine(Show(AppodealDistributor, Mode.Interstitial, "Achievements"));
+    StartCoroutine(routine: Show(distributor: appodealDistributor, mode: Mode.Interstitial,
+                                 location: "Achievements"));
   }
 
+  [UsedImplicitly]
   public void ShowAppodealRewarded() {
-//    StartCoroutine(Show(AppodealDistributor, Mode.Reward, "Quests"));
+    StartCoroutine(routine: Show(distributor: appodealDistributor, mode: Mode.Reward,
+                                 location: "Quests"));
   }
 
+  [UsedImplicitly]
   public void ShowChartboostInterstitial() {
-//    StartCoroutine(Show(ChartboostDistributor, Mode.Interstitial, "Level Start"));
+    StartCoroutine(routine: Show(distributor: chartboostDistributor, mode: Mode.Interstitial,
+                                 location: "Level Start"));
   }
 
+  [UsedImplicitly]
   public void ShowChartboostRewarded() {
-//    StartCoroutine(Show(ChartboostDistributor, Mode.Reward, "Level Complete"));
-  }
-
-  private IEnumerator RewardedVideoAllNetworksCoroutine() {
-    yield return null; //RewardedVideoAllNetworks.Show();
+    StartCoroutine(routine: Show(distributor: chartboostDistributor, mode: Mode.Reward,
+                                 location: "Level Complete"));
   }
 
   private IEnumerator RewardedVideoAllNetworksCoroutine(string location) {
-    yield return null; //RewardedVideoAllNetworks.Show(location);
+    yield return rewardedVideoAllNetworks.Show(location: location);
 
-//    Debug.Log("After Reward: adRequested=" + RewardedVideoAllNetworks.adRequested +
-//      ", adWatched=" + RewardedVideoAllNetworks.adWatched);
-//    showResults(RewardedVideoAllNetworks.distributor);
+    Debug.Log(message: "After Reward: adRequested=" + rewardedVideoAllNetworks.AdRequested +
+                       ", adWatched="               + rewardedVideoAllNetworks.AdWatched);
+
+    showResults(distributor: rewardedVideoAllNetworks.Distributor);
   }
 
+  [UsedImplicitly]
   public void ShowAllRewarded() {
-//    StartCoroutine(RewardedVideoAllNetworksCoroutine("Turn Complete"));
+    StartCoroutine(routine: RewardedVideoAllNetworksCoroutine(location: "Turn Complete"));
   }
 
   // other locations include IAP Store, Item Store, Game Over, Leaderboard, Settings and Quit
