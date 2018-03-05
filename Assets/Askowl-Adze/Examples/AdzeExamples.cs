@@ -20,13 +20,13 @@ public sealed class AdzeExamples : MonoBehaviour {
   }
 
   void showResults([NotNull] AdzeDistributor distributor) {
-    Debug.Log(message: "%%%% After Show: adShown=" + distributor.AdShown       +
-                       ", adActionTaken="          + distributor.AdActionTaken + ", error=" +
+    Debug.Log(message: "*** After Show: adShown=" + distributor.AdShown       +
+                       ", adActionTaken="         + distributor.AdActionTaken + ", error=" +
                        distributor.Error);
   }
 
   private IEnumerator Show([NotNull] AdzeDistributor distributor, Mode mode, string location) {
-    Debug.Log(message: "%%%% Showing " + distributor.ServerName + ", mode=" + mode + ", location=" +
+    Debug.Log(message: "*** Showing " + distributor.ServerName + ", mode=" + mode + ", location=" +
                        location);
 
     yield return
@@ -75,8 +75,8 @@ public sealed class AdzeExamples : MonoBehaviour {
   private IEnumerator RewardedVideoAllNetworksCoroutine(string location) {
     yield return rewardedVideoAllNetworks.Show(location: location);
 
-    Debug.Log(message: "After Reward: adRequested=" + rewardedVideoAllNetworks.AdRequested +
-                       ", adWatched="               + rewardedVideoAllNetworks.AdWatched);
+    Debug.Log(message: "*** After Reward: adRequested=" + rewardedVideoAllNetworks.AdRequested +
+                       ", adWatched="                   + rewardedVideoAllNetworks.AdWatched);
 
     showResults(distributor: rewardedVideoAllNetworks.Distributor);
   }

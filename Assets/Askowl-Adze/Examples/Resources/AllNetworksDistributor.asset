@@ -14,8 +14,8 @@ MonoBehaviour:
   RoundRobin: 1
   Servers:
   - {fileID: 11400000, guid: ba9d6ecd055734dd999d9acd80b21e08, type: 2}
-  - {fileID: 11400000, guid: c8a681fc84a4b41ceb524f7ff4f828d8, type: 2}
   - {fileID: 11400000, guid: d0915f45f2d0748a7826d7028352fedc, type: 2}
+  - {fileID: 11400000, guid: c8a681fc84a4b41ceb524f7ff4f828d8, type: 2}
   AdShown: 0
   AdActionTaken: 0
   Error: 0

@@ -1,39 +1,46 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-#if AdzeAdMob
-using GoogleMobileAds.Api;
-
+﻿#if AdzeAdMob
 namespace Adze {
+  using System;
+  using System.Collections;
+  using Decoupled.Analytics;
+  using GoogleMobileAds.Api;
   using JetBrains.Annotations;
+  using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
   public sealed class AdzeAdMob : AdzeServer {
-    private bool                        complete, initialised;
-    private Decoupled.Analytics.GameLog analytics;
-    private Action                      showAd;
-    private BannerView                  bannerView;
-    private InterstitialAd              interstitialAd;
-    private RewardBasedVideoAd          rewardBasedVideoAd;
+    private static bool initialised;
+
+    private bool               complete;
+    private GameLog            analytics;
+    private Action             showAd;
+    private BannerView         bannerView;
+    private InterstitialAd     interstitialAd;
+    private RewardBasedVideoAd rewardBasedVideoAd;
 
     protected override void Initialise() {
-      analytics = Decoupled.Analytics.GameLog.Instance;
-      MobileAds.Initialize(appId: AppKey);
+      analytics = GameLog.Instance;
+
+      if (!initialised) {
+        string[] appKey = AppKey.Split('/');
+        MobileAds.Initialize(appId: appKey[0]);
+        initialised = true;
+      }
 
       if (Mode == Mode.Reward) {
-        rewardBasedVideoAd                        =  RewardBasedVideoAd.Instance;
+        rewardBasedVideoAd = RewardBasedVideoAd.Instance;
+
         rewardBasedVideoAd.OnAdLoaded             += OnAdLoaded;
         rewardBasedVideoAd.OnAdFailedToLoad       += OnAdFailedToLoad;
         rewardBasedVideoAd.OnAdRewarded           += OnAdRewarded;
         rewardBasedVideoAd.OnAdClosed             += OnAdClosed;
         rewardBasedVideoAd.OnAdLeavingApplication += OnAdLeavingApplication;
-        showAd                                    =  rewardBasedVideoAd.Show;
+
+        showAd = rewardBasedVideoAd.Show;
       }
 
       LoadNextAd(location: "Default");
     }
-
-    protected override void Destroy() { }
 
     protected override IEnumerator ShowNow(string location) {
       analytics.Event("Adze", "Show AdMob", location);

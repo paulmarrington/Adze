@@ -1,47 +1,52 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-#if AdzeAppodeal
-using AppodealAds.Unity.Api;
-using AppodealAds.Unity.Common;
+﻿#if AdzeAppodeal
 #endif
 
 namespace Adze {
+  using System.Collections;
+  using System.Collections.Generic;
+  using AppodealAds.Unity.Api;
+  using AppodealAds.Unity.Common;
+  using Decoupled.Analytics;
   using JetBrains.Annotations;
+  using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
   #if AdzeAppodeal
   public sealed class AdzeAppodeal : AdzeServer, IInterstitialAdListener,
                                      INonSkippableVideoAdListener, IBannerAdListener {
-    private int appodealMode = -1;
+    private static bool initialised;
+    private        int  appodealMode = -1;
     #else
   public sealed class AdzeAppodeal : AdzeServer {
     private static bool first = true;
-        #endif
+                                                    #endif
 
-    private static Dictionary<Mode, int>       appodealModes;
-    private        bool                        complete;
-    private        Decoupled.Analytics.GameLog log;
+    private static Dictionary<Mode, int> appodealModes;
+    private        bool                  complete;
+    private        GameLog               log;
 
     protected override void Initialise() {
       #if AdzeAppodeal
-      log = Decoupled.Analytics.GameLog.Instance;
+      if (initialised) return;
+
+      log = GameLog.Instance;
       #if (UNITY_ANDROID || UNITY_IPHONE)
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
       #else
       int NON_SKIPPABLE_VIDEO = 256;
-            #endif
+                                                                         #endif
       appodealModes = new Dictionary<Mode, int>() {
         {Mode.Interstitial, Appodeal.INTERSTITIAL},
         {Mode.Reward, NON_SKIPPABLE_VIDEO},
       };
 
       appodealMode = appodealModes[key: Mode];
+      int modes = Appodeal.INTERSTITIAL | NON_SKIPPABLE_VIDEO;
 
-      DisableNetworks();
-      Appodeal.setAutoCache(adTypes: appodealMode, autoCache: true);
+      DisableNetworksWeDoNotWantToUse();
+      Appodeal.setAutoCache(adTypes: modes, autoCache: true);
 //      Appodeal.disableLocationPermissionCheck();
-      Appodeal.initialize(appKey: AppKey, adTypes: appodealMode);
+      Appodeal.initialize(appKey: AppKey, adTypes: modes);
       Appodeal.setTesting(test: Debug.isDebugBuild);
 
       Appodeal.setLogLevel(log: Debug.isDebugBuild
@@ -51,12 +56,13 @@ namespace Adze {
       Appodeal.setBannerCallbacks(listener: this);
       Appodeal.setInterstitialCallbacks(listener: this);
       Appodeal.setNonSkippableVideoCallbacks(listener: this);
+      initialised = true;
       #else
       if (first) {
         Debug.LogWarning(message: "Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
         first = false;
       }
-            #endif
+                                                                              #endif
     }
 
     protected override IEnumerator ShowNow(string location) {
@@ -78,7 +84,7 @@ namespace Adze {
       Debug.Log(message: "Show Appodeal Advertisement for '" + location + "'");
       Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       complete = true;
-            #endif
+                                                                              #endif
 
       while (!complete) {
         yield return null;
@@ -169,7 +175,7 @@ namespace Adze {
     public Network[] DisabledNetworks = {Network.pubnative};
 
     [UsedImplicitly]
-    private void DisableNetworks() {
+    private void DisableNetworksWeDoNotWantToUse() {
       // ReSharper disable once UnusedVariable
       foreach (Network disabledNetwork in DisabledNetworks) {
         #if AdzeAppodeal
