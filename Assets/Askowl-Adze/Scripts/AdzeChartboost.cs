@@ -1,46 +1,60 @@
 ﻿#if AdzeChartboost
-using ChartboostSDK;
-
 namespace Adze {
   using System;
   using System.Collections;
+  using ChartboostSDK;
   using Decoupled.Analytics;
   using JetBrains.Annotations;
   using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "Chartboost")]
   public sealed class AdzeChartboost : AdzeServer {
-    private bool                        complete, initialised;
-    private GameLog analytics;
-    private Action<string>              chartboostShow;
+    private bool           complete;
+    private GameLog        analytics;
+    private Action<string> chartboostShow;
+    private string[]       keyPair;
 
     protected override void Initialise() {
+      Chartboost[] chartboosts = GameObject.FindObjectsOfType<Chartboost>();
+      Debug.Log("**** Chartboosts=" + chartboosts.Length);
+
+      if (chartboosts.Length > 0) {
+        Debug.Log("**** Chartboost before SendMessage");
+        chartboosts[0].SendMessage("didInitializeEvent", "true");
+        Debug.Log("**** Chartboost after SendMessage");
+      }
+
       // appKey is made up of AppId and AppSignature separated by ; or similar
       string[] separators = {";", " ", ",", ":"};
 
-      string[] keyPair = AppKey.Split(separator: separators,
-                                      options: StringSplitOptions.RemoveEmptyEntries);
+      keyPair = AppKey.Split(separator: separators, options: StringSplitOptions.RemoveEmptyEntries);
 
       analytics = GameLog.Instance;
 
       switch (Mode) {
         case Mode.Interstitial:
-
-          chartboostShow = (loc) =>
-            Chartboost.showInterstitial(location: CBLocation.locationFromName(name: loc));
-
+          chartboostShow = showInterstitial;
           break;
+
         case Mode.Reward:
-
-          chartboostShow = (loc) =>
-            Chartboost.showRewardedVideo(location: CBLocation.locationFromName(name: loc));
-
+          chartboostShow = showRewardedVideo;
           break;
       }
 
       SetupDelegates();
-      Chartboost.CreateWithAppId(appId: keyPair[0], appSignature: keyPair[1]);
-      Chartboost.setAutoCacheAds(autoCacheAds: true);
+
+      //      Chartboost.Create();
+      Chartboost.setAutoCacheAds(true);
+    }
+
+    void showRewardedVideo(string location) {
+      CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
+      Chartboost.showRewardedVideo(location: CBLocation.locationFromName(name: location));
+    }
+
+    void showInterstitial(string location) {
+      CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
+      Chartboost.showInterstitial(location: CBLocation.locationFromName(name: location));
     }
 
     protected override void Destroy() { RemoveDelegates(); }
@@ -48,12 +62,12 @@ namespace Adze {
     protected override IEnumerator ShowNow(string location) {
       analytics.Event("Adze", "Show Chartboost", location);
 
-      while (!initialised) {
+      while (!Chartboost.isInitialized()) {
         yield return null;
       }
 
       complete = false;
-      chartboostShow(obj: location);
+      chartboostShow(location);
 
       while (!complete) {
         yield return null;
@@ -118,11 +132,8 @@ namespace Adze {
       complete = Error = true;
       Loaded   = false;
 
-      string msg =
-        string.Format(format: "Chartboost: {0} -- {1} at location {2}", arg0: what, arg1: errorText,
-                      arg2: location);
-
-      analytics.Event("Adze", msg);
+      analytics.Event("Adze", string.Format(
+                        "Chartboost: {0} -- {1} at location {2}", what, errorText, location));
     }
 
     private void CbDismiss(string which, string location) {
@@ -136,8 +147,6 @@ namespace Adze {
     }
 
     private void DidInitialize(bool status) {
-      initialised = true;
-
       if (!(Error = status)) {
         analytics.Error(message: "Chartboost did not initialise correctly");
       }
