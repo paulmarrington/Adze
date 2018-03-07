@@ -11,30 +11,30 @@ namespace Adze {
   using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
-  #if AdzeAppodeal
+#if AdzeAppodeal
   public sealed class AdzeAppodeal : AdzeServer, IInterstitialAdListener,
                                      INonSkippableVideoAdListener, IBannerAdListener {
     private static bool initialised;
     private        int  appodealMode = -1;
-    #else
+#else
   public sealed class AdzeAppodeal : AdzeServer {
     private static bool first = true;
-                                                    #endif
+#endif
 
     private static Dictionary<Mode, int> appodealModes;
     private        bool                  complete;
     private        GameLog               log;
 
     protected override void Initialise() {
-      #if AdzeAppodeal
+#if AdzeAppodeal
       if (initialised) return;
 
       log = GameLog.Instance;
-      #if (UNITY_ANDROID || UNITY_IPHONE)
+#if (UNITY_ANDROID || UNITY_IPHONE)
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
-      #else
+#else
       int NON_SKIPPABLE_VIDEO = 256;
-                                                                         #endif
+#endif
       appodealModes = new Dictionary<Mode, int>() {
         {Mode.Interstitial, Appodeal.INTERSTITIAL},
         {Mode.Reward, NON_SKIPPABLE_VIDEO},
@@ -47,6 +47,10 @@ namespace Adze {
       Appodeal.setAutoCache(adTypes: modes, autoCache: true);
 //      Appodeal.disableLocationPermissionCheck();
       Appodeal.initialize(appKey: AppKey, adTypes: modes);
+
+      Debug.LogWarning(message: "**** Debug.isDebugBuild=" + Debug.isDebugBuild +
+                                "  #### DELETE-ME ####"); //TODO DELETE-ME
+
       Appodeal.setTesting(test: Debug.isDebugBuild);
 
       Appodeal.setLogLevel(log: Debug.isDebugBuild
@@ -57,41 +61,37 @@ namespace Adze {
       Appodeal.setInterstitialCallbacks(listener: this);
       Appodeal.setNonSkippableVideoCallbacks(listener: this);
       initialised = true;
-      #else
+#else
       if (first) {
         Debug.LogWarning(message: "Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
         first = false;
       }
-                                                                              #endif
+#endif
     }
 
     protected override IEnumerator ShowNow(string location) {
-      #if AdzeAppodeal
+#if AdzeAppodeal
       log.Event("Adze", "Show", "Appodeal " + location);
-      complete = false;
+      complete = Error = false;
 
-//      if (!Debug.isDebugBuild && !Appodeal.isLoaded(appodealMode)) {
-//        yield return After.Realtime.seconds(1);
-//      }
       if ((location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: location)) {
         Appodeal.show(adTypes: appodealMode, placement: location);
       } else {
         log.Event("Adze", "Appodeal ad not shown for location '" + location + "'");
         complete = true;
       }
-
-      #else
+#else
       Debug.Log(message: "Show Appodeal Advertisement for '" + location + "'");
       Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       complete = true;
-                                                                              #endif
+#endif
 
       while (!complete) {
         yield return null;
       }
     }
 
-    #if AdzeAppodeal
+#if AdzeAppodeal
     public void onNonSkippableVideoLoaded() { Loaded = true; }
 
     public void onNonSkippableVideoFailedToLoad() {
@@ -134,11 +134,12 @@ namespace Adze {
     public void onBannerShown() { Loaded = false; }
 
     public void onBannerClicked() { AdActionTaken = true; }
-    #endif
+#endif
 
     public enum Network {
       // ReSharper disable InconsistentNaming
       // ReSharper disable UnusedMember.Global
+
       adcolony,
       admob,
       amazon_ads,
@@ -166,8 +167,8 @@ namespace Adze {
       tapjoy,
       unity_ads,
       vungle,
-
       yandex
+
       // ReSharper restore UnusedMember.Global
       // ReSharper restore InconsistentNaming
     }
@@ -178,9 +179,9 @@ namespace Adze {
     private void DisableNetworksWeDoNotWantToUse() {
       // ReSharper disable once UnusedVariable
       foreach (Network disabledNetwork in DisabledNetworks) {
-        #if AdzeAppodeal
+#if AdzeAppodeal
         Appodeal.disableNetwork(network: disabledNetwork.ToString());
-        #endif
+#endif
       }
     }
   }

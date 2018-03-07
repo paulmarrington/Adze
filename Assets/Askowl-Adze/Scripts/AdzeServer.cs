@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿
 
 /*
  * Usage:
@@ -13,7 +10,11 @@ namespace Ads {
 } */
 
 namespace Adze {
+  using System;
+  using System.Collections;
+  using System.Collections.Generic;
   using JetBrains.Annotations;
+  using UnityEngine;
 
   public abstract class AdzeServer : CustomAsset<AdzeServer> {
     [Serializable]
@@ -45,7 +46,7 @@ namespace Adze {
     internal IEnumerator Show(Mode modeRequested, string location) {
       if (enabled && (modeRequested == Mode)) {
         AdActionTaken = false;
-        yield return ShowNow(location: location);
+        yield return ShowNow(location);
       } else {
         Error = true;
         yield return null;

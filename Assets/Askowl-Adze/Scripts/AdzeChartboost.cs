@@ -15,15 +15,6 @@ namespace Adze {
     private string[]       keyPair;
 
     protected override void Initialise() {
-      Chartboost[] chartboosts = GameObject.FindObjectsOfType<Chartboost>();
-      Debug.Log("**** Chartboosts=" + chartboosts.Length);
-
-      if (chartboosts.Length > 0) {
-        Debug.Log("**** Chartboost before SendMessage");
-        chartboosts[0].SendMessage("didInitializeEvent", "true");
-        Debug.Log("**** Chartboost after SendMessage");
-      }
-
       // appKey is made up of AppId and AppSignature separated by ; or similar
       string[] separators = {";", " ", ",", ":"};
 
@@ -33,11 +24,11 @@ namespace Adze {
 
       switch (Mode) {
         case Mode.Interstitial:
-          chartboostShow = showInterstitial;
+          chartboostShow = ShowInterstitial;
           break;
 
         case Mode.Reward:
-          chartboostShow = showRewardedVideo;
+          chartboostShow = ShowRewardedVideo;
           break;
       }
 
@@ -47,14 +38,19 @@ namespace Adze {
       Chartboost.setAutoCacheAds(true);
     }
 
-    void showRewardedVideo(string location) {
+    private void ShowRewardedVideo(string location) {
+      CBLocation cbLocation = CBLocation.locationFromName(name: location);
       CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
-      Chartboost.showRewardedVideo(location: CBLocation.locationFromName(name: location));
+      Chartboost.showRewardedVideo(cbLocation);
+      Chartboost.cacheRewardedVideo(cbLocation);
     }
 
-    void showInterstitial(string location) {
+    private void ShowInterstitial(string location) {
+      CBLocation cbLocation = CBLocation.locationFromName(name: location);
+
       CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
-      Chartboost.showInterstitial(location: CBLocation.locationFromName(name: location));
+      Chartboost.showInterstitial(cbLocation);
+      Chartboost.cacheInterstitial(cbLocation);
     }
 
     protected override void Destroy() { RemoveDelegates(); }
@@ -66,7 +62,7 @@ namespace Adze {
         yield return null;
       }
 
-      complete = false;
+      complete = Error = false;
       chartboostShow(location);
 
       while (!complete) {
@@ -97,9 +93,9 @@ namespace Adze {
       Chartboost.didPauseClickForConfirmation += DidPauseClickForConfirmation;
       Chartboost.willDisplayVideo             += WillDisplayVideo;
 
-      #if UNITY_IPHONE
+    #if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow += DidCompleteAppStoreSheetFlow;
-      #endif
+    #endif
     }
 
     private void RemoveDelegates() {
@@ -123,37 +119,37 @@ namespace Adze {
       Chartboost.didPauseClickForConfirmation -= DidPauseClickForConfirmation;
       Chartboost.willDisplayVideo             -= WillDisplayVideo;
 
-      #if UNITY_IPHONE
+    #if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow -= DidCompleteAppStoreSheetFlow;
-      #endif
+    #endif
     }
 
     private void CbError(string what, string location, string errorText) {
       complete = Error = true;
       Loaded   = false;
 
-      analytics.Event("Adze", string.Format(
-                        "Chartboost: {0} -- {1} at location {2}", what, errorText, location));
+      analytics.Event("Adze",
+                      "**** Chartboost: " + what + " -- " + errorText + " at location" + location);
     }
 
     private void CbDismiss(string which, string location) {
-      complete = AdActionTaken = true;
+      complete = true;
       Loaded   = false;
-
-      analytics.Event(
-        "Adze",
-        string.Format(format: "Chartboost: {0} dismissed at location {1}", arg0: which,
-                      arg1: location));
+      analytics.Event("Adze", "*** Chartboost: " + which + " dismissed at location " + location);
     }
 
     private void DidInitialize(bool status) {
-      if (!(Error = status)) {
-        analytics.Error(message: "Chartboost did not initialise correctly");
+      if (status) {
+        AdActionTaken = true; // only way we can tell that I could see
+      } else {
+        Error  = true;
+        Loaded = false;
+        analytics.Error("*** Chartboost did not initialise correctly");
       }
     }
 
     private void DidFailToLoadInterstitial([NotNull] CBLocation location, CBImpressionError error) {
-      CbError(what: "Interstitial failed to load", location: location.ToString(),
+      CbError(what: "*** Interstitial failed to load", location: location.ToString(),
               errorText: error.ToString());
     }
 
@@ -172,7 +168,7 @@ namespace Adze {
     private void DidDisplayInterstitial(CBLocation location) { Loaded = false; }
 
     private void DidFailToRecordClick([NotNull] CBLocation location, CBClickError error) {
-      CbError(what: "Failed to record click", location: location.ToString(),
+      CbError(what: "*** Failed to record click", location: location.ToString(),
               errorText: error.ToString());
     }
 
@@ -188,7 +184,7 @@ namespace Adze {
 
     private void DidCloseRewardedVideo(CBLocation location) { complete = true; }
 
-    private void DidClickRewardedVideo(CBLocation location) { AdActionTaken = true; }
+    private void DidClickRewardedVideo(CBLocation location) { }
 
     private void DidCacheRewardedVideo(CBLocation location) { Loaded = true; }
 

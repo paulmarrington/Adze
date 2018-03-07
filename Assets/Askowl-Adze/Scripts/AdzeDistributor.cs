@@ -55,7 +55,7 @@ namespace Adze {
               PrepareNextServer(); // ready for next time we show an advertisement
             }
 
-            string actionText = AdActionTaken ? "Ad action taken" : "Ad video watched";
+            string actionText = AdActionTaken ? "Ad action taken" : "Ad viewed";
             log.Event("Adze", "Action", actionText);
             Debug.Log(message: "**** Adze - " + actionText);
             break;
