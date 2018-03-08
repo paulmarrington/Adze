@@ -26,10 +26,8 @@ namespace Adze {
     private        GameLog               log;
 
     protected override void Initialise() {
-#if AdzeAppodeal
-      if (initialised) return;
-
       log = GameLog.Instance;
+#if AdzeAppodeal
 #if (UNITY_ANDROID || UNITY_IPHONE)
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
 #else
@@ -41,26 +39,16 @@ namespace Adze {
       };
 
       appodealMode = appodealModes[key: Mode];
-      int modes = Appodeal.INTERSTITIAL | NON_SKIPPABLE_VIDEO;
+      InitialiseAppodealOnce(modes: Appodeal.INTERSTITIAL | NON_SKIPPABLE_VIDEO);
 
-      DisableNetworksWeDoNotWantToUse();
-      Appodeal.setAutoCache(adTypes: modes, autoCache: true);
-//      Appodeal.disableLocationPermissionCheck();
-      Appodeal.initialize(appKey: AppKey, adTypes: modes);
-
-      Debug.LogWarning(message: "**** Debug.isDebugBuild=" + Debug.isDebugBuild +
-                                "  #### DELETE-ME ####"); //TODO DELETE-ME
-
-      Appodeal.setTesting(test: Debug.isDebugBuild);
-
-      Appodeal.setLogLevel(log: Debug.isDebugBuild
-                                  ? Appodeal.LogLevel.Verbose
-                                  : Appodeal.LogLevel.None);
-
-      Appodeal.setBannerCallbacks(listener: this);
-      Appodeal.setInterstitialCallbacks(listener: this);
-      Appodeal.setNonSkippableVideoCallbacks(listener: this);
-      initialised = true;
+      switch (Mode) {
+        case Mode.Interstitial:
+          Appodeal.setInterstitialCallbacks(listener: this);
+          break;
+        case Mode.Reward:
+          Appodeal.setNonSkippableVideoCallbacks(listener: this);
+          break;
+      }
 #else
       if (first) {
         Debug.LogWarning(message: "Install Appodeal unity package from https://www.appodeal.com/sdk/unity2");
@@ -69,38 +57,44 @@ namespace Adze {
 #endif
     }
 
+    private void InitialiseAppodealOnce(int modes) {
+      if (initialised) return;
+
+      initialised = true;
+      DisableNetworksWeDoNotWantToUse();
+      Appodeal.setAutoCache(adTypes: modes, autoCache: true);
+//      Appodeal.disableLocationPermissionCheck();
+      Appodeal.initialize(appKey: AppKey, adTypes: modes);
+      Appodeal.setTesting(test: Debug.isDebugBuild);
+    }
+
     protected override IEnumerator ShowNow(string location) {
 #if AdzeAppodeal
-      log.Event("Adze", "Show", "Appodeal " + location);
+      log.Event("Adze", "Show", "Appodeal " + Mode + " for " + location);
       complete = Error = false;
 
       if ((location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: location)) {
         Appodeal.show(adTypes: appodealMode, placement: location);
       } else {
-        log.Event("Adze", "Appodeal ad not shown for location '" + location + "'");
-        complete = true;
+        log.Event("Adze", "Appodeal ad not available for location '" + location + "'");
+        complete = Error = true;
       }
 #else
       Debug.Log(message: "Show Appodeal Advertisement for '" + location + "'");
       Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       complete = true;
 #endif
-
       while (!complete) {
         yield return null;
       }
     }
 
 #if AdzeAppodeal
-    public void onNonSkippableVideoLoaded() { Loaded = true; }
+    public void onNonSkippableVideoLoaded() { }
 
-    public void onNonSkippableVideoFailedToLoad() {
-      complete = Error = true;
-      Loaded   = false;
-      log.Event("Adze", "Appodeal Non-Skippable Video Failed To Load");
-    }
+    public void onNonSkippableVideoFailedToLoad() { complete = Error = true; }
 
-    public void onNonSkippableVideoShown() { Loaded = false; }
+    public void onNonSkippableVideoShown() { }
 
     public void onNonSkippableVideoFinished() { AdActionTaken = true; }
 
@@ -111,27 +105,25 @@ namespace Adze {
 
     public void onInterstitialClosed() { complete = true; }
 
-    public void onInterstitialLoaded(bool isPrecache) { Loaded = true; }
+    public void onInterstitialLoaded(bool isPrecache) { }
 
     public void onInterstitialFailedToLoad() {
-      Loaded   = false;
       complete = Error = true;
       log.Event("Adze", "Appodeal Interstitial Failed To Load");
     }
 
-    public void onInterstitialShown() { Loaded = false; }
+    public void onInterstitialShown() { }
 
     public void onInterstitialClicked() { AdActionTaken = true; }
 
-    public void onBannerLoaded(bool isPrecache) { Loaded = true; }
+    public void onBannerLoaded(bool isPrecache) { }
 
     public void onBannerFailedToLoad() {
-      Loaded   = false;
       complete = Error = true;
       log.Event("Adze", "Appodeal Interstitial Failed To Load");
     }
 
-    public void onBannerShown() { Loaded = false; }
+    public void onBannerShown() { }
 
     public void onBannerClicked() { AdActionTaken = true; }
 #endif

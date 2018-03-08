@@ -11,7 +11,7 @@ namespace Adze {
   public sealed class AdzeAdMob : AdzeServer {
     private static bool initialised;
 
-    private bool               complete;
+    private bool               complete, loaded;
     private GameLog            analytics;
     private Action             showAd;
     private BannerView         bannerView;
@@ -46,9 +46,9 @@ namespace Adze {
       analytics.Event("Adze", "Show AdMob", location);
       complete = false;
 
-      if (Error && !Loaded) LoadNextAd(location);
+      if (Error && !loaded) LoadNextAd(location);
 
-      while (!Loaded) {
+      while (!loaded) {
         if (Error) yield break;
 
         yield return null;
@@ -67,7 +67,7 @@ namespace Adze {
 
     private void LoadNextAd(string location) {
       AdRequest adRequest = new AdRequest.Builder().AddKeyword(keyword: location).Build();
-      Loaded = Error      = false;
+      loaded = Error      = false;
 
       switch (Mode) {
         case Mode.Interstitial:
@@ -89,7 +89,7 @@ namespace Adze {
     }
 
     /* ******************************************************************* */
-    private void OnAdLoaded(object sender, EventArgs args) { Loaded = true; }
+    private void OnAdLoaded(object sender, EventArgs args) { loaded = true; }
 
     private void OnAdFailedToLoad(object sender, [NotNull] AdFailedToLoadEventArgs args) {
       Error = true;

@@ -93,9 +93,9 @@ namespace Adze {
       Chartboost.didPauseClickForConfirmation += DidPauseClickForConfirmation;
       Chartboost.willDisplayVideo             += WillDisplayVideo;
 
-    #if UNITY_IPHONE
+#if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow += DidCompleteAppStoreSheetFlow;
-    #endif
+#endif
     }
 
     private void RemoveDelegates() {
@@ -119,14 +119,13 @@ namespace Adze {
       Chartboost.didPauseClickForConfirmation -= DidPauseClickForConfirmation;
       Chartboost.willDisplayVideo             -= WillDisplayVideo;
 
-    #if UNITY_IPHONE
+#if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow -= DidCompleteAppStoreSheetFlow;
-    #endif
+#endif
     }
 
     private void CbError(string what, string location, string errorText) {
       complete = Error = true;
-      Loaded   = false;
 
       analytics.Event("Adze",
                       "**** Chartboost: " + what + " -- " + errorText + " at location" + location);
@@ -134,7 +133,6 @@ namespace Adze {
 
     private void CbDismiss(string which, string location) {
       complete = true;
-      Loaded   = false;
       analytics.Event("Adze", "*** Chartboost: " + which + " dismissed at location " + location);
     }
 
@@ -142,8 +140,7 @@ namespace Adze {
       if (status) {
         AdActionTaken = true; // only way we can tell that I could see
       } else {
-        Error  = true;
-        Loaded = false;
+        Error = true;
         analytics.Error("*** Chartboost did not initialise correctly");
       }
     }
@@ -161,11 +158,11 @@ namespace Adze {
 
     private void DidClickInterstitial(CBLocation location) { AdActionTaken = true; }
 
-    private void DidCacheInterstitial(CBLocation location) { Loaded = true; }
+    private void DidCacheInterstitial(CBLocation location) { }
 
     private bool ShouldDisplayInterstitial(CBLocation location) { return true; }
 
-    private void DidDisplayInterstitial(CBLocation location) { Loaded = false; }
+    private void DidDisplayInterstitial(CBLocation location) { }
 
     private void DidFailToRecordClick([NotNull] CBLocation location, CBClickError error) {
       CbError(what: "*** Failed to record click", location: location.ToString(),
@@ -186,7 +183,7 @@ namespace Adze {
 
     private void DidClickRewardedVideo(CBLocation location) { }
 
-    private void DidCacheRewardedVideo(CBLocation location) { Loaded = true; }
+    private void DidCacheRewardedVideo(CBLocation location) { }
 
     private bool ShouldDisplayRewardedVideo(CBLocation location) { return true; }
 
@@ -194,7 +191,7 @@ namespace Adze {
       complete = AdActionTaken = true;
     }
 
-    private void DidDisplayRewardedVideo(CBLocation location) { Loaded = false; }
+    private void DidDisplayRewardedVideo(CBLocation location) { }
 
     private void DidPauseClickForConfirmation() { }
 

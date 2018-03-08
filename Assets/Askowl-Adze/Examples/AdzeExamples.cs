@@ -56,8 +56,9 @@ public sealed class AdzeExamples : MonoBehaviour {
 
   [UsedImplicitly]
   public void ShowAppodealRewarded() {
+    // location must be Default or a valid Appodeal placement
     StartCoroutine(routine: Show(distributor: appodealDistributor, mode: Mode.Reward,
-                                 location: "Quests"));
+                                 location: "Default"));
   }
 
   [UsedImplicitly]

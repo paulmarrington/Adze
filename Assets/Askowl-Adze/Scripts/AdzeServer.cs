@@ -1,6 +1,4 @@
-﻿
-
-/*
+﻿/*
  * Usage:
 namespace Ads {
   public class AnAdServer : AdServer {
@@ -29,7 +27,7 @@ namespace Adze {
     public int  Priority     = 1;
     public int  UsageBalance = 1;
 
-    [HideInInspector] public bool   AdActionTaken, Error, Loaded;
+    [HideInInspector] public bool   AdActionTaken, Error;
     protected                string AppKey;
 
     private bool enabled;
