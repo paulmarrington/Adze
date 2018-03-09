@@ -56,12 +56,10 @@ namespace Adze {
             }
 
             string actionText = AdActionTaken ? "Ad action taken" : "Ad viewed";
-            log.Event("Adze", "Action", actionText);
-            Debug.Log(message: "**** Adze - " + actionText);
+            log.Event(name: "Adze", action: "Player Action", result: actionText);
             break;
           } else if (!PrepareNextServer()) {
-            Debug.LogWarning(message: "**** Adze servers not responding");
-            log.Event("Adze", "Error", "Ad servers not responding");
+            log.Event(name: "Adze", action: "Error", result: "Ad servers not responding");
             yield return After.Realtime.ms(ms: 500);
           }
         }

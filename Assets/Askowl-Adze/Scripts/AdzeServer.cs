@@ -11,6 +11,7 @@ namespace Adze {
   using System;
   using System.Collections;
   using System.Collections.Generic;
+  using Decoupled.Analytics;
   using JetBrains.Annotations;
   using UnityEngine;
 
@@ -41,9 +42,10 @@ namespace Adze {
 
     protected abstract IEnumerator ShowNow(string location);
 
-    internal IEnumerator Show(Mode modeRequested, string location) {
+    public IEnumerator Show(Mode modeRequested, string location) {
       if (enabled && (modeRequested == Mode)) {
         AdActionTaken = false;
+        Log("Show", "Now", More(Name, Mode, location));
         yield return ShowNow(location);
       } else {
         Error = true;
@@ -52,6 +54,8 @@ namespace Adze {
     }
 
     public void OnEnable() {
+      log = GameLog.Instance;
+
       foreach (Key appKey in AppKeys) {
         enabled = (Application.platform == appKey.Platform);
 
@@ -71,5 +75,16 @@ namespace Adze {
     }
 
     public void OnDisable() { Destroy(); }
+
+    private GameLog log;
+
+    protected void Log(string action, string result, string csv = "") {
+      log.Event(name: "Adze", action: action, result: result, csv: More(Name, Mode, csv));
+    }
+
+    [NotNull]
+    protected string More([NotNull] params object[] list) { return log.More(list); }
+
+    protected void LogError(string message) { log.Error(message: More("Adze", Name, message)); }
   }
 }

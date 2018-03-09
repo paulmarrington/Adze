@@ -2,7 +2,6 @@
 namespace Adze {
   using System;
   using System.Collections;
-  using Decoupled.Analytics;
   using GoogleMobileAds.Api;
   using JetBrains.Annotations;
   using UnityEngine;
@@ -12,15 +11,12 @@ namespace Adze {
     private static bool initialised;
 
     private bool               complete, loaded;
-    private GameLog            analytics;
     private Action             showAd;
     private BannerView         bannerView;
     private InterstitialAd     interstitialAd;
     private RewardBasedVideoAd rewardBasedVideoAd;
 
     protected override void Initialise() {
-      analytics = GameLog.Instance;
-
       if (!initialised) {
         string[] appKey = AppKey.Split('/');
         MobileAds.Initialize(appId: appKey[0]);
@@ -43,7 +39,6 @@ namespace Adze {
     }
 
     protected override IEnumerator ShowNow(string location) {
-      analytics.Event("Adze", "Show AdMob", location);
       complete = false;
 
       if (Error && !loaded) LoadNextAd(location);
@@ -93,7 +88,7 @@ namespace Adze {
 
     private void OnAdFailedToLoad(object sender, [NotNull] AdFailedToLoadEventArgs args) {
       Error = true;
-      analytics.Event("Adze", "AdMob " + Mode + ": Failed To Load -- " + args.Message);
+      Log(action: "Load", result: "Failed", csv: More(args.Message));
     }
 
     private void OnAdRewarded(object sender, Reward args) { AdActionTaken = true; }

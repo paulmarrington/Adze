@@ -3,14 +3,12 @@ namespace Adze {
   using System;
   using System.Collections;
   using ChartboostSDK;
-  using Decoupled.Analytics;
   using JetBrains.Annotations;
   using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "Chartboost")]
   public sealed class AdzeChartboost : AdzeServer {
     private bool           complete;
-    private GameLog        analytics;
     private Action<string> chartboostShow;
     private string[]       keyPair;
 
@@ -19,8 +17,6 @@ namespace Adze {
       string[] separators = {";", " ", ",", ":"};
 
       keyPair = AppKey.Split(separator: separators, options: StringSplitOptions.RemoveEmptyEntries);
-
-      analytics = GameLog.Instance;
 
       switch (Mode) {
         case Mode.Interstitial:
@@ -56,8 +52,6 @@ namespace Adze {
     protected override void Destroy() { RemoveDelegates(); }
 
     protected override IEnumerator ShowNow(string location) {
-      analytics.Event("Adze", "Show Chartboost", location);
-
       while (!Chartboost.isInitialized()) {
         yield return null;
       }
@@ -127,13 +121,15 @@ namespace Adze {
     private void CbError(string what, string location, string errorText) {
       complete = Error = true;
 
-      analytics.Event("Adze",
-                      "**** Chartboost: " + what + " -- " + errorText + " at location" + location);
+      Log(action: "Error", result: what, csv: More(location, errorText));
     }
 
     private void CbDismiss(string which, string location) {
+      if (!complete) {
+        Log(action: "Dismiss", result: "Ad closed", csv: More(which, location));
+      }
+
       complete = true;
-      analytics.Event("Adze", "*** Chartboost: " + which + " dismissed at location " + location);
     }
 
     private void DidInitialize(bool status) {
@@ -141,12 +137,12 @@ namespace Adze {
         AdActionTaken = true; // only way we can tell that I could see
       } else {
         Error = true;
-        analytics.Error("*** Chartboost did not initialise correctly");
+        LogError(message: "Did not initialise correctly");
       }
     }
 
     private void DidFailToLoadInterstitial([NotNull] CBLocation location, CBImpressionError error) {
-      CbError(what: "*** Interstitial failed to load", location: location.ToString(),
+      CbError(what: "Interstitial failed to load", location: location.ToString(),
               errorText: error.ToString());
     }
 
@@ -165,7 +161,7 @@ namespace Adze {
     private void DidDisplayInterstitial(CBLocation location) { }
 
     private void DidFailToRecordClick([NotNull] CBLocation location, CBClickError error) {
-      CbError(what: "*** Failed to record click", location: location.ToString(),
+      CbError(what: "Failed to record click", location: location.ToString(),
               errorText: error.ToString());
     }
 

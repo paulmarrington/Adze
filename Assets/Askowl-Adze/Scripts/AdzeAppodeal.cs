@@ -6,7 +6,6 @@ namespace Adze {
   using System.Collections.Generic;
   using AppodealAds.Unity.Api;
   using AppodealAds.Unity.Common;
-  using Decoupled.Analytics;
   using JetBrains.Annotations;
   using UnityEngine;
 
@@ -23,10 +22,8 @@ namespace Adze {
 
     private static Dictionary<Mode, int> appodealModes;
     private        bool                  complete;
-    private        GameLog               log;
 
     protected override void Initialise() {
-      log = GameLog.Instance;
 #if AdzeAppodeal
 #if (UNITY_ANDROID || UNITY_IPHONE)
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
@@ -70,13 +67,12 @@ namespace Adze {
 
     protected override IEnumerator ShowNow(string location) {
 #if AdzeAppodeal
-      log.Event("Adze", "Show", "Appodeal " + Mode + " for " + location);
       complete = Error = false;
 
       if ((location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: location)) {
         Appodeal.show(adTypes: appodealMode, placement: location);
       } else {
-        log.Event("Adze", "Appodeal ad not available for location '" + location + "'");
+        Log(action: "Show", result: "Unavailable", csv: location);
         complete = Error = true;
       }
 #else
@@ -109,7 +105,7 @@ namespace Adze {
 
     public void onInterstitialFailedToLoad() {
       complete = Error = true;
-      log.Event("Adze", "Appodeal Interstitial Failed To Load");
+      Log(action: "Load", result: "Failed");
     }
 
     public void onInterstitialShown() { }
@@ -120,7 +116,7 @@ namespace Adze {
 
     public void onBannerFailedToLoad() {
       complete = Error = true;
-      log.Event("Adze", "Appodeal Interstitial Failed To Load");
+      Log(action: "Load", result: "Failed");
     }
 
     public void onBannerShown() { }
