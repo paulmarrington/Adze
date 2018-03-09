@@ -70,6 +70,11 @@ namespace Adze {
       complete = Error = false;
 
       if ((location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: location)) {
+        // Wait for it (or it won't display)
+        while (!Appodeal.isLoaded(adTypes: appodealMode)) {
+          yield return null;
+        }
+
         Appodeal.show(adTypes: appodealMode, placement: location);
       } else {
         Log(action: "Show", result: "Unavailable", csv: location);
@@ -92,7 +97,7 @@ namespace Adze {
 
     public void onNonSkippableVideoShown() { }
 
-    public void onNonSkippableVideoFinished() { AdActionTaken = true; }
+    public void onNonSkippableVideoFinished() { }
 
     public void onNonSkippableVideoClosed(bool finished) {
       Error    = !finished;

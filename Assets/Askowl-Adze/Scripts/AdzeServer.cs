@@ -45,7 +45,7 @@ namespace Adze {
     public IEnumerator Show(Mode modeRequested, string location) {
       if (enabled && (modeRequested == Mode)) {
         AdActionTaken = false;
-        Log("Show", "Now", More(Name, Mode, location));
+        Log("Show", "Now", More(location));
         yield return ShowNow(location);
       } else {
         Error = true;

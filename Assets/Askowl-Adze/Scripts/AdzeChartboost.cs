@@ -124,14 +124,6 @@ namespace Adze {
       Log(action: "Error", result: what, csv: More(location, errorText));
     }
 
-    private void CbDismiss(string which, string location) {
-      if (!complete) {
-        Log(action: "Dismiss", result: "Ad closed", csv: More(which, location));
-      }
-
-      complete = true;
-    }
-
     private void DidInitialize(bool status) {
       if (status) {
         AdActionTaken = true; // only way we can tell that I could see
@@ -146,9 +138,7 @@ namespace Adze {
               errorText: error.ToString());
     }
 
-    private void DidDismissInterstitial([NotNull] CBLocation location) {
-      CbDismiss(which: "Interstitial", location: location.ToString());
-    }
+    private void DidDismissInterstitial([NotNull] CBLocation location) { complete = true; }
 
     private void DidCloseInterstitial(CBLocation location) { complete = true; }
 
@@ -171,21 +161,17 @@ namespace Adze {
               errorText: error.ToString());
     }
 
-    private void DidDismissRewardedVideo([NotNull] CBLocation location) {
-      CbDismiss(which: "Rewarded video", location: location.ToString());
-    }
+    private void DidDismissRewardedVideo([NotNull] CBLocation location) { complete = true; }
 
     private void DidCloseRewardedVideo(CBLocation location) { complete = true; }
 
-    private void DidClickRewardedVideo(CBLocation location) { }
+    private void DidClickRewardedVideo(CBLocation location) { AdActionTaken = true; }
 
     private void DidCacheRewardedVideo(CBLocation location) { }
 
     private bool ShouldDisplayRewardedVideo(CBLocation location) { return true; }
 
-    private void DidCompleteRewardedVideo(CBLocation location, int reward) {
-      complete = AdActionTaken = true;
-    }
+    private void DidCompleteRewardedVideo(CBLocation location, int reward) { }
 
     private void DidDisplayRewardedVideo(CBLocation location) { }
 
