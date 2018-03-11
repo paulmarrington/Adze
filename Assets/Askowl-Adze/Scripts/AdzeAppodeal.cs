@@ -9,7 +9,7 @@ namespace Adze {
   using JetBrains.Annotations;
   using UnityEngine;
 
-  [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "Appodeal")]
+  [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "AdzeAppodeal")]
 #if AdzeAppodeal
   public sealed class AdzeAppodeal : AdzeServer, IInterstitialAdListener,
                                      INonSkippableVideoAdListener, IBannerAdListener {
@@ -85,9 +85,7 @@ namespace Adze {
       Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       complete = true;
 #endif
-      while (!complete) {
-        yield return null;
-      }
+      while (!complete && !Error) yield return null;
     }
 
 #if AdzeAppodeal

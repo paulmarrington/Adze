@@ -6,7 +6,7 @@ namespace Adze {
   using JetBrains.Annotations;
   using UnityEngine;
 
-  [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
+  [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdzeAdMob")]
   public sealed class AdzeAdMob : AdzeServer {
     private static bool initialised;
 
@@ -51,18 +51,17 @@ namespace Adze {
 
       showAd();
 
-      while (!complete) {
-        if (Error) yield break;
-
-        yield return null;
-      }
+      while (!complete && !Error) yield return null;
 
       LoadNextAd(location);
     }
 
     private void LoadNextAd(string location) {
       AdRequest
-        adRequest = new AdRequest.Builder().AddKeyword(keyword: location).Build();
+        adRequest = new AdRequest.Builder()
+//                   .AddTestDevice(AdRequest.TestDeviceSimulator)
+//                   .AddTestDevice(kGADSimulatorID)
+                   .AddKeyword(keyword: location).Build();
 
       loaded = Error = false;
 

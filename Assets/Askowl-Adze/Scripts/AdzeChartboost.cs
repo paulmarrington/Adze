@@ -6,7 +6,7 @@ namespace Adze {
   using JetBrains.Annotations;
   using UnityEngine;
 
-  [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "Chartboost")]
+  [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "AdzeChartboost")]
   public sealed class AdzeChartboost : AdzeServer {
     private bool           complete;
     private Action<string> chartboostShow;
@@ -59,9 +59,7 @@ namespace Adze {
       complete = Error = false;
       chartboostShow(location);
 
-      while (!complete) {
-        yield return null;
-      }
+      while (!complete && !Error) yield return null;
     }
 
     /* ******************************************************************* */

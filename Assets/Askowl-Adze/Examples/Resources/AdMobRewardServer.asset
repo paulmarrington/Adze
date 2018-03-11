@@ -13,10 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppKeys:
   - Platform: 8
-    Value: ca-app-pub-3940256099942544/5224354917
+    Value: ca-app-pub-3940256099942544/1712485313
   Mode: 1
   Priority: 1
   UsageBalance: 1
   AdActionTaken: 0
   Error: 1
-  Loaded: 0
