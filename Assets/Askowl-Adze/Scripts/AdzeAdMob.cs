@@ -39,22 +39,9 @@ namespace Adze {
     }
 
     protected override IEnumerator ShowNow(string location) {
-      if (rewardBasedVideoAd == null) { // TODO Delete ME
-        Error = complete = true;
-        yield break;
-      }
-
       complete = false;
 
-      Debug.LogWarning(message: "**** 1. rewardBasedVideoAd.isLoaded=" +
-                                rewardBasedVideoAd.IsLoaded()          + ", loaded=" + loaded +
-                                ", Error="                             + Error); //TODO DELETE-ME
-
-      if (Error && !loaded) LoadNextAd(location);
-
-      Debug.LogWarning(message: "**** 2. rewardBasedVideoAd.isLoaded=" +
-                                rewardBasedVideoAd.IsLoaded()          + ", loaded=" + loaded +
-                                ", Error="                             + Error); //TODO DELETE-ME
+//      if (Error && !loaded) LoadNextAd(location);
 
       while (!loaded) {
         if (Error) yield break;
@@ -62,15 +49,7 @@ namespace Adze {
         yield return null;
       }
 
-      Debug.LogWarning(message: "**** 3. rewardBasedVideoAd.isLoaded=" +
-                                rewardBasedVideoAd.IsLoaded()          + ", loaded=" + loaded +
-                                ", Error="                             + Error); //TODO DELETE-ME
-
       showAd();
-
-      Debug.LogWarning(message: "**** 4. rewardBasedVideoAd.isLoaded=" +
-                                rewardBasedVideoAd.IsLoaded()          + ", loaded=" + loaded +
-                                ", Error="                             + Error); //TODO DELETE-ME
 
       while (!complete) {
         if (Error) yield break;
@@ -78,22 +57,14 @@ namespace Adze {
         yield return null;
       }
 
-      Debug.LogWarning(message: "**** 5. rewardBasedVideoAd.isLoaded=" +
-                                rewardBasedVideoAd.IsLoaded()          + ", loaded=" + loaded +
-                                ", Error="                             + Error); //TODO DELETE-ME
-
       LoadNextAd(location);
-
-      Debug.LogWarning(message: "**** 6. rewardBasedVideoAd.isLoaded=" +
-                                rewardBasedVideoAd.IsLoaded()          + ", loaded=" + loaded +
-                                ", Error="                             + Error); //TODO DELETE-ME
     }
 
     private void LoadNextAd(string location) {
-      AdRequest adRequest = new AdRequest.Builder().AddKeyword(keyword: location).Build();
-      loaded = Error      = false;
+      AdRequest
+        adRequest = new AdRequest.Builder().AddKeyword(keyword: location).Build();
 
-      Debug.LogWarning("**** LoadNextAd Mode=" + Mode + ""); //TODO DELETE-ME
+      loaded = Error = false;
 
       switch (Mode) {
         case Mode.Interstitial:
@@ -116,30 +87,18 @@ namespace Adze {
     }
 
     /* ******************************************************************* */
-    private void OnAdLoaded(object sender, EventArgs args) {
-      loaded = true;
-      Debug.LogWarning("**** OnAdLoaded Mode=" + Mode + ""); //TODO DELETE-ME
-    }
+    private void OnAdLoaded(object sender, EventArgs args) { loaded = true; }
 
     private void OnAdFailedToLoad(object sender, [NotNull] AdFailedToLoadEventArgs args) {
       Error = true;
       Log(action: "Load", result: "Failed", csv: More(args.Message));
     }
 
-    private void OnAdRewarded(object sender, Reward args) {
-      AdActionTaken = true;
-      Debug.LogWarning("**** OnAdFailedToLoad Mode=" + Mode + ""); //TODO DELETE-ME
-    }
+    private void OnAdRewarded(object sender, Reward args) { AdActionTaken = true; }
 
-    private void OnAdClosed(object sender, EventArgs args) {
-      complete = true;
-      Debug.LogWarning("**** OnAdClosed Mode=" + Mode + ""); //TODO DELETE-ME
-    }
+    private void OnAdClosed(object sender, EventArgs args) { complete = true; }
 
-    private void OnAdLeavingApplication(object sender, EventArgs args) {
-      AdActionTaken = true;
-      Debug.LogWarning("**** OnAdLeavingApplication Mode=" + Mode + ""); //TODO DELETE-ME
-    }
+    private void OnAdLeavingApplication(object sender, EventArgs args) { AdActionTaken = true; }
   }
 }
 
