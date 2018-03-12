@@ -15,8 +15,17 @@
     }
 
     protected override IEnumerator ShowNow(string location) {
+      while (!Ready) yield return null;
+
+      complete = Error = false;
+
       Advertisement.Show(placementId: location, showOptions: options);
-      while (!complete && !Error) yield return null;
+
+      yield return WaitForResponse();
+    }
+
+    private static bool Ready {
+      get { return Advertisement.isInitialized && Advertisement.IsReady(); }
     }
 
     private void HandleShowResult(ShowResult result) {

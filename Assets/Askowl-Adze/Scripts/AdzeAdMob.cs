@@ -51,7 +51,7 @@ namespace Adze {
 
       showAd();
 
-      while (!complete && !Error) yield return null;
+      yield return WaitForResponse();
 
       LoadNextAd(location);
     }

@@ -59,7 +59,7 @@ namespace Adze {
       complete = Error = false;
       chartboostShow(location);
 
-      while (!complete && !Error) yield return null;
+      yield return WaitForResponse();
     }
 
     /* ******************************************************************* */

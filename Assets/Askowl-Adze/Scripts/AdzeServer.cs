@@ -22,14 +22,15 @@ namespace Adze {
       [UsedImplicitly] public string          Value;
     }
 
-    public List<Key> AppKeys;
+    [SerializeField] private   List<Key> appKeys;
+    [SerializeField] protected Mode      Mode           = Mode.Reward;
+    [SerializeField] public    int       Priority       = 1;
+    [SerializeField] public    int       UsageBalance   = 1;
+    [SerializeField] private   int       secondsTimeout = 10;
 
-    public Mode Mode         = Mode.Reward;
-    public int  Priority     = 1;
-    public int  UsageBalance = 1;
+    [HideInInspector] public bool AdActionTaken, Error, Complete;
 
-    [HideInInspector] public bool   AdActionTaken, Error;
-    protected                string AppKey;
+    protected string AppKey;
 
     private bool enabled;
 
@@ -53,10 +54,19 @@ namespace Adze {
       }
     }
 
+    protected IEnumerator WaitForResponse() {
+      var timer = After.Realtime.Timer(secondsTimeout);
+
+      while (!Complete && !Error) {
+        if (!timer.Running) Error = true;
+        yield return null;
+      }
+    }
+
     public void OnEnable() {
       log = GameLog.Instance;
 
-      foreach (Key appKey in AppKeys) {
+      foreach (Key appKey in appKeys) {
         enabled = (Application.platform == appKey.Platform);
 
         if (enabled) {

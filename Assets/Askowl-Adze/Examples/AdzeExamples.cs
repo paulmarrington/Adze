@@ -8,18 +8,18 @@ public sealed class AdzeExamples : MonoBehaviour {
 
   private AdzeDistributor appodealDistributor;
   private AdzeDistributor chartboostDistributor;
+  private AdzeDistributor unityDistributor;
   private AdzeReward      rewardedVideoAllNetworks;
 
   private void Start() {
-    adMobDistributor = AdzeDistributor.Asset(name: "AdMobDistributor");
-
-    appodealDistributor   = AdzeDistributor.Asset(name: "AppodealDistributor");
-    chartboostDistributor = AdzeDistributor.Asset(name: "ChartboostDistributor");
-
+    adMobDistributor         = AdzeDistributor.Asset(name: "AdMobDistributor");
+    appodealDistributor      = AdzeDistributor.Asset(name: "AppodealDistributor");
+    chartboostDistributor    = AdzeDistributor.Asset(name: "ChartboostDistributor");
+    unityDistributor         = AdzeDistributor.Asset(name: "UnityDistributor");
     rewardedVideoAllNetworks = AdzeReward.Asset(assetName: "RewardedVideoAllNetworks");
   }
 
-  void showResults([NotNull] AdzeDistributor distributor) {
+  private void showResults([NotNull] AdzeDistributor distributor) {
     Debug.Log(message: "*** After Show: adShown=" + distributor.AdShown       +
                        ", adActionTaken="         + distributor.AdActionTaken + ", error=" +
                        distributor.Error);
@@ -46,6 +46,18 @@ public sealed class AdzeExamples : MonoBehaviour {
   public void ShowAdMobRewarded() {
     StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Reward,
                                  location: "Main Menu"));
+  }
+
+  [UsedImplicitly]
+  public void ShowUnityInterstitial() {
+    StartCoroutine(routine: Show(distributor: unityDistributor, mode: Mode.Interstitial,
+                                 location: "video"));
+  }
+
+  [UsedImplicitly]
+  public void ShowUnityRewarded() {
+    StartCoroutine(routine: Show(distributor: unityDistributor, mode: Mode.Reward,
+                                 location: "rewardedVideo"));
   }
 
   [UsedImplicitly]
@@ -87,5 +99,5 @@ public sealed class AdzeExamples : MonoBehaviour {
     StartCoroutine(routine: RewardedVideoAllNetworksCoroutine(location: "Turn Complete"));
   }
 
-  // other locations include IAP Store, Item Store, Game Over, Leaderboard, Settings and Quit
+  // other locations include Game Over, Leaderboard, IAP Store, Item Store, Settings and Quit
 }

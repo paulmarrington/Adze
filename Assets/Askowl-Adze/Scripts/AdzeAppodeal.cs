@@ -85,7 +85,7 @@ namespace Adze {
       Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       complete = true;
 #endif
-      while (!complete && !Error) yield return null;
+      yield return WaitForResponse();
     }
 
 #if AdzeAppodeal
