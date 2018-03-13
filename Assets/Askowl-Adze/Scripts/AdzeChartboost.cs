@@ -8,7 +8,6 @@ namespace Adze {
 
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "AdzeChartboost")]
   public sealed class AdzeChartboost : AdzeServer {
-    private bool           complete;
     private Action<string> chartboostShow;
     private string[]       keyPair;
 
@@ -60,6 +59,10 @@ namespace Adze {
       chartboostShow(location);
 
       yield return WaitForResponse();
+    }
+
+    protected override bool Loaded(string location) {
+
     }
 
     /* ******************************************************************* */

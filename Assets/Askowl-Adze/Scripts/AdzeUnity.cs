@@ -5,7 +5,6 @@
 
   [CreateAssetMenu(menuName = "Adze/Unity", fileName = "AdzeUnity")]
   public sealed class AdzeUnity : AdzeServer {
-    private bool        complete;
     private ShowOptions options;
 
     protected override void Initialise() {
@@ -15,17 +14,13 @@
     }
 
     protected override IEnumerator ShowNow(string location) {
-      while (!Ready) yield return null;
-
-      complete = Error = false;
-
+      Complete = Error = false;
       Advertisement.Show(placementId: location, showOptions: options);
-
       yield return WaitForResponse();
     }
 
-    private static bool Ready {
-      get { return Advertisement.isInitialized && Advertisement.IsReady(); }
+    protected override bool Loaded(string location) {
+      return Advertisement.isInitialized && Advertisement.IsReady();
     }
 
     private void HandleShowResult(ShowResult result) {
@@ -41,7 +36,7 @@
           break;
       }
 
-      complete = true;
+      Complete = true;
     }
   }
 }

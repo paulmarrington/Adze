@@ -23,10 +23,9 @@ namespace Adze {
     }
 
     [SerializeField] private   List<Key> appKeys;
-    [SerializeField] protected Mode      Mode           = Mode.Reward;
-    [SerializeField] public    int       Priority       = 1;
-    [SerializeField] public    int       UsageBalance   = 1;
-    [SerializeField] private   int       secondsTimeout = 10;
+    [SerializeField] protected Mode      Mode         = Mode.Reward;
+    [SerializeField] public    int       Priority     = 1;
+    [SerializeField] public    int       UsageBalance = 1;
 
     [HideInInspector] public bool AdActionTaken, Error, Complete;
 
@@ -43,10 +42,20 @@ namespace Adze {
 
     protected abstract IEnumerator ShowNow(string location);
 
+    protected abstract bool Loaded(string location);
+
     public IEnumerator Show(Mode modeRequested, string location) {
       if (enabled && (modeRequested == Mode)) {
         AdActionTaken = false;
-        Log("Show", "Now", More(location));
+
+        while (!Loaded(location) && !Error) {
+          yield return null;
+        }
+
+        if (Error) yield break;
+
+        Log(action: "Show", result: "Now", csv: More(location));
+        Complete = Error = false;
         yield return ShowNow(location);
       } else {
         Error = true;
@@ -55,25 +64,18 @@ namespace Adze {
     }
 
     protected IEnumerator WaitForResponse() {
-      var timer = After.Realtime.Timer(secondsTimeout);
-
-      while (!Complete && !Error) {
-        if (!timer.Running) Error = true;
-        yield return null;
-      }
+      while (!Complete && !Error) yield return null;
     }
 
     public void OnEnable() {
       log = GameLog.Instance;
 
       foreach (Key appKey in appKeys) {
-        enabled = (Application.platform == appKey.Platform);
+        if (!(enabled = (Application.platform == appKey.Platform))) continue;
 
-        if (enabled) {
-          AppKey = appKey.Value;
-          Initialise();
-          return;
-        }
+        AppKey = appKey.Value;
+        Initialise();
+        return;
       }
 
       if (Application.platform != RuntimePlatform.OSXEditor) {

@@ -11,11 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaf8e45f5bea5416bb4ae7bb31554b96, type: 3}
   m_Name: AdMobRewardServer
   m_EditorClassIdentifier: 
-  AppKeys:
+  appKeys:
   - Platform: 8
     Value: ca-app-pub-3940256099942544/1712485313
   Mode: 1
   Priority: 1
   UsageBalance: 1
+  secondsTimeout: 10
   AdActionTaken: 0
   Error: 1
+  Complete: 0

@@ -10,8 +10,8 @@ namespace Adze {
   public sealed class AdzeAdMob : AdzeServer {
     private static bool initialised;
 
-    private bool               complete, loaded;
     private Action             showAd;
+    private Func<bool>         isLoaded;
     private BannerView         bannerView;
     private InterstitialAd     interstitialAd;
     private RewardBasedVideoAd rewardBasedVideoAd;
@@ -32,29 +32,22 @@ namespace Adze {
         rewardBasedVideoAd.OnAdClosed             += OnAdClosed;
         rewardBasedVideoAd.OnAdLeavingApplication += OnAdLeavingApplication;
 
-        showAd = rewardBasedVideoAd.Show;
+        showAd   = rewardBasedVideoAd.Show;
+        isLoaded = rewardBasedVideoAd.IsLoaded;
       }
 
       LoadNextAd(location: "Default");
     }
 
     protected override IEnumerator ShowNow(string location) {
-      complete = false;
-
 //      if (Error && !loaded) LoadNextAd(location);
-
-      while (!loaded) {
-        if (Error) yield break;
-
-        yield return null;
-      }
-
       showAd();
-
       yield return WaitForResponse();
 
       LoadNextAd(location);
     }
+
+    protected override bool Loaded(string location) { return isLoaded(); }
 
     private void LoadNextAd(string location) {
       AdRequest
@@ -62,8 +55,6 @@ namespace Adze {
 //                   .AddTestDevice(AdRequest.TestDeviceSimulator)
 //                   .AddTestDevice(kGADSimulatorID)
                    .AddKeyword(keyword: location).Build();
-
-      loaded = Error = false;
 
       switch (Mode) {
         case Mode.Interstitial:
@@ -76,7 +67,8 @@ namespace Adze {
           interstitialAd.OnAdClosed             += OnAdClosed;
           interstitialAd.OnAdLeavingApplication += OnAdLeavingApplication;
           interstitialAd.LoadAd(request: adRequest);
-          showAd = interstitialAd.Show;
+          showAd   = interstitialAd.Show;
+          isLoaded = interstitialAd.IsLoaded;
           break;
 
         case Mode.Reward:
@@ -86,7 +78,7 @@ namespace Adze {
     }
 
     /* ******************************************************************* */
-    private void OnAdLoaded(object sender, EventArgs args) { loaded = true; }
+    private void OnAdLoaded(object sender, EventArgs args) { }
 
     private void OnAdFailedToLoad(object sender, [NotNull] AdFailedToLoadEventArgs args) {
       Error = true;
@@ -95,7 +87,7 @@ namespace Adze {
 
     private void OnAdRewarded(object sender, Reward args) { AdActionTaken = true; }
 
-    private void OnAdClosed(object sender, EventArgs args) { complete = true; }
+    private void OnAdClosed(object sender, EventArgs args) { Complete = true; }
 
     private void OnAdLeavingApplication(object sender, EventArgs args) { AdActionTaken = true; }
   }

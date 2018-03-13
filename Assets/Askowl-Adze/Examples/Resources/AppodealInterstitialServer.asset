@@ -11,13 +11,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 692a40a66f2de43cba19c9426da28899, type: 3}
   m_Name: AppodealInterstitialServer
   m_EditorClassIdentifier: 
-  AppKeys:
+  appKeys:
   - Platform: 8
     Value: ea5c54fb46260fb6de3cdc782da2f0b066c3a8058d98c393
   Mode: 0
   Priority: 1
   UsageBalance: 1
+  secondsTimeout: 10
   AdActionTaken: 0
   Error: 1
-  Loaded: 0
+  Complete: 0
   DisabledNetworks: 15000000

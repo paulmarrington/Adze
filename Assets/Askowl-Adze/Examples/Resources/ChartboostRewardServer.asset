@@ -11,12 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c25fe087876c468b8172033411d844a, type: 3}
   m_Name: ChartboostRewardServer
   m_EditorClassIdentifier: 
-  AppKeys:
+  appKeys:
   - Platform: 8
     Value: 5a8175bd57a2dd0c356a268b;4160d1aa36df777fe5a0be28364af302f50a0bf2
   Mode: 1
   Priority: 1
   UsageBalance: 1
+  secondsTimeout: 10
   AdActionTaken: 0
   Error: 1
-  Loaded: 0
+  Complete: 0

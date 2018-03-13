@@ -70,11 +70,6 @@ namespace Adze {
       complete = Error = false;
 
       if ((location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: location)) {
-        // Wait for it (or it won't display)
-        while (!Appodeal.isLoaded(adTypes: appodealMode)) {
-          yield return null;
-        }
-
         Appodeal.show(adTypes: appodealMode, placement: location);
       } else {
         Log(action: "Show", result: "Unavailable", csv: location);
@@ -86,6 +81,12 @@ namespace Adze {
       complete = true;
 #endif
       yield return WaitForResponse();
+    }
+
+    protected override bool Loaded(string location) {
+#if AdzeAppodeal
+      return Appodeal.isLoaded(adTypes: appodealMode);
+#endif
     }
 
 #if AdzeAppodeal
