@@ -1,5 +1,4 @@
 ﻿namespace Adze {
-  using System.Collections;
   using UnityEngine;
   using UnityEngine.Advertisements;
 
@@ -13,10 +12,8 @@
       options = new ShowOptions {resultCallback = HandleShowResult};
     }
 
-    protected override IEnumerator ShowNow(string location) {
-      Complete = Error = false;
+    protected override void ShowNow(string location) {
       Advertisement.Show(placementId: location, showOptions: options);
-      yield return WaitForResponse();
     }
 
     protected override bool Loaded(string location) {

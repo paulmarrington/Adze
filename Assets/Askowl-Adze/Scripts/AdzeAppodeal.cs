@@ -65,9 +65,8 @@ namespace Adze {
       Appodeal.setTesting(test: Debug.isDebugBuild);
     }
 
-    protected override IEnumerator ShowNow(string location) {
+    protected override void ShowNow(string location) {
 #if AdzeAppodeal
-      complete = Error = false;
 
       if ((location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: location)) {
         Appodeal.show(adTypes: appodealMode, placement: location);
@@ -80,7 +79,6 @@ namespace Adze {
       Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
       complete = true;
 #endif
-      yield return WaitForResponse();
     }
 
     protected override bool Loaded(string location) {

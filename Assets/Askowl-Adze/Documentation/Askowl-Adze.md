@@ -14,6 +14,7 @@ With an extensive range of networks to choose from:
 * **AdMob** - Google-backed and the most popular
 * **Chartboost** - specifically for games
 * **Appodeal** - Aggregator of many of the others
+* **Unity** - Simplify for gamers
 * and many more
 
 Now you could use an aggregator and manually select the network. There are some problems with this:
@@ -33,7 +34,7 @@ Adze also provides a rewarded video prefab that once reskinned can ease the proc
 
 You will need to install ***Askowl-Lib*** and ***Askowl-Adze*** packages. It is all you will need for development. The external interfaces are stubbed out and only show a message if used.
 
-Install the API packages when you are ready to test on active devices. The stub message will give you a URL.
+Install the Ad network API packages when you are ready to test on active devices. The stub message will give you a URL.
 
 ## Implementation
 All components are Custom Assets. Instances of Custom Assets reside in a ***Resources*** somewhere in your project. 

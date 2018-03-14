@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using UnityEngine;
 using Adze;
 using JetBrains.Annotations;
+using UnityEngine;
 
 public sealed class AdzeExamples : MonoBehaviour {
   private AdzeDistributor adMobDistributor;
-
   private AdzeDistributor appodealDistributor;
   private AdzeDistributor chartboostDistributor;
   private AdzeDistributor unityDistributor;
@@ -29,9 +28,8 @@ public sealed class AdzeExamples : MonoBehaviour {
     Debug.Log(message: "*** Showing " + distributor.ServerName + ", mode=" + mode + ", location=" +
                        location);
 
-    yield return
-      distributor.Show(mode: mode,
-                       location: location); // location is optional - defaults to "Default"
+    // location is optional - defaults to "Default"
+    yield return distributor.Show(mode: mode, location: location);
 
     showResults(distributor: distributor);
   }

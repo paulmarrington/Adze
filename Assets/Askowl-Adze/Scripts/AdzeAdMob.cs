@@ -1,7 +1,6 @@
 ﻿#if AdzeAdMob
 namespace Adze {
   using System;
-  using System.Collections;
   using GoogleMobileAds.Api;
   using JetBrains.Annotations;
   using UnityEngine;
@@ -39,26 +38,24 @@ namespace Adze {
       LoadNextAd(location: "Default");
     }
 
-    protected override IEnumerator ShowNow(string location) {
-//      if (Error && !loaded) LoadNextAd(location);
-      showAd();
-      yield return WaitForResponse();
+    protected override void Prepare(string location) {
+      if (!Loaded(location)) LoadNextAd(location);
+    }
 
+    protected override void ShowNow(string location) {
+      showAd();
       LoadNextAd(location);
     }
 
     protected override bool Loaded(string location) { return isLoaded(); }
 
     private void LoadNextAd(string location) {
-      AdRequest
-        adRequest = new AdRequest.Builder()
-//                   .AddTestDevice(AdRequest.TestDeviceSimulator)
-//                   .AddTestDevice(kGADSimulatorID)
-                   .AddKeyword(keyword: location).Build();
+      AdRequest adRequest = new AdRequest.Builder()
+//                           .AddTestDevice(AdRequest.TestDeviceSimulator)
+                           .AddKeyword(keyword: location).Build();
 
       switch (Mode) {
         case Mode.Interstitial:
-
           if (interstitialAd != null) interstitialAd.Destroy();
 
           interstitialAd                        =  new InterstitialAd(adUnitId: AppKey);
