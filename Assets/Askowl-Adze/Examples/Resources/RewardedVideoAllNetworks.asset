@@ -14,7 +14,7 @@ MonoBehaviour:
   Prompts:
   - Message: Tell your player why it would be a good idea to watch an advertisement.
     AcceptButton: Yes Please
-    RefuseButton: No Thankyou
+    RefuseButton: No Thank You
   - Message: Please watch a message from our sponsor while your score is being calculated
     AcceptButton: OK
     RefuseButton: Later
@@ -25,7 +25,7 @@ MonoBehaviour:
   - Message: Ta
     AcceptButton: Onwards and Upwards
     RefuseButton: 
-  AdsShownBetweenQuotes: 2
+  AdsShownBetweenQuotes: 5
   Distributor: {fileID: 11400000, guid: d8d601fd7abf640b2b263c35a7c1559d, type: 2}
   AdWatched: 0
-  AdRequested: 0
+  AdRequested: 1

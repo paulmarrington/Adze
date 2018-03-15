@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-
-namespace Adze {
+﻿namespace Adze {
+  using System;
+  using System.Collections;
+  using Decoupled.Analytics;
   using JetBrains.Annotations;
+  using UnityEngine;
 
   public enum Mode {
     //    Banner,
@@ -21,18 +21,18 @@ namespace Adze {
     [NotNull]
     internal string ServerName { get { return Servers[currentServer].Name; } }
 
-    private int                         currentServer, lastServer;
-    private int[]                       usages;
-    private Mode                        currentMode;
-    private Decoupled.Analytics.GameLog log;
+    private int     currentServer, lastServer;
+    private int[]   usages;
+    private Mode    currentMode;
+    private GameLog log;
 
     internal new static AdzeDistributor Asset(string name = "Distributor") {
       return CustomAsset<AdzeDistributor>.Asset(name: name);
     }
 
     internal IEnumerator Show(Mode mode, string location = "Default") {
-      currentMode = mode;
-      AdShown     = AdActionTaken = Error = false;
+      currentMode   = mode;
+      AdActionTaken = AdShown = Error = false;
 
       if (!RoundRobin) {
         currentServer = 0; // alway start with the primary server
@@ -47,8 +47,9 @@ namespace Adze {
           yield return Servers[currentServer].Show(modeRequested: currentMode, location: location);
 
           if (!(Error = Servers[currentServer].Error)) {
-            AdShown               =  true;
-            AdActionTaken         =  Servers[currentServer].AdActionTaken;
+            AdShown       = true;
+            AdActionTaken = Servers[currentServer].AdActionTaken;
+
             usages[currentServer] += 1;
 
             if ((usages[currentServer] % Servers[currentServer].UsageBalance) == 0) {
@@ -65,7 +66,7 @@ namespace Adze {
             log.Event(name: "Adze", action: "Error", result: "Ad servers not responding",
                       csv: log.More(currentMode, location));
 
-            yield return After.Realtime.ms(ms: 500);
+            yield return new WaitForSecondsRealtime(0.5f);
           }
         }
       }
@@ -74,7 +75,7 @@ namespace Adze {
     }
 
     public void OnEnable() {
-      log = Decoupled.Analytics.GameLog.Instance;
+      log = GameLog.Instance;
 
       if (Servers == null) {
         log.Error(message: "Set advertising servers in Adze Distributor Custom Asset");

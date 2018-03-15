@@ -12,14 +12,16 @@ namespace Adze {
       // ReSharper disable MemberCanBeInternal
       // ReSharper disable UnassignedField.Global
       [TextArea] public string Message;
+
       public string AcceptButton;
+
       public string RefuseButton;
       // ReSharper restore UnassignedField.Global
       // ReSharper restore MemberCanBeInternal
     }
 
-    public Prompt[] Prompts, Thanks;
-    public int      AdsShownBetweenQuotes    = 2;
+    public Prompt[]        Prompts, Thanks;
+    public int             AdsShownBetweenQuotes = 2;
     public AdzeDistributor Distributor;
 
     private Selector<Prompt>            prompt, thank;
@@ -27,7 +29,7 @@ namespace Adze {
     private int                         count;
     private Decoupled.Analytics.GameLog log;
 
-    [HideInInspector] public bool            AdWatched, AdRequested;
+    [HideInInspector] public bool AdWatched, AdRequested;
 
     [UsedImplicitly]
     public new static AdzeReward Asset(string assetName) {
@@ -35,11 +37,11 @@ namespace Adze {
     }
 
     public void OnEnable() {
-      log         = Decoupled.Analytics.GameLog.Instance;
-      prompt      = new Selector<Prompt>(choices: Prompts);
-      thank       = new Selector<Prompt>(choices: Thanks);
-      quotes      = new Quotes();
-      count       = 0;
+      log    = Decoupled.Analytics.GameLog.Instance;
+      prompt = new Selector<Prompt>(choices: Prompts);
+      thank  = new Selector<Prompt>(choices: Thanks);
+      quotes = new Quotes();
+      count  = 0;
     }
 
     private IEnumerator ShowDialog([NotNull] Dialog dialog, [NotNull] IPick<Prompt> prompter) {
@@ -74,11 +76,11 @@ namespace Adze {
         if ((++count % (AdsShownBetweenQuotes + 1)) == 0) {
           yield return ShowQuote(dialog: dialog);
 
-          log.Event("Advertisement", "Content", "Quote displayed");
+          log.Event(name: "Advertisement", action: "Content", result: "Quote displayed");
         } else if (Distributor == null) {
           yield return ShowQuote(dialog: dialog);
 
-          log.Error(message: "Advertisement server not set");
+          log.Error("Advertisement server not set");
         } else {
           yield return Distributor.Show(mode: Mode.Reward, location: location);
 

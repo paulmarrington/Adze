@@ -12,12 +12,13 @@
       options = new ShowOptions {resultCallback = HandleShowResult};
     }
 
-    protected override void ShowNow(string location) {
-      Advertisement.Show(placementId: location, showOptions: options);
+    protected override bool ShowNow() {
+      Advertisement.Show(placementId: Location, showOptions: options);
+      return true;
     }
 
-    protected override bool Loaded(string location) {
-      return Advertisement.isInitialized && Advertisement.IsReady();
+    protected override bool Loaded {
+      get { return Advertisement.isInitialized && Advertisement.IsReady(); }
     }
 
     private void HandleShowResult(ShowResult result) {
@@ -33,7 +34,7 @@
           break;
       }
 
-      Complete = true;
+      Dismissed = true;
     }
   }
 }

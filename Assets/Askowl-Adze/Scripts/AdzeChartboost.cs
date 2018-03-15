@@ -1,16 +1,15 @@
 ﻿#if AdzeChartboost
 namespace Adze {
   using System;
-  using System.Collections;
   using ChartboostSDK;
   using JetBrains.Annotations;
   using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "AdzeChartboost")]
   public sealed class AdzeChartboost : AdzeServer {
-    private Action<string>     chartboostShow;
-    private Func<string, bool> isLoaded;
-    private string[]           keyPair;
+    private Action     chartboostShow;
+    private Func<bool> isLoaded;
+    private string[]   keyPair;
 
     protected override void Initialise() {
       // appKey is made up of AppId and AppSignature separated by ; or similar
@@ -36,28 +35,29 @@ namespace Adze {
       Chartboost.setAutoCacheAds(true);
     }
 
-    protected override void Prepare(string location) {
-      CBLocation cbLocation = CBLocation.locationFromName(name: location);
+    protected override bool Prepare() {
+      CBLocation cbLocation = CBLocation.locationFromName(name: Location);
       CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
       Chartboost.cacheRewardedVideo(cbLocation);
+      return true;
     }
 
-    private bool HasRewardedVideo(string location) {
-      return Chartboost.hasRewardedVideo(CBLocation.locationFromName(name: location));
+    private bool HasRewardedVideo() {
+      return Chartboost.hasRewardedVideo(CBLocation.locationFromName(name: Location));
     }
 
-    private void showRewardedVideo(string location) {
-      CBLocation cbLocation = CBLocation.locationFromName(name: location);
+    private void showRewardedVideo() {
+      CBLocation cbLocation = CBLocation.locationFromName(name: Location);
       Chartboost.showRewardedVideo(cbLocation);
       Chartboost.cacheRewardedVideo(cbLocation);
     }
 
-    private bool HasInterstitial(string location) {
-      return Chartboost.hasRewardedVideo(CBLocation.locationFromName(name: location));
+    private bool HasInterstitial() {
+      return Chartboost.hasRewardedVideo(CBLocation.locationFromName(name: Location));
     }
 
-    private void ShowInterstitial(string location) {
-      CBLocation cbLocation = CBLocation.locationFromName(name: location);
+    private void ShowInterstitial() {
+      CBLocation cbLocation = CBLocation.locationFromName(name: Location);
 
       CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
       Chartboost.showInterstitial(cbLocation);
@@ -66,9 +66,12 @@ namespace Adze {
 
     protected override void Destroy() { RemoveDelegates(); }
 
-    protected override void ShowNow(string location) { chartboostShow(location); }
+    protected override bool ShowNow() {
+      chartboostShow();
+      return true;
+    }
 
-    protected override bool Loaded(string location) { return isLoaded(location); }
+    protected override bool Loaded { get { return isLoaded(); } }
 
     /* ******************************************************************* */
     private void SetupDelegates() {
@@ -125,7 +128,7 @@ namespace Adze {
     }
 
     private void CbError(string what, string location, string errorText) {
-      Complete = Error = true;
+      Dismissed = Error = true;
 
       Log(action: "Error", result: what, csv: More(location, errorText));
     }
@@ -144,7 +147,7 @@ namespace Adze {
               errorText: error.ToString());
     }
 
-    private void DidDismissInterstitial([NotNull] CBLocation location) { Complete = true; }
+    private void DidDismissInterstitial([NotNull] CBLocation location) { Dismissed = true; }
 
     private void DidCloseInterstitial(CBLocation location) { }
 
@@ -167,7 +170,7 @@ namespace Adze {
               errorText: error.ToString());
     }
 
-    private void DidDismissRewardedVideo([NotNull] CBLocation location) { Complete = true; }
+    private void DidDismissRewardedVideo([NotNull] CBLocation location) { Dismissed = true; }
 
     private void DidCloseRewardedVideo(CBLocation location) { }
 

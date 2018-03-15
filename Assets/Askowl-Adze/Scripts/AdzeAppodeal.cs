@@ -2,7 +2,6 @@
 #endif
 
 namespace Adze {
-  using System.Collections;
   using System.Collections.Generic;
   using AppodealAds.Unity.Api;
   using AppodealAds.Unity.Common;
@@ -21,7 +20,6 @@ namespace Adze {
 #endif
 
     private static Dictionary<Mode, int> appodealModes;
-    private        bool                  complete;
 
     protected override void Initialise() {
 #if AdzeAppodeal
@@ -65,48 +63,47 @@ namespace Adze {
       Appodeal.setTesting(test: Debug.isDebugBuild);
     }
 
-    protected override void ShowNow(string location) {
+    protected override bool ShowNow() {
 #if AdzeAppodeal
 
-      if ((location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: location)) {
-        Appodeal.show(adTypes: appodealMode, placement: location);
+      if ((Location == "Default") || Appodeal.canShow(adTypes: appodealMode, placement: Location)) {
+        Appodeal.show(adTypes: appodealMode, placement: Location);
+        return true;
       } else {
-        Log(action: "Show", result: "Unavailable", csv: location);
-        complete = Error = true;
+        Log(action: "Show", result: "Unavailable", csv: Location);
+        return false;
       }
 #else
       Debug.Log(message: "Show Appodeal Advertisement for '" + location + "'");
       Debug.LogWarning(message: "Show requires Appodeal unity package from https://www.appodeal.com/sdk/unity2");
-      complete = true;
+      return false;
 #endif
     }
 
-    protected override bool Loaded(string location) {
 #if AdzeAppodeal
-      return Appodeal.isLoaded(adTypes: appodealMode);
+    protected override bool Loaded { get { return Appodeal.isLoaded(adTypes: appodealMode); } }
 #endif
-    }
 
 #if AdzeAppodeal
     public void onNonSkippableVideoLoaded() { }
 
-    public void onNonSkippableVideoFailedToLoad() { complete = Error = true; }
+    public void onNonSkippableVideoFailedToLoad() { Dismissed = Error = true; }
 
     public void onNonSkippableVideoShown() { }
 
     public void onNonSkippableVideoFinished() { }
 
     public void onNonSkippableVideoClosed(bool finished) {
-      Error    = !finished;
-      complete = true;
+      Error     = !finished;
+      Dismissed = true;
     }
 
-    public void onInterstitialClosed() { complete = true; }
+    public void onInterstitialClosed() { Dismissed = true; }
 
     public void onInterstitialLoaded(bool isPrecache) { }
 
     public void onInterstitialFailedToLoad() {
-      complete = Error = true;
+      Dismissed = Error = true;
       Log(action: "Load", result: "Failed");
     }
 
@@ -117,7 +114,7 @@ namespace Adze {
     public void onBannerLoaded(bool isPrecache) { }
 
     public void onBannerFailedToLoad() {
-      complete = Error = true;
+      Dismissed = Error = true;
       Log(action: "Load", result: "Failed");
     }
 
@@ -163,7 +160,9 @@ namespace Adze {
       // ReSharper restore InconsistentNaming
     }
 
-    public Network[] DisabledNetworks = {Network.pubnative};
+    public Network[] DisabledNetworks = {
+      Network.pubnative
+    };
 
     [UsedImplicitly]
     private void DisableNetworksWeDoNotWantToUse() {

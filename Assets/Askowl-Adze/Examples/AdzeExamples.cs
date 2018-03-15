@@ -48,12 +48,14 @@ public sealed class AdzeExamples : MonoBehaviour {
 
   [UsedImplicitly]
   public void ShowUnityInterstitial() {
+    // locations must be this unless a new position is defined
     StartCoroutine(routine: Show(distributor: unityDistributor, mode: Mode.Interstitial,
                                  location: "video"));
   }
 
   [UsedImplicitly]
   public void ShowUnityRewarded() {
+    // locations must be this unless a new position is defined
     StartCoroutine(routine: Show(distributor: unityDistributor, mode: Mode.Reward,
                                  location: "rewardedVideo"));
   }
@@ -80,7 +82,7 @@ public sealed class AdzeExamples : MonoBehaviour {
   [UsedImplicitly]
   public void ShowChartboostRewarded() {
     StartCoroutine(routine: Show(distributor: chartboostDistributor, mode: Mode.Reward,
-                                 location: "Level Complete"));
+                                 location: "Level Dismissed"));
   }
 
   private IEnumerator RewardedVideoAllNetworksCoroutine(string location) {
@@ -94,8 +96,11 @@ public sealed class AdzeExamples : MonoBehaviour {
 
   [UsedImplicitly]
   public void ShowAllRewarded() {
-    StartCoroutine(routine: RewardedVideoAllNetworksCoroutine(location: "Turn Complete"));
+    // Appodeal will fail because it expects a location of 'Default'
+    // Admob will fail because it does not like to coexist with Appodeal (but it will take 30 seconds)
+    // So we should either get Chartboost or Unity ads
+    StartCoroutine(routine: RewardedVideoAllNetworksCoroutine(location: "rewardedVideo"));
   }
 
-  // other locations include Game Over, Leaderboard, IAP Store, Item Store, Settings and Quit
+  // other locations include Turn Dismissed, Game Over, Leaderboard, IAP Store, Item Store, Settings and Quit
 }

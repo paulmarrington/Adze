@@ -14,12 +14,17 @@ namespace Adze {
     private BannerView         bannerView;
     private InterstitialAd     interstitialAd;
     private RewardBasedVideoAd rewardBasedVideoAd;
+    private float              mustLoadAddByThisTime;
 
     protected override void Initialise() {
       if (!initialised) {
         string[] appKey = AppKey.Split('/');
         MobileAds.Initialize(appId: appKey[0]);
         initialised = true;
+      }
+
+      if (mustLoadAddByThisTime < 1) {
+        mustLoadAddByThisTime = Time.realtimeSinceStartup + SecondsTimeoutForAdLoad;
       }
 
       if (Mode == Mode.Reward) {
@@ -35,24 +40,37 @@ namespace Adze {
         isLoaded = rewardBasedVideoAd.IsLoaded;
       }
 
-      LoadNextAd(location: "Default");
+      LoadNextAd();
     }
 
-    protected override void Prepare(string location) {
-      if (!Loaded(location)) LoadNextAd(location);
+    protected override bool Prepare() {
+      if (Loaded) return true;
+
+      if (Time.realtimeSinceStartup > mustLoadAddByThisTime) Error = true;
+      LoadNextAd();
+      return false;
     }
 
-    protected override void ShowNow(string location) {
+    protected override bool ShowNow() {
       showAd();
-      LoadNextAd(location);
+      return true;
     }
 
-    protected override bool Loaded(string location) { return isLoaded(); }
+    protected override bool Loaded { get { return isLoaded(); } }
+    private            bool dismissed;
 
-    private void LoadNextAd(string location) {
+    protected override Boolean Dismissed {
+      get { return dismissed; }
+      set {
+        dismissed = value;
+        if (dismissed) Prepare();
+      }
+    }
+
+    private void LoadNextAd() {
       AdRequest adRequest = new AdRequest.Builder()
 //                           .AddTestDevice(AdRequest.TestDeviceSimulator)
-                           .AddKeyword(keyword: location).Build();
+                           .AddKeyword(keyword: Location).Build();
 
       switch (Mode) {
         case Mode.Interstitial:
@@ -84,7 +102,7 @@ namespace Adze {
 
     private void OnAdRewarded(object sender, Reward args) { AdActionTaken = true; }
 
-    private void OnAdClosed(object sender, EventArgs args) { Complete = true; }
+    private void OnAdClosed(object sender, EventArgs args) { Dismissed = true; }
 
     private void OnAdLeavingApplication(object sender, EventArgs args) { AdActionTaken = true; }
   }
