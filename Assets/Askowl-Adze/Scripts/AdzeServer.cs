@@ -31,6 +31,7 @@
     protected virtual  bool Prepare() { return true; }
     protected abstract bool ShowNow();
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     protected virtual bool Loaded    { get; set; }
     protected virtual bool Dismissed { get; set; }
 
@@ -45,16 +46,10 @@
 
         if (!Prepare()) throw new Exception();
 
-        if (!Loaded) {
-          Log(action: "Show", result: "Not Ready");
-          throw new Exception();
-        }
-
-        Log(action: "Show", result: "Now");
+        Log(action: "Show", result: "Now", csv: Loaded ? "Preloaded" : "Not Preloaded");
         if (!ShowNow()) throw new Exception();
       } catch {
         Error = true;
-        yield break;
       }
 
       yield return WaitUntilAdDismissed();
@@ -93,7 +88,9 @@
     [NotNull]
     protected string More([NotNull] params object[] list) { return log.More(list: list); }
 
-    protected void LogError(string message) { log.Error(message: More("Adze", Name, message)); }
+    protected void LogError(string message) {
+      log.Error(message: More("Adze, Error", message, Name, "DELETE ME"));
+    }
 
     [Serializable]
     public struct Key {

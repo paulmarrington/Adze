@@ -7,9 +7,10 @@ namespace Adze {
 
   [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "AdzeChartboost")]
   public sealed class AdzeChartboost : AdzeServer {
-    private Action     chartboostShow;
+    private Action     chartboostShow, chartboostCache;
     private Func<bool> isLoaded;
     private string[]   keyPair;
+    private CBLocation cbLocation;
 
     protected override void Initialise() {
       // appKey is made up of AppId and AppSignature separated by ; or similar
@@ -19,55 +20,36 @@ namespace Adze {
 
       switch (Mode) {
         case Mode.Interstitial:
-          chartboostShow = ShowInterstitial;
-          isLoaded       = HasInterstitial;
+          chartboostShow  = () => Chartboost.showInterstitial(cbLocation);
+          isLoaded        = () => Chartboost.hasInterstitial(cbLocation);
+          chartboostCache = () => Chartboost.cacheInterstitial(cbLocation);
           break;
 
         case Mode.Reward:
-          chartboostShow = showRewardedVideo;
-          isLoaded       = HasRewardedVideo;
+          chartboostShow  = () => Chartboost.showRewardedVideo(cbLocation);
+          isLoaded        = () => Chartboost.hasRewardedVideo(cbLocation);
+          chartboostCache = () => Chartboost.cacheRewardedVideo(cbLocation);
           break;
       }
 
       SetupDelegates();
 
-      //      Chartboost.Create();
+      Chartboost.Create();
       Chartboost.setAutoCacheAds(true);
     }
 
     protected override bool Prepare() {
-      CBLocation cbLocation = CBLocation.locationFromName(name: Location);
+      cbLocation = CBLocation.locationFromName(name: Location);
       CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
-      Chartboost.cacheRewardedVideo(cbLocation);
+      chartboostCache();
       return true;
-    }
-
-    private bool HasRewardedVideo() {
-      return Chartboost.hasRewardedVideo(CBLocation.locationFromName(name: Location));
-    }
-
-    private void showRewardedVideo() {
-      CBLocation cbLocation = CBLocation.locationFromName(name: Location);
-      Chartboost.showRewardedVideo(cbLocation);
-      Chartboost.cacheRewardedVideo(cbLocation);
-    }
-
-    private bool HasInterstitial() {
-      return Chartboost.hasRewardedVideo(CBLocation.locationFromName(name: Location));
-    }
-
-    private void ShowInterstitial() {
-      CBLocation cbLocation = CBLocation.locationFromName(name: Location);
-
-      CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
-      Chartboost.showInterstitial(cbLocation);
-      Chartboost.cacheInterstitial(cbLocation);
     }
 
     protected override void Destroy() { RemoveDelegates(); }
 
     protected override bool ShowNow() {
       chartboostShow();
+      chartboostCache();
       return true;
     }
 
