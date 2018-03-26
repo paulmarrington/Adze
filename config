@@ -1,5 +1,6 @@
 declare -- framework="Unity"
-declare -- packages=""
-declare -- local_packages="Askowl-Build Askowl-Assets Askowl-UI Askowl-Decoupler Askowl-Coroutines"
+declare -- packages="Asset:Store-5.x/Unity:Technologies/Unity:EssentialsBeta:Content/TextMesh:Pro.unitypackage CBUnityPlugin_7_0_1.unitypackage"
+declare -- local_packages="Askowl/Assets Askowl/Build Askowl/Coroutines Askowl/Decoupler Askowl/UI"
 declare -- quote_count="50"
+declare -- fact_count="100"
 declare -- joke_count="200"
