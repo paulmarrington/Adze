@@ -3,7 +3,7 @@
   using System.Collections;
   using System.Collections.Generic;
   using Askowl;
-  using Decoupled.Analytics;
+  using Decoupled;
   using JetBrains.Annotations;
   using UnityEngine;
 
@@ -14,10 +14,10 @@
 
     private bool enabled;
 
-    private                    GameLog log;
-    [SerializeField] protected Mode    Mode         = Mode.Reward;
-    [SerializeField] public    int     Priority     = 1;
-    [SerializeField] public    int     UsageBalance = 1;
+    private                    Analytics log;
+    [SerializeField] protected Mode      Mode         = Mode.Reward;
+    [SerializeField] public    int       Priority     = 1;
+    [SerializeField] public    int       UsageBalance = 1;
 
     public    bool   AdActionTaken { get; protected set; }
     public    bool   Error         { get; protected set; }
@@ -47,7 +47,7 @@
     public void OnEnable() {
       name     = GetType().Name;
       Location = "default";
-      log      = GameLog.Instance;
+      log      = Analytics.Instance;
 
       foreach (Key appKey in appKeys) {
         if (!(enabled = Application.platform == appKey.Platform)) continue;
@@ -74,7 +74,7 @@
 
     // ReSharper disable once UnusedMember.Global
     protected void LogError(string message) {
-      log.Error(message: log.More("Adze, Error", message, name, Mode, Location));
+      log.Error("Adze", message, name, Mode, "Location=", Location);
     }
 
     [Serializable]

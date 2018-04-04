@@ -2,7 +2,7 @@
   using System;
   using System.Collections;
   using Askowl;
-  using Decoupled.Analytics;
+  using Decoupled;
   using UnityEngine;
 
   public enum Mode {
@@ -21,10 +21,10 @@
 //    [NotNull]
 //    public string ServerName { get { return Servers[currentServer].name; } }
 
-    private int     currentServer, lastServer;
-    private int[]   usages;
-    private Mode    currentMode;
-    private GameLog log;
+    private int       currentServer, lastServer;
+    private int[]     usages;
+    private Mode      currentMode;
+    private Analytics log;
 
     internal new static AdzeDistributor Asset(string name = "Distributor") {
       return CustomAsset<AdzeDistributor>.Asset(name: name);
@@ -48,10 +48,10 @@
 
         if (!Error) break;
 
-        if (!PrepareNextServer()) {
-          i++;
-          yield return new WaitForSecondsRealtime(0.5f);
-        }
+        if (PrepareNextServer()) continue;
+
+        i++;
+        yield return new WaitForSecondsRealtime(0.5f);
       }
 
       if (Error) {
@@ -67,27 +67,27 @@
 
       Error = Servers[currentServer].Error;
 
-      if (!Error) {
-        AdShown       = true;
-        AdActionTaken = Servers[currentServer].AdActionTaken;
+      if (Error) yield break;
 
-        usages[currentServer] += 1;
+      AdShown       = true;
+      AdActionTaken = Servers[currentServer].AdActionTaken;
 
-        if ((usages[currentServer] % Servers[currentServer].UsageBalance) == 0) {
-          PrepareNextServer(); // ready for next time we show an advertisement
-        }
+      usages[currentServer] += 1;
 
-        string actionText = AdActionTaken ? "Ad action taken" : "Ad displayed";
-
-        log.Event("Adze", "Player Action", actionText, currentMode, location);
+      if ((usages[currentServer] % Servers[currentServer].UsageBalance) == 0) {
+        PrepareNextServer(); // ready for next time we show an advertisement
       }
+
+      string actionText = AdActionTaken ? "Ad action taken" : "Ad displayed";
+
+      log.Event("Adze", "Player Action", actionText, currentMode, location);
     }
 
     public void OnEnable() {
-      log = GameLog.Instance;
+      log = Analytics.Instance;
 
       if (Servers == null) {
-        log.Error(message: "Set advertising servers in Adze Distributor Custom Asset");
+        log.Error("Adze", "No advertising servers in Adze Distributor Custom Asset");
         Servers = new AdzeServer[0];
       }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using System;
+using Decoupled;
 
 namespace Adze {
   using Askowl;
@@ -25,10 +26,10 @@ namespace Adze {
     public int             AdsShownBetweenQuotes = 2;
     public AdzeDistributor Distributor;
 
-    private Selector<Prompt>            prompt, thank;
-    private Quotes                      quotes, facts;
-    private int                         count;
-    private Decoupled.Analytics.GameLog log;
+    private Selector<Prompt> prompt, thank;
+    private Quotes           quotes, facts;
+    private int              count;
+    private Analytics        log;
 
     [HideInInspector] public bool AdWatched, AdRequested;
 
@@ -38,7 +39,7 @@ namespace Adze {
     }
 
     public void OnEnable() {
-      log    = Decoupled.Analytics.GameLog.Instance;
+      log    = Analytics.Instance;
       prompt = new Selector<Prompt>(choices: Prompts);
       thank  = new Selector<Prompt>(choices: Thanks);
       quotes = new Quotes();
@@ -87,7 +88,7 @@ namespace Adze {
         } else if (Distributor == null) {
           yield return ShowQuote(dialog);
 
-          log.Error("Advertisement server not set");
+          log.Error("Adze", "Advertisement server not set");
         } else {
           // ReSharper disable once MustUseReturnValue
           ShowFact(dialog); // don't wait
