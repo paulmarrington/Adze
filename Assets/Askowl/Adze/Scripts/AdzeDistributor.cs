@@ -24,7 +24,7 @@
     private int       currentServer, lastServer;
     private int[]     usages;
     private Mode      currentMode;
-    private Analytics log;
+    private Analytics Log { get { return Analytics.Instance; } }
 
     internal new static AdzeDistributor Asset(string name = "Distributor") {
       return CustomAsset<AdzeDistributor>.Asset(name: name);
@@ -55,7 +55,7 @@
       }
 
       if (Error) {
-        log.Event("Adze", "Error", "Ad servers not responding", currentMode, location);
+        Log.Event("Adze", "Error", "Ad servers not responding", currentMode, location);
       }
 
       Time.timeScale = timeScale;
@@ -80,14 +80,12 @@
 
       string actionText = AdActionTaken ? "Ad action taken" : "Ad displayed";
 
-      log.Event("Adze", "Player Action", actionText, currentMode, location);
+      Log.Event("Adze", "Player Action", actionText, currentMode, location);
     }
 
     public void OnEnable() {
-      log = Analytics.Instance;
-
       if (Servers == null) {
-        log.Error("Adze", "No advertising servers in Adze Distributor Custom Asset");
+        Log.Error("Adze", "No advertising servers in Adze Distributor Custom Asset");
         Servers = new AdzeServer[0];
       }
 

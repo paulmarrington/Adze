@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using UnityEngine;
-using System;
-using Decoupled;
-
-namespace Adze {
+﻿namespace Adze {
+  using System;
+  using System.Collections;
   using Askowl;
+  using Decoupled;
   using JetBrains.Annotations;
+  using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "Reward")]
   public sealed class AdzeReward : CustomAsset<AdzeReward> {
@@ -29,17 +28,15 @@ namespace Adze {
     private Selector<Prompt> prompt, thank;
     private Quotes           quotes, facts;
     private int              count;
-    private Analytics        log;
+
+    private static Analytics Log { get { return Analytics.Instance; } }
 
     [HideInInspector] public bool AdWatched, AdRequested;
 
     [UsedImplicitly]
-    public new static AdzeReward Asset(string assetName) {
-      return CustomAsset<AdzeReward>.Asset(name: assetName);
-    }
+    public new static AdzeReward Asset(string assetName) { return Asset(name: assetName); }
 
     public void OnEnable() {
-      log    = Analytics.Instance;
       prompt = new Selector<Prompt>(choices: Prompts);
       thank  = new Selector<Prompt>(choices: Thanks);
       quotes = new Quotes();
@@ -84,11 +81,11 @@ namespace Adze {
         if (((++count % (AdsShownBetweenQuotes + 1)) == 0) && (quotes.Length > 0)) {
           yield return ShowQuote(dialog);
 
-          log.Event(name: "Advertisement", action: "Content", result: "Quote displayed");
+          Log.Event(name: "Advertisement", action: "Content", result: "Quote displayed");
         } else if (Distributor == null) {
           yield return ShowQuote(dialog);
 
-          log.Error("Adze", "Advertisement server not set");
+          Log.Error(name: "Adze", message: "Advertisement server not set");
         } else {
           // ReSharper disable once MustUseReturnValue
           ShowFact(dialog); // don't wait
@@ -101,7 +98,7 @@ namespace Adze {
           }
         }
       } else {
-        log.Event(name: "Advertisement", action: "Content", result: "Ad not watched by player");
+        Log.Event(name: "Advertisement", action: "Content", result: "Ad not watched by player");
       }
     }
   }

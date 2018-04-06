@@ -10,14 +10,12 @@
   public abstract class AdzeServer : CustomAsset<AdzeServer> {
     protected string AppKey;
 
-    [SerializeField] private List<Key> appKeys;
-
-    private bool enabled;
-
-    private                    Analytics log;
+    [SerializeField] private   List<Key> appKeys;
     [SerializeField] protected Mode      Mode         = Mode.Reward;
     [SerializeField] public    int       Priority     = 1;
     [SerializeField] public    int       UsageBalance = 1;
+
+    private bool enabled;
 
     public    bool   AdActionTaken { get; protected set; }
     public    bool   Error         { get; protected set; }
@@ -47,7 +45,6 @@
     public void OnEnable() {
       name     = GetType().Name;
       Location = "default";
-      log      = Analytics.Instance;
 
       foreach (Key appKey in appKeys) {
         if (!(enabled = Application.platform == appKey.Platform)) continue;
@@ -69,12 +66,12 @@
 
     // ReSharper disable once MemberCanBePrivate.Global
     protected void Log(string action, string result, [NotNull] params object[] more) {
-      log.Event("Adze", action, result, name, Mode, Location, log.More(more));
+      Analytics.Instance.Event("Adze", action, result, name, Mode, Location, Analytics.More(more));
     }
 
     // ReSharper disable once UnusedMember.Global
     protected void LogError(string message) {
-      log.Error("Adze", message, name, Mode, "Location=", Location);
+      Analytics.Instance.Error("Adze", message, name, Mode, "Location=", Location);
     }
 
     [Serializable]
