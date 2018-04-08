@@ -20,15 +20,15 @@ namespace Adze {
 
       switch (Mode) {
         case Mode.Interstitial:
-          chartboostShow  = () => Chartboost.showInterstitial(cbLocation);
-          isLoaded        = () => Chartboost.hasInterstitial(cbLocation);
+          chartboostShow = () => Chartboost.showInterstitial(cbLocation);
+          isLoaded = () => Chartboost.hasInterstitial(cbLocation);
           chartboostCache = () => Chartboost.cacheInterstitial(cbLocation);
           SetupInterstitialDelegates();
           break;
 
         case Mode.Reward:
-          chartboostShow  = () => Chartboost.showRewardedVideo(cbLocation);
-          isLoaded        = () => Chartboost.hasRewardedVideo(cbLocation);
+          chartboostShow = () => Chartboost.showRewardedVideo(cbLocation);
+          isLoaded = () => Chartboost.hasRewardedVideo(cbLocation);
           chartboostCache = () => Chartboost.cacheRewardedVideo(cbLocation);
           SetupRewardDelegates();
           break;
@@ -71,17 +71,17 @@ namespace Adze {
     /* ******************************************************************* */
     private void SetupInterstitialDelegates() {
       // Listen to all impression-related events
-      Chartboost.didInitialize                += DidInitialize;
-      Chartboost.didFailToLoadInterstitial    += DidFailToLoadInterstitial;
-      Chartboost.didDismissInterstitial       += DidDismissInterstitial;
-      Chartboost.didCloseInterstitial         += DidCloseInterstitial;
-      Chartboost.didClickInterstitial         += DidClickInterstitial;
-      Chartboost.didCacheInterstitial         += DidCacheInterstitial;
-      Chartboost.shouldDisplayInterstitial    += ShouldDisplayInterstitial;
-      Chartboost.didDisplayInterstitial       += DidDisplayInterstitial;
-      Chartboost.didFailToRecordClick         += DidFailToRecordClick;
+      Chartboost.didInitialize += DidInitialize;
+      Chartboost.didFailToLoadInterstitial += DidFailToLoadInterstitial;
+      Chartboost.didDismissInterstitial += DidDismissInterstitial;
+      Chartboost.didCloseInterstitial += DidCloseInterstitial;
+      Chartboost.didClickInterstitial += DidClickInterstitial;
+      Chartboost.didCacheInterstitial += DidCacheInterstitial;
+      Chartboost.shouldDisplayInterstitial += ShouldDisplayInterstitial;
+      Chartboost.didDisplayInterstitial += DidDisplayInterstitial;
+      Chartboost.didFailToRecordClick += DidFailToRecordClick;
       Chartboost.didPauseClickForConfirmation += DidPauseClickForConfirmation;
-      Chartboost.willDisplayVideo             += WillDisplayVideo;
+      Chartboost.willDisplayVideo += WillDisplayVideo;
 
 #if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow += DidCompleteAppStoreSheetFlow;
@@ -90,18 +90,18 @@ namespace Adze {
 
     private void SetupRewardDelegates() {
       // Listen to all impression-related events
-      Chartboost.didInitialize                += DidInitialize;
-      Chartboost.didFailToRecordClick         += DidFailToRecordClick;
-      Chartboost.didFailToLoadRewardedVideo   += DidFailToLoadRewardedVideo;
-      Chartboost.didDismissRewardedVideo      += DidDismissRewardedVideo;
-      Chartboost.didCloseRewardedVideo        += DidCloseRewardedVideo;
-      Chartboost.didClickRewardedVideo        += DidClickRewardedVideo;
-      Chartboost.didCacheRewardedVideo        += DidCacheRewardedVideo;
-      Chartboost.shouldDisplayRewardedVideo   += ShouldDisplayRewardedVideo;
-      Chartboost.didCompleteRewardedVideo     += DidCompleteRewardedVideo;
-      Chartboost.didDisplayRewardedVideo      += DidDisplayRewardedVideo;
+      Chartboost.didInitialize += DidInitialize;
+      Chartboost.didFailToRecordClick += DidFailToRecordClick;
+      Chartboost.didFailToLoadRewardedVideo += DidFailToLoadRewardedVideo;
+      Chartboost.didDismissRewardedVideo += DidDismissRewardedVideo;
+      Chartboost.didCloseRewardedVideo += DidCloseRewardedVideo;
+      Chartboost.didClickRewardedVideo += DidClickRewardedVideo;
+      Chartboost.didCacheRewardedVideo += DidCacheRewardedVideo;
+      Chartboost.shouldDisplayRewardedVideo += ShouldDisplayRewardedVideo;
+      Chartboost.didCompleteRewardedVideo += DidCompleteRewardedVideo;
+      Chartboost.didDisplayRewardedVideo += DidDisplayRewardedVideo;
       Chartboost.didPauseClickForConfirmation += DidPauseClickForConfirmation;
-      Chartboost.willDisplayVideo             += WillDisplayVideo;
+      Chartboost.willDisplayVideo += WillDisplayVideo;
 
 #if UNITY_IPHONE
       Chartboost.didCompleteAppStoreSheetFlow += DidCompleteAppStoreSheetFlow;
@@ -111,32 +111,32 @@ namespace Adze {
     private void RemoveDelegates() {
       switch (Mode) {
         case Mode.Interstitial:
-          Chartboost.didInitialize                -= DidInitialize;
-          Chartboost.didFailToLoadInterstitial    -= DidFailToLoadInterstitial;
-          Chartboost.didDismissInterstitial       -= DidDismissInterstitial;
-          Chartboost.didCloseInterstitial         -= DidCloseInterstitial;
-          Chartboost.didClickInterstitial         -= DidClickInterstitial;
-          Chartboost.didCacheInterstitial         -= DidCacheInterstitial;
-          Chartboost.shouldDisplayInterstitial    -= ShouldDisplayInterstitial;
-          Chartboost.didDisplayInterstitial       -= DidDisplayInterstitial;
-          Chartboost.didFailToRecordClick         -= DidFailToRecordClick;
+          Chartboost.didInitialize -= DidInitialize;
+          Chartboost.didFailToLoadInterstitial -= DidFailToLoadInterstitial;
+          Chartboost.didDismissInterstitial -= DidDismissInterstitial;
+          Chartboost.didCloseInterstitial -= DidCloseInterstitial;
+          Chartboost.didClickInterstitial -= DidClickInterstitial;
+          Chartboost.didCacheInterstitial -= DidCacheInterstitial;
+          Chartboost.shouldDisplayInterstitial -= ShouldDisplayInterstitial;
+          Chartboost.didDisplayInterstitial -= DidDisplayInterstitial;
+          Chartboost.didFailToRecordClick -= DidFailToRecordClick;
           Chartboost.didPauseClickForConfirmation -= DidPauseClickForConfirmation;
-          Chartboost.willDisplayVideo             -= WillDisplayVideo;
+          Chartboost.willDisplayVideo -= WillDisplayVideo;
           break;
 
         case Mode.Reward:
-          Chartboost.didInitialize                -= DidInitialize;
-          Chartboost.didFailToLoadRewardedVideo   -= DidFailToLoadRewardedVideo;
-          Chartboost.didDismissRewardedVideo      -= DidDismissRewardedVideo;
-          Chartboost.didCloseRewardedVideo        -= DidCloseRewardedVideo;
-          Chartboost.didClickRewardedVideo        -= DidClickRewardedVideo;
-          Chartboost.didCacheRewardedVideo        -= DidCacheRewardedVideo;
-          Chartboost.shouldDisplayRewardedVideo   -= ShouldDisplayRewardedVideo;
-          Chartboost.didCompleteRewardedVideo     -= DidCompleteRewardedVideo;
-          Chartboost.didDisplayRewardedVideo      -= DidDisplayRewardedVideo;
-          Chartboost.didFailToRecordClick         -= DidFailToRecordClick;
+          Chartboost.didInitialize -= DidInitialize;
+          Chartboost.didFailToLoadRewardedVideo -= DidFailToLoadRewardedVideo;
+          Chartboost.didDismissRewardedVideo -= DidDismissRewardedVideo;
+          Chartboost.didCloseRewardedVideo -= DidCloseRewardedVideo;
+          Chartboost.didClickRewardedVideo -= DidClickRewardedVideo;
+          Chartboost.didCacheRewardedVideo -= DidCacheRewardedVideo;
+          Chartboost.shouldDisplayRewardedVideo -= ShouldDisplayRewardedVideo;
+          Chartboost.didCompleteRewardedVideo -= DidCompleteRewardedVideo;
+          Chartboost.didDisplayRewardedVideo -= DidDisplayRewardedVideo;
+          Chartboost.didFailToRecordClick -= DidFailToRecordClick;
           Chartboost.didPauseClickForConfirmation -= DidPauseClickForConfirmation;
-          Chartboost.willDisplayVideo             -= WillDisplayVideo;
+          Chartboost.willDisplayVideo -= WillDisplayVideo;
           break;
       }
 
@@ -214,7 +214,7 @@ namespace Adze {
   using UnityEngine;
 
   // so we can create asset and still install Appodeal later
-  [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "Chartboost")]
+  [CreateAssetMenu(menuName = "Adze/Chartboost", fileName = "AdzeChartboost")]
   public sealed class AdzeChartboost : AdzeServer {
     protected override void Initialise() {
       Debug.LogWarning("*** Install Chartboost unity package from " +

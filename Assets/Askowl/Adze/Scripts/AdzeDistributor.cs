@@ -11,7 +11,7 @@
     Reward
   }
 
-  [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "Distributor")]
+  [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "AdzeDistributor")]
   public sealed class AdzeDistributor : CustomAsset<AdzeDistributor> {
     public bool         RoundRobin = true;
     public AdzeServer[] Servers;
@@ -24,7 +24,7 @@
     private int       currentServer, lastServer;
     private int[]     usages;
     private Mode      currentMode;
-    private Analytics Log { get { return Analytics.Instance; } }
+    private Analytics log;
 
     internal new static AdzeDistributor Asset(string name = "Distributor") {
       return CustomAsset<AdzeDistributor>.Asset(name: name);
@@ -55,7 +55,7 @@
       }
 
       if (Error) {
-        Log.Event("Adze", "Error", "Ad servers not responding", currentMode, location);
+        log.Event("Adze", "Error", "Ad servers not responding", currentMode, location);
       }
 
       Time.timeScale = timeScale;
@@ -80,12 +80,14 @@
 
       string actionText = AdActionTaken ? "Ad action taken" : "Ad displayed";
 
-      Log.Event("Adze", "Player Action", actionText, currentMode, location);
+      log.Event("Adze", "Player Action", actionText, currentMode, location);
     }
 
     public void OnEnable() {
+      log = Analytics.Instance;
+
       if (Servers == null) {
-        Log.Error("Adze", "No advertising servers in Adze Distributor Custom Asset");
+        log.Error("Adze", "No advertising servers in Adze Distributor Custom Asset");
         Servers = new AdzeServer[0];
       }
 

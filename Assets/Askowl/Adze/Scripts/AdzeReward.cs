@@ -29,7 +29,7 @@
     private Quotes           quotes, facts;
     private int              count;
 
-    private static Analytics Log { get { return Analytics.Instance; } }
+    private Analytics log;
 
     [HideInInspector] public bool AdWatched, AdRequested;
 
@@ -37,6 +37,7 @@
     public new static AdzeReward Asset(string assetName) { return Asset(name: assetName); }
 
     public void OnEnable() {
+      log    = Analytics.Instance;
       prompt = new Selector<Prompt>(choices: Prompts);
       thank  = new Selector<Prompt>(choices: Thanks);
       quotes = new Quotes();
@@ -81,11 +82,11 @@
         if (((++count % (AdsShownBetweenQuotes + 1)) == 0) && (quotes.Length > 0)) {
           yield return ShowQuote(dialog);
 
-          Log.Event(name: "Advertisement", action: "Content", result: "Quote displayed");
+          log.Event(name: "Advertisement", action: "Content", result: "Quote displayed");
         } else if (Distributor == null) {
           yield return ShowQuote(dialog);
 
-          Log.Error(name: "Adze", message: "Advertisement server not set");
+          log.Error(name: "Adze", message: "Advertisement server not set");
         } else {
           // ReSharper disable once MustUseReturnValue
           ShowFact(dialog); // don't wait
@@ -98,7 +99,7 @@
           }
         }
       } else {
-        Log.Event(name: "Advertisement", action: "Content", result: "Ad not watched by player");
+        log.Event(name: "Advertisement", action: "Content", result: "Ad not watched by player");
       }
     }
   }

@@ -43,6 +43,7 @@
     }
 
     public void OnEnable() {
+      log      = Analytics.Instance;
       name     = GetType().Name;
       Location = "default";
 
@@ -64,14 +65,16 @@
 
     public void OnDisable() { Destroy(); }
 
+    private Analytics log;
+
     // ReSharper disable once MemberCanBePrivate.Global
     protected void Log(string action, string result, [NotNull] params object[] more) {
-      Analytics.Instance.Event("Adze", action, result, name, Mode, Location, Analytics.More(more));
+      log.Event("Adze", action, result, name, Mode, Location, Analytics.More(more));
     }
 
     // ReSharper disable once UnusedMember.Global
     protected void LogError(string message) {
-      Analytics.Instance.Error("Adze", message, name, Mode, "Location=", Location);
+      log.Error("Adze", message, name, Mode, "Location=", Location);
     }
 
     [Serializable]

@@ -552,7 +552,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: AskowlLib;Askowl
+    1: AskowlLib;Askowl;TextMeshPro
     4: Askowl;AdzeChartboost
   platformArchitecture: {}
   scriptingBackend: {}
