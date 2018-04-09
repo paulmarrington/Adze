@@ -6,7 +6,7 @@
   using JetBrains.Annotations;
   using UnityEngine;
 
-  [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "Reward")]
+  [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "AdzeReward")]
   public sealed class AdzeReward : CustomAsset<AdzeReward> {
     [Serializable]
     public struct Prompt {
@@ -70,7 +70,7 @@
        * Peculiar since it has the same ID. Probably something to do with it being a prefab.
        * The solution/workaround I chose was to find it when I need it.
        */
-      Dialog dialog           = Dialog.Instance(gameObjectName: "Reward");
+      Dialog dialog           = Dialog.Instance(gameObjectName: "AdzeReward");
       AdWatched = AdRequested = false;
       if (dialog == null) yield break;
 

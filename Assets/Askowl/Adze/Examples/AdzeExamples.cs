@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using System.Collections;
 using Adze;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -102,3 +103,4 @@ public sealed class AdzeExamples : MonoBehaviour {
 
   // other locations include Turn Dismissed, Game Over, Leaderboard, IAP Store, Item Store, Settings and Quit
 }
+#endif

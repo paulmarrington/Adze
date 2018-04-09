@@ -26,7 +26,7 @@
     private Mode      currentMode;
     private Analytics log;
 
-    internal new static AdzeDistributor Asset(string name = "Distributor") {
+    internal new static AdzeDistributor Asset(string name = "AdzeDistributor") {
       return CustomAsset<AdzeDistributor>.Asset(name: name);
     }
 
