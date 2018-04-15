@@ -9,14 +9,10 @@ namespace Adze {
   public sealed class AdzeChartboost : AdzeServer {
     private Action     chartboostShow, chartboostCache;
     private Func<bool> isLoaded;
-    private string[]   keyPair;
     private CBLocation cbLocation;
 
     protected override void Initialise() {
       // appKey is made up of AppId and AppSignature separated by ; or similar
-      string[] separators = {";", " ", ",", ":"};
-
-      keyPair = AppKey.Split(separator: separators, options: StringSplitOptions.RemoveEmptyEntries);
       SetChartboostData();
 
       switch (Mode) {
@@ -41,8 +37,9 @@ namespace Adze {
     }
 
     private void SetChartboostData() {
+      if (string.IsNullOrEmpty(Location)) Location = "Default";
       cbLocation = CBLocation.locationFromName(name: Location);
-      CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
+      CBSettings.setAppId(AppKey, AppSignature);
     }
 
     private bool Prepare() {

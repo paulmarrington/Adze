@@ -9,6 +9,8 @@
 
   public abstract class AdzeServer : CustomAsset<AdzeServer> {
     protected string AppKey;
+    protected string AppSignature;
+    protected string Location;
 
     [SerializeField] private   List<Key> appKeys;
     [SerializeField] protected Mode      Mode         = Mode.Reward;
@@ -17,9 +19,8 @@
 
     private bool enabled;
 
-    public    bool   AdActionTaken { get; protected set; }
-    public    bool   Error         { get; protected set; }
-    protected string Location      { get; private set; }
+    public bool AdActionTaken { get; protected set; }
+    public bool Error         { get; protected set; }
 
     protected virtual void Initialise() { }
 
@@ -32,8 +33,9 @@
     // ReSharper disable once VirtualMemberNeverOverridden.Global
     protected virtual bool Dismissed { get; set; }
 
-    public IEnumerator Show(Mode modeRequested, string location) {
-      Location      = location;
+    public IEnumerator Show(Mode modeRequested, [CanBeNull] string location) {
+      if (!string.IsNullOrEmpty(location)) Location = location;
+
       AdActionTaken = Error = Dismissed = false;
 
       if (modeRequested == Mode) Log(action: "Show", result: "Now");
@@ -51,6 +53,15 @@
         if (!(enabled = Application.platform == appKey.Platform)) continue;
 
         AppKey = appKey.Value;
+        string[] separators = {";", " ", ",", ":"};
+
+        string[] parts = appKey.Value.Split(separator: separators,
+                                            options: StringSplitOptions.RemoveEmptyEntries);
+
+        AppKey       = parts[0];
+        AppSignature = (parts.Length > 1) ? parts[1] : "";
+        Location     = (parts.Length > 2) ? parts[2] : "";
+
         Initialise();
         return;
       }

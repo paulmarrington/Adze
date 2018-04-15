@@ -30,7 +30,7 @@
       return CustomAsset<AdzeDistributor>.Asset(name: name);
     }
 
-    internal IEnumerator Show(Mode mode, string location = "Default") {
+    internal IEnumerator Show(Mode mode, string location = "") {
       Error = true;
 
       if (Servers.Length == 0) yield break;

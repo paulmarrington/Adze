@@ -1,4 +1,5 @@
 ﻿namespace Adze {
+  using System;
   using UnityEngine;
   using UnityEngine.Advertisements;
 
@@ -13,6 +14,19 @@
     }
 
     protected override bool ShowNow() {
+      if (string.IsNullOrEmpty(Location)) {
+        switch (Mode) {
+          case Mode.Interstitial:
+            Location = "rewardedVideo";
+            break;
+          case Mode.Reward:
+            Location = "video";
+            break;
+          default:
+            throw new ArgumentOutOfRangeException();
+        }
+      }
+
       Advertisement.Show(placementId: Location, showOptions: options);
       return true;
     }
