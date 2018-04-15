@@ -45,7 +45,7 @@
     public void OnEnable() {
       log      = Analytics.Instance;
       name     = GetType().Name;
-      Location = "default";
+      Location = "Default";
 
       foreach (Key appKey in appKeys) {
         if (!(enabled = Application.platform == appKey.Platform)) continue;

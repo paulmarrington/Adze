@@ -17,6 +17,7 @@ namespace Adze {
       string[] separators = {";", " ", ",", ":"};
 
       keyPair = AppKey.Split(separator: separators, options: StringSplitOptions.RemoveEmptyEntries);
+      SetChartboostData();
 
       switch (Mode) {
         case Mode.Interstitial:
@@ -39,10 +40,13 @@ namespace Adze {
       Prepare();
     }
 
-    private bool Prepare() {
+    private void SetChartboostData() {
       cbLocation = CBLocation.locationFromName(name: Location);
       CBSettings.setAppId(appId: keyPair[0], appSignature: keyPair[1]);
+    }
 
+    private bool Prepare() {
+      SetChartboostData();
       if (isLoaded()) return true;
 
       chartboostCache();
