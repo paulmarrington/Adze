@@ -47,8 +47,7 @@
         yield return Show(location);
 
         if (!Error) break;
-
-        if (PrepareNextServer()) continue;
+        if (PrepareNextServer()) break;
 
         i++;
         yield return new WaitForSecondsRealtime(0.5f);
