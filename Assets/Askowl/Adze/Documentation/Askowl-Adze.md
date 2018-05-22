@@ -1,5 +1,5 @@
 # Adze
-[TOC]
+* {:toc}
 > Read the code in the Examples Folder.
 
 ## Introduction
