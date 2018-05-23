@@ -1,8 +1,13 @@
-# Adze
-* {:toc}
+---
+title: Askowl Advertising Connector for Unity3D
+description: Choose your advertising network
+---
+* Table of Contents
+{:toc}
+
 > Read the code in the Examples Folder.
 
-## Introduction
+# Introduction
 Advertisements are the life-blood for many games. It is difficult to attract players if they have to pay upfront. There are many different formats with the three most common being:
 
 * Banner - displays above or below game-play
@@ -31,14 +36,14 @@ Adze provides a decoupled interface to the systems of your choice. If you have m
 
 Adze also provides a rewarded video prefab that once reskinned can ease the process for you.
 
-## Installation
+# Installation
 
 You will need to install the ***Askowl-Adze*** package using ***Askowl-Packager***. It is all you will need for development. The external interfaces are stubbed out and only show a message if used.
 
 Install the API packages when you are ready to test on active devices. The stub message will give you a URL. Alternatively, you can use ***Askowl-Packager*** to fetch the ones you want.
 
-## Implementation
-### Servers and Distributors
+# Implementation
+## Servers and Distributors
 All components are Custom Assets. Instances of Custom Assets reside in a ***Resources*** somewhere in your project. 
 
 1. Working in the  Unity editor project view
@@ -57,7 +62,7 @@ All components are Custom Assets. Instances of Custom Assets reside in a ***Reso
 
 To advertise in your code, fetch a reference to a *Distributor* and call show giving it an advertising type and an optional location, and network specific (unfortunately).
 
-```C#
+```c#
   private void Start() {
     unityDistributor = AdzeDistributor.Asset(name: "UnityDistributor");
   }
@@ -67,7 +72,7 @@ To advertise in your code, fetch a reference to a *Distributor* and call show gi
   }
 ```
 
-### Rewards Prefab
+## Rewards Prefab
 A resource created using the custom asset AdzeReward will use the reward prefab to ask your player if they want to watch a video for a reward.
 
 1. Drag the reward prefab from the Askowl-Adze/Prefabs folder into your scene. Retain the name *Reward*.
@@ -82,35 +87,35 @@ A resource created using the custom asset AdzeReward will use the reward prefab 
   1. Display the results in a *Coroutine* `yield return ref.Show(location: location);`
   1. Check to see if the player accepted and watched the video `if (ref.AdWatched) ...`.
 
-#### Entertainment
+### Entertainment
 Put two text files in a directory called *quotes.txt* and *facts.txt*. Quotes are occasionally displayed instead of an ad. Set the frequency in the Rewards custom asset. Leave the file empty to not show quotes at all.
 
 Facts are displayed while ads are loading. It will help keep player attention on slow networks.
 
-### Application Keys
+## Application Keys
 Each AdzeServer resource can have an application key for each platform it supports. In this way, the same project can be used even when compiling for different target platforms.
 
-### Priority
+## Priority
 Priority sets the order of networks.
 * It is the order displayed in *Round Robin* mode.
 * The highest priority will always be used when available when *Round Robin* is not selected.
 
-### Usage Balance
+## Usage Balance
 Each network will display *Usage Balance* times before going to the next on the list in *Round Robin* mode.
 
-### Round Robbin
+## Round Robbin
 In *Round Robin* mode each network is given an opportunity to display an ad. Use *Usage Balance* to control the proportion of the pie each option will consume.
 
 When not in *Round Robin* mode the network with the highest priority will always be selected. Only when it cannot serve an ad is the next on the list used.
 
-## Adding a new advertising Network
+# Adding a new advertising Network
 At last count, there are over 40 networks, not including special and regional ones. Here is a partial list:
 
 > AdColony, Adcash, Admob, Adsterra, Airpush, Applovin, Appnext, AppsUnion, Avazu, Billy, Mobile, Black6Adv, CPAlead, Chartboost, Clickdealer, Epom, Fyber, GOWIDE, InMobi, Kimia, Leadbolt, Minimob, MobAir, Mobidea, MobileCore, Mobobeat, MoBrain, Mobusi, Mobvista, Mpire, Network, Msales, PassionTeck, Persona.ly, Propeller, Ads, RevMob, Smaato, Startapp, Tapjoy, Unity, Ads, Vungle and Yeahmobi
 
 `Adze` only supports a few of them. If you want to add a new one, it is a relatively simple process. Inherit from `AdzeServer` and override some methods and encapsulated fields. Use ***AdzeUnity.cs*** and ***AdzeChartboost.cs*** as examples. The former is the simplest implementation while the latter provides a more detailed implementation without getting too complicated.
 
-### Available Fields
+## Available Fields
 * `AdActionTaken` - 
   1. *Interstitial* - Is set if the player clicks on the advertisement. It can be used to provide some subtle reward.
   1. *Rewarded* - Is set if the player does not abort the ad. If not set, do not give then the prize unless you are feeling particularly generous.
@@ -124,11 +129,11 @@ At last count, there are over 40 networks, not including special and regional on
 * `Priority` - Set in the Unity Editor. Change this to affect the order networks are accessed.
 * `UsageBalance` - When in `RoundRobin` mode, each network will be used `UsageBalance` times before Adze will move on to the next network in the list.
 
-### Available Methods
+## Available Methods
 * `Log(action, result, ...)` - A message is logged to the analytics package of choice. It will include the action, result, name of the network, type of advertisement, location supplied and any other parameters supplied.
 * `LogError(message)` - Logs an error message to the analytics package of choice including the information listed above.
 
-### Virtual Methods and Encapsulated Fields
+## Virtual Methods and Encapsulated Fields
 * `void Initialise()` - Is called once when the custom asset loads - so once per game invocation. Preparations may include initialising the network interface and preparing callbacks.
 * `void Destroy()` - Is called just before the game exits.
 * `bool ShowNow()` - Typically tells the network to display an ad and then returns immediately. Return false if the ad is not ready.
