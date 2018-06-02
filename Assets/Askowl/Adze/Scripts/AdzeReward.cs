@@ -33,7 +33,7 @@
 
     [HideInInspector] public bool AdWatched, AdRequested;
 
-    [UsedImplicitly]
+    
     public new static AdzeReward Asset(string assetName) { return Asset(name: assetName); }
 
     public void OnEnable() {
@@ -63,7 +63,7 @@
       return dialog.Activate(text: facts.Pick());
     }
 
-    [UsedImplicitly]
+    
     public IEnumerator Show(string location = "Default") {
       /*
        * When I try and cache dialog loaded in OnEnable, the reference becomes destroyed.

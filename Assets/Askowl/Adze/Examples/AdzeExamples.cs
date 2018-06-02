@@ -32,52 +32,52 @@ public sealed class AdzeExamples : MonoBehaviour {
     showResults(distributor: distributor);
   }
 
-  [UsedImplicitly]
+  
   public void ShowAdMobInterstitial() {
     StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Interstitial,
                                  location: "Startup"));
   }
 
-  [UsedImplicitly]
+  
   public void ShowAdMobRewarded() {
     StartCoroutine(routine: Show(distributor: adMobDistributor, mode: Mode.Reward,
                                  location: "Main Menu"));
   }
 
-  [UsedImplicitly]
+  
   public void ShowUnityInterstitial() {
     // locations must be this unless a new position is defined
     StartCoroutine(routine: Show(distributor: unityDistributor, mode: Mode.Interstitial,
                                  location: "video"));
   }
 
-  [UsedImplicitly]
+  
   public void ShowUnityRewarded() {
     // locations must be this unless a new position is defined
     StartCoroutine(routine: Show(distributor: unityDistributor, mode: Mode.Reward,
                                  location: "rewardedVideo"));
   }
 
-  [UsedImplicitly]
+  
   public void ShowAppodealInterstitial() {
     StartCoroutine(routine: Show(distributor: appodealDistributor, mode: Mode.Interstitial,
                                  location: "Achievements"));
   }
 
-  [UsedImplicitly]
+  
   public void ShowAppodealRewarded() {
     // location must be Default or a valid Appodeal placement
     StartCoroutine(routine: Show(distributor: appodealDistributor, mode: Mode.Reward,
                                  location: "Default"));
   }
 
-  [UsedImplicitly]
+  
   public void ShowChartboostInterstitial() {
     StartCoroutine(routine: Show(distributor: chartboostDistributor, mode: Mode.Interstitial,
                                  location: "Level Start"));
   }
 
-  [UsedImplicitly]
+  
   public void ShowChartboostRewarded() {
     StartCoroutine(routine: Show(distributor: chartboostDistributor, mode: Mode.Reward,
                                  location: "Level Dismissed"));
@@ -93,7 +93,7 @@ public sealed class AdzeExamples : MonoBehaviour {
     showResults(distributor: rewardedVideoAllNetworks.Distributor);
   }
 
-  [UsedImplicitly]
+  
   public void ShowAllRewarded() {
     // Appodeal will fail because it expects a location of 'Default'
     // Admob will fail because it does not like to coexist with Appodeal

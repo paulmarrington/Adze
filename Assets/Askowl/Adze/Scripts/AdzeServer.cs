@@ -90,8 +90,8 @@
 
     [Serializable]
     public struct Key {
-      [UsedImplicitly] public RuntimePlatform Platform;
-      [UsedImplicitly] public string          Value;
+       public RuntimePlatform Platform;
+       public string          Value;
     }
   }
 }

@@ -151,7 +151,7 @@
       Network.pubnative
     };
 
-    [UsedImplicitly]
+    
     private void DisableNetworksWeDoNotWantToUse() {
       // ReSharper disable once UnusedVariable
       foreach (Network disabledNetwork in DisabledNetworks) {
