@@ -12,14 +12,14 @@
   }
 
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "AdzeDistributor")]
-  public sealed class AdzeDistributor : CustomAsset<AdzeDistributor> {
-    public bool         RoundRobin = true;
-    public AdzeServer[] Servers;
+  public sealed class AdzeDistributor : CustomAsset.OfType<AdzeDistributor> {
+    [SerializeField] private Mode         defaultMode = Mode.Reward;
+    [SerializeField] private bool         roundRobin  = true;
+    [SerializeField] private AdzeServer[] servers;
 
-    [HideInInspector] public bool AdShown, AdActionTaken, Error;
-
-//    [NotNull]
-//    public string ServerName { get { return Servers[currentServer].name; } }
+    public bool AdShown       { get; private set; }
+    public bool AdActionTaken { get; private set; }
+    public bool Error         { get; private set; }
 
     private int       currentServer, lastServer;
     private int[]     usages;
@@ -27,24 +27,26 @@
     private Analytics log;
 
     internal new static AdzeDistributor Asset(string name = "AdzeDistributor") {
-      return CustomAsset<AdzeDistributor>.Asset(name: name);
+      return CustomAsset.OfType<AdzeDistributor>.Asset(name);
     }
 
-    internal IEnumerator Show(Mode mode, string location = "") {
+    public IEnumerator Show(string location = "") { yield return Show(defaultMode, location); }
+
+    public IEnumerator Show(Mode mode, string location = "") {
       Error = true;
 
-      if (Servers.Length == 0) yield break;
+      if (servers.Length == 0) yield break;
 
       float timeScale = Time.timeScale;
       Time.timeScale = 0;
       currentMode    = mode;
       AdActionTaken  = AdShown = false;
 
-      if (!RoundRobin) currentServer = 0; // alway start with the primary server
+      if (!roundRobin) currentServer = 0; // alway start with the primary server
       lastServer = currentServer;         // set so we only try each server once
 
       for (int i = 0; i < 3;) {
-        yield return Show(location);
+        yield return ShowOnCurrentServer(location);
 
         if (!Error) break;
         if (PrepareNextServer()) break;
@@ -61,19 +63,19 @@
       yield return null;
     }
 
-    private IEnumerator Show(string location) {
-      yield return Servers[currentServer].Show(currentMode, location);
+    private IEnumerator ShowOnCurrentServer(string location) {
+      yield return servers[currentServer].Show(currentMode, location);
 
-      Error = Servers[currentServer].Error;
+      Error = servers[currentServer].Error;
 
       if (Error) yield break;
 
       AdShown       = true;
-      AdActionTaken = Servers[currentServer].AdActionTaken;
+      AdActionTaken = servers[currentServer].AdActionTaken;
 
       usages[currentServer] += 1;
 
-      if ((usages[currentServer] % Servers[currentServer].UsageBalance) == 0) {
+      if ((usages[currentServer] % servers[currentServer].UsageBalance) == 0) {
         PrepareNextServer(); // ready for next time we show an advertisement
       }
 
@@ -85,20 +87,22 @@
     public void OnEnable() {
       log = Analytics.Instance;
 
-      if (Servers == null) {
+      if (servers == null) {
         log.Error("Adze", "No advertising servers in Adze Distributor Custom Asset");
-        Servers = new AdzeServer[0];
+        servers = new AdzeServer[0];
       }
 
-      Array.Sort(array: Servers, comparison: (x, y) => x.Priority.CompareTo(value: y.Priority));
+      Array.Sort(array: servers, comparison: (x, y) => x.Priority.CompareTo(value: y.Priority));
 
       currentServer = 0;
-      usages        = new int[Servers.Length];
+      usages        = new int[servers.Length];
     }
 
+    protected override bool Equals(AdzeDistributor other) { }
+
     private bool PrepareNextServer() {
-      while ((currentServer = (currentServer + 1) % Servers.Length) != lastServer) {
-        if (Servers[currentServer].UsageBalance != 0) {
+      while ((currentServer = (currentServer + 1) % servers.Length) != lastServer) {
+        if (servers[currentServer].UsageBalance != 0) {
           return true; // only allow if this ad server is meant to serve in the loop
         }
       }

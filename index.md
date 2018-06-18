@@ -1,5 +1,1 @@
----
-redirect_to:
-  - /Assets/Askowl/Adze/Documentation/Askowl-Adze
----
-
+redirect_to:\n  - /Assets/Askowl/Adze/Documentation/Askowl-Adze
