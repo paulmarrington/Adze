@@ -26,10 +26,6 @@
     private Mode      currentMode;
     private Analytics log;
 
-    internal new static AdzeDistributor Asset(string name = "AdzeDistributor") {
-      return CustomAsset.OfType<AdzeDistributor>.Asset(name);
-    }
-
     public IEnumerator Show(string location = "") { yield return Show(defaultMode, location); }
 
     public IEnumerator Show(Mode mode, string location = "") {
@@ -97,8 +93,6 @@
       currentServer = 0;
       usages        = new int[servers.Length];
     }
-
-    protected override bool Equals(AdzeDistributor other) { }
 
     private bool PrepareNextServer() {
       while ((currentServer = (currentServer + 1) % servers.Length) != lastServer) {
