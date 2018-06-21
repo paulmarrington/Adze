@@ -12,7 +12,7 @@
   }
 
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "AdzeDistributor")]
-  public sealed class AdzeDistributor : CustomAsset.OfType<AdzeDistributor> {
+  public sealed class AdzeDistributor : CustomAsset.Constant.OfType<AdzeDistributor> {
     [SerializeField] private Mode         defaultMode = Mode.Reward;
     [SerializeField] private bool         roundRobin  = true;
     [SerializeField] private AdzeServer[] servers;

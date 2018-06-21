@@ -1,4 +1,6 @@
-﻿namespace Adze {
+﻿using CustomAsset.Constant;
+
+namespace Adze {
   using System;
   using System.Collections;
   using Askowl;
@@ -7,45 +9,40 @@
   using UnityEngine;
 
   [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "AdzeReward")]
-  public sealed class AdzeReward : CustomAsset<AdzeReward> {
+  public sealed class AdzeReward : CustomAsset.Constant.OfType<AdzeReward> {
     [Serializable]
     public struct Prompt {
-      // ReSharper disable MemberCanBeInternal
-      // ReSharper disable UnassignedField.Global
-      [TextArea] public string Message;
+      [TextArea, SerializeField] internal string Message;
 
-      public string AcceptButton;
+      [SerializeField] internal string AcceptButton;
 
-      public string RefuseButton;
-      // ReSharper restore UnassignedField.Global
-      // ReSharper restore MemberCanBeInternal
+      [SerializeField] internal string RefuseButton;
     }
 
-    public Prompt[]        Prompts, Thanks;
-    public int             AdsShownBetweenQuotes = 2;
-    public AdzeDistributor Distributor;
+    [SerializeField] private Prompt[]        prompts, thanks;
+    [SerializeField] private int             adsShownBetweenQuotes = 2;
+    [SerializeField] private AdzeDistributor distributor;
+    [SerializeField] private Quotes          quotes, facts;
 
     private Selector<Prompt> prompt, thank;
-    private Quotes           quotes, facts;
     private int              count;
 
     private Analytics log;
 
     [HideInInspector] public bool AdWatched, AdRequested;
 
-    
-    public new static AdzeReward Asset(string assetName) { return Asset(name: assetName); }
+    public AdzeDistributor Distributor { get { return distributor; } }
+
+    public static AdzeReward Instance(string assetName) { return Instance<AdzeReward>(assetName); }
 
     public void OnEnable() {
       log    = Analytics.Instance;
-      prompt = new Selector<Prompt>(choices: Prompts);
-      thank  = new Selector<Prompt>(choices: Thanks);
-      quotes = new Quotes();
-      facts  = new Quotes("facts");
+      prompt = new Selector<Prompt>(choices: prompts);
+      thank  = new Selector<Prompt>(choices: thanks);
       count  = 0;
     }
 
-    private IEnumerator ShowDialog([NotNull] Dialog dialog, [NotNull] IPick<Prompt> prompter) {
+    private IEnumerator ShowDialog(Dialog dialog, Pick<Prompt> prompter) {
       Prompt dialogContent = prompter.Pick();
 
       return dialog.Activate(
@@ -63,7 +60,6 @@
       return dialog.Activate(text: facts.Pick());
     }
 
-    
     public IEnumerator Show(string location = "Default") {
       /*
        * When I try and cache dialog loaded in OnEnable, the reference becomes destroyed.
@@ -79,22 +75,22 @@
       if (dialog.Action.Equals(value: "Yes")) {
         AdRequested = true;
 
-        if (((++count % (AdsShownBetweenQuotes + 1)) == 0) && (quotes.Length > 0)) {
+        if (((++count % (adsShownBetweenQuotes + 1)) == 0) && (quotes.Count > 0)) {
           yield return ShowQuote(dialog);
 
           log.Event(name: "Advertisement", action: "Content", result: "Quote displayed");
-        } else if (Distributor == null) {
+        } else if (distributor == null) {
           yield return ShowQuote(dialog);
 
           log.Error(name: "Adze", message: "Advertisement server not set");
         } else {
           // ReSharper disable once MustUseReturnValue
           ShowFact(dialog); // don't wait
-          yield return Distributor.Show(mode: Mode.Reward, location: location);
+          yield return distributor.Show(mode: Mode.Reward, location: location);
 
-          AdWatched = Distributor.AdShown;
+          AdWatched = distributor.AdShown;
 
-          if (AdWatched || Distributor.Error) {
+          if (AdWatched || distributor.Error) {
             yield return ShowDialog(dialog: dialog, prompter: thank);
           }
         }

@@ -7,7 +7,7 @@
   using JetBrains.Annotations;
   using UnityEngine;
 
-  public abstract class AdzeServer : CustomAsset<AdzeServer> {
+  public abstract class AdzeServer : CustomAsset.Constant.OfType<AdzeServer> {
     protected string AppKey;
     protected string AppSignature;
     protected string Location;
@@ -90,8 +90,8 @@
 
     [Serializable]
     public struct Key {
-       public RuntimePlatform Platform;
-       public string          Value;
+      public RuntimePlatform Platform;
+      public string          Value;
     }
   }
 }
