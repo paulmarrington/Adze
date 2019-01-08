@@ -1,32 +1,42 @@
 ﻿using System;
 using System.Collections;
+using Askowl;
 using CustomAsset.Constant;
 using UnityEngine;
 
 namespace Adze {
+  /// <a href=""></a> //#TBD#//
   public enum Mode {
     //    Banner,
-    Interstitial,
+    /// <a href=""></a> //#TBD#//
+    Interstitial, /// <a href=""></a> //#TBD#//
     Reward
   }
 
+  /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "AdzeDistributor")]
   public sealed class AdzeDistributor : OfType<AdzeDistributor> {
     [SerializeField] private Mode         defaultMode = Mode.Reward;
     [SerializeField] private bool         roundRobin  = true;
     [SerializeField] private AdzeServer[] servers;
 
-    public bool AdShown       { get; private set; }
+    /// <a href=""></a> //#TBD#//
+    public bool AdShown { get; private set; }
+    /// <a href=""></a> //#TBD#//
     public bool AdActionTaken { get; private set; }
-    public bool Error         { get; private set; }
+    /// <a href=""></a> //#TBD#//
+    public bool Error { get; private set; }
 
-    private int       currentServer, lastServer;
-    private int[]     usages;
-    private Mode      currentMode;
-    private Analytics log;
+    private          int                 currentServer, lastServer;
+    private          int[]               usages;
+    private          Mode                currentMode;
+    private readonly Log.EventRecorder   error = Log.Errors();
+    private readonly Log.MessageRecorder log   = Log.Messages();
 
+    /// <a href=""></a> //#TBD#//
     public IEnumerator Show(string location = "") { yield return Show(defaultMode, location); }
 
+    /// <a href=""></a> //#TBD#//
     public IEnumerator Show(Mode mode, string location = "") {
       Error = true;
 
@@ -37,7 +47,7 @@ namespace Adze {
       currentMode    = mode;
       AdActionTaken  = AdShown = false;
 
-      if (!roundRobin) currentServer = 0; // alway start with the primary server
+      if (!roundRobin) currentServer = 0; // always start with the primary server
       lastServer = currentServer;         // set so we only try each server once
 
       for (int i = 0; i < 3;) {
@@ -51,7 +61,7 @@ namespace Adze {
       }
 
       if (Error) {
-        log.Event("Adze", "Error", "Ad servers not responding", currentMode, location);
+        error($"Ad servers not responding,{currentMode},{location}");
       }
 
       Time.timeScale = timeScale;
@@ -70,24 +80,23 @@ namespace Adze {
 
       usages[currentServer] += 1;
 
-      if ((usages[currentServer] % servers[currentServer].UsageBalance) == 0) {
+      if ((usages[currentServer] % servers[currentServer].usageBalance) == 0) {
         PrepareNextServer(); // ready for next time we show an advertisement
       }
 
       string actionText = AdActionTaken ? "Ad action taken" : "Ad displayed";
 
-      log.Event("Adze", "Player Action", actionText, currentMode, location);
+      log("Player Action", $"{actionText},{currentMode},{location}");
     }
 
-    public void OnEnable() {
-      log = Analytics.Instance;
-
+    /// <a href=""></a> //#TBD#//
+    protected override void OnEnable() {
       if (servers == null) {
-        log.Error("Adze", "No advertising servers in Adze Distributor Custom Asset");
+        error("No advertising servers in Adze Distributor Custom Asset");
         servers = new AdzeServer[0];
       }
 
-      Array.Sort(array: servers, comparison: (x, y) => x.Priority.CompareTo(value: y.Priority));
+      Array.Sort(array: servers, comparison: (x, y) => x.priority.CompareTo(value: y.priority));
 
       currentServer = 0;
       usages        = new int[servers.Length];
@@ -95,7 +104,7 @@ namespace Adze {
 
     private bool PrepareNextServer() {
       while ((currentServer = (currentServer + 1) % servers.Length) != lastServer) {
-        if (servers[currentServer].UsageBalance != 0) {
+        if (servers[currentServer].usageBalance != 0) {
           return true; // only allow if this ad server is meant to serve in the loop
         }
       }

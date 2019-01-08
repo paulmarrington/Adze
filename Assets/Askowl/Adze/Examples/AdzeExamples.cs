@@ -87,8 +87,8 @@ public sealed class AdzeExamples : MonoBehaviour {
     yield return rewardedVideoAllNetworks.Show(location: location);
 
     Debug.Log(message: "**** >>> After Reward: adRequested=" +
-                       rewardedVideoAllNetworks.AdRequested  + ", adWatched=" +
-                       rewardedVideoAllNetworks.AdWatched);
+                       rewardedVideoAllNetworks.adRequested  + ", adWatched=" +
+                       rewardedVideoAllNetworks.adWatched);
 
     showResults(distributor: rewardedVideoAllNetworks.Distributor);
   }

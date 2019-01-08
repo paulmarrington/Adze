@@ -1,22 +1,19 @@
-﻿using CustomAsset.Constant;
+﻿using System;
+using System.Collections;
+using Askowl;
+using CustomAsset.Constant;
+using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Adze {
-  using System;
-  using System.Collections;
-  using Askowl;
-  using Decoupled;
-  using JetBrains.Annotations;
-  using UnityEngine;
-
+  /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "AdzeReward")]
-  public sealed class AdzeReward : CustomAsset.Constant.OfType<AdzeReward> {
-    [Serializable]
-    public struct Prompt {
-      [TextArea, SerializeField] internal string Message;
-
-      [SerializeField] internal string AcceptButton;
-
-      [SerializeField] internal string RefuseButton;
+  public sealed class AdzeReward : OfType<AdzeReward> {
+    /// <a href=""></a> //#TBD#//
+    [Serializable] public struct Prompt {
+      [TextArea, SerializeField] internal string message;
+      [SerializeField]           internal string acceptButton;
+      [SerializeField]           internal string refuseButton;
     }
 
     [SerializeField] private Prompt[]        prompts, thanks;
@@ -27,18 +24,22 @@ namespace Adze {
     private Selector<Prompt> prompt, thank;
     private int              count;
 
-    private Analytics log;
+    private readonly Log.EventRecorder log   = Log.Events("Content");
+    private readonly Log.EventRecorder error = Log.Errors();
 
-    [HideInInspector] public bool AdWatched, AdRequested;
+    /// <a href=""></a> //#TBD#//
+    [HideInInspector] public bool adWatched, adRequested;
 
-    public AdzeDistributor Distributor { get { return distributor; } }
+    /// <a href=""></a> //#TBD#//
+    public AdzeDistributor Distributor => distributor;
 
-    public static AdzeReward Instance(string assetName) { return Instance<AdzeReward>(assetName); }
+    /// <a href=""></a> //#TBD#//
+    public new static AdzeReward Instance(string assetName) => Instance<AdzeReward>(assetName);
 
-    public void OnEnable() {
-      log    = Analytics.Instance;
-      prompt = new Selector<Prompt>(choices: prompts);
-      thank  = new Selector<Prompt>(choices: thanks);
+    /// <a href=""></a> //#TBD#//
+    protected override void OnEnable() {
+      prompt = new Selector<Prompt> {Choices = prompts};
+      thank  = new Selector<Prompt> {Choices = thanks};
       count  = 0;
     }
 
@@ -46,20 +47,18 @@ namespace Adze {
       Prompt dialogContent = prompter.Pick();
 
       return dialog.Activate(
-        dialogContent.Message,
-        dialogContent.RefuseButton,
-        dialogContent.AcceptButton);
+        dialogContent.message,
+        dialogContent.refuseButton,
+        dialogContent.acceptButton);
     }
 
-    private IEnumerator ShowQuote([NotNull] Dialog dialog) {
-      return dialog.Activate(quotes.Pick(), "", thank.Pick().AcceptButton);
-    }
+    private IEnumerator ShowQuote([NotNull] Dialog dialog) =>
+      dialog.Activate(quotes.Pick(), "", thank.Pick().acceptButton);
 
     // ReSharper disable once UnusedMethodReturnValue.Local
-    private IEnumerator ShowFact([NotNull] Dialog dialog) {
-      return dialog.Activate(text: facts.Pick());
-    }
+    private IEnumerator ShowFact([NotNull] Dialog dialog) => dialog.Activate(text: facts.Pick());
 
+    /// <a href=""></a> //#TBD#//
     public IEnumerator Show(string location = "Default") {
       /*
        * When I try and cache dialog loaded in OnEnable, the reference becomes destroyed.
@@ -67,35 +66,37 @@ namespace Adze {
        * The solution/workaround I chose was to find it when I need it.
        */
       Dialog dialog           = Dialog.Instance(gameObjectName: "AdzeReward");
-      AdWatched = AdRequested = false;
+      adWatched = adRequested = false;
       if (dialog == null) yield break;
 
       yield return ShowDialog(dialog: dialog, prompter: prompt);
 
       if (dialog.Action.Equals(value: "Yes")) {
-        AdRequested = true;
+        adRequested = true;
 
         if (((++count % (adsShownBetweenQuotes + 1)) == 0) && (quotes.Count > 0)) {
           yield return ShowQuote(dialog);
 
-          log.Event(name: "Advertisement", action: "Content", result: "Quote displayed");
+          log("Quote");
         } else if (distributor == null) {
           yield return ShowQuote(dialog);
 
-          log.Error(name: "Adze", message: "Advertisement server not set");
+          error("Advertisement server not set");
         } else {
-          // ReSharper disable once MustUseReturnValue
-          ShowFact(dialog); // don't wait
+          yield return ShowFact(dialog); // don't wait
           yield return distributor.Show(mode: Mode.Reward, location: location);
 
-          AdWatched = distributor.AdShown;
+          adWatched = distributor.AdShown;
+          log(
+            adWatched         ? "Watched" :
+            distributor.Error ? "Distributor Error" : "Skipped");
 
-          if (AdWatched || distributor.Error) {
+          if (adWatched || distributor.Error) {
             yield return ShowDialog(dialog: dialog, prompter: thank);
           }
         }
       } else {
-        log.Event(name: "Advertisement", action: "Content", result: "Ad not watched by player");
+        log("Rejected");
       }
     }
   }

@@ -15,7 +15,7 @@
 
     protected override bool ShowNow() {
       if (string.IsNullOrEmpty(Location)) {
-        switch (Mode) {
+        switch (mode) {
           case Mode.Interstitial:
             Location = "rewardedVideo";
             break;
