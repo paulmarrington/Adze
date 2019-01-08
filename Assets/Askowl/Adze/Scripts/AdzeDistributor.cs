@@ -1,10 +1,9 @@
-﻿namespace Adze {
-  using System;
-  using System.Collections;
-  using Askowl;
-  using Decoupled;
-  using UnityEngine;
+﻿using System;
+using System.Collections;
+using CustomAsset.Constant;
+using UnityEngine;
 
+namespace Adze {
   public enum Mode {
     //    Banner,
     Interstitial,
@@ -12,7 +11,7 @@
   }
 
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "AdzeDistributor")]
-  public sealed class AdzeDistributor : CustomAsset.Constant.OfType<AdzeDistributor> {
+  public sealed class AdzeDistributor : OfType<AdzeDistributor> {
     [SerializeField] private Mode         defaultMode = Mode.Reward;
     [SerializeField] private bool         roundRobin  = true;
     [SerializeField] private AdzeServer[] servers;
