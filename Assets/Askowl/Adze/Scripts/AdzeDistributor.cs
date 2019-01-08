@@ -21,6 +21,9 @@ namespace Adze {
     [SerializeField] private AdzeServer[] servers;
 
     /// <a href=""></a> //#TBD#//
+    public new static AdzeDistributor Instance(string assetName) => OfType<AdzeDistributor>.Instance(assetName);
+
+    /// <a href=""></a> //#TBD#//
     public bool AdShown { get; private set; }
     /// <a href=""></a> //#TBD#//
     public bool AdActionTaken { get; private set; }

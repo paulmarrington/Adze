@@ -1,17 +1,18 @@
-﻿namespace Adze {
-  using System;
-  using System.Collections;
-  using System.Collections.Generic;
-  using Askowl;
-  using Decoupled;
-  using JetBrains.Annotations;
-  using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Askowl;
+using CustomAsset.Constant;
+using JetBrains.Annotations;
+using UnityEngine;
 
+namespace Adze {
   /// <a href=""></a> //#TBD#//
-  public abstract class AdzeServer : CustomAsset.Constant.OfType<AdzeServer> {
+  public abstract class AdzeServer : OfType<AdzeServer> {
     /// <a href=""></a> //#TBD#//
     protected string AppKey;
     /// <a href=""></a> //#TBD#//
+    // ReSharper disable once NotAccessedField.Global
     protected string AppSignature;
     /// <a href=""></a> //#TBD#//
     protected string Location;
@@ -32,12 +33,14 @@
     public bool Error { get; protected set; }
 
     /// <a href=""></a> //#TBD#//
+    // ReSharper disable once VirtualMemberNeverOverridden.Global
     protected virtual void Destroy() { }
 
     /// <a href=""></a> //#TBD#//
     protected virtual bool ShowNow() => false;
 
     /// <a href=""></a> //#TBD#//
+    // ReSharper disable once VirtualMemberNeverOverridden.Global
     protected virtual bool Dismissed { get; set; }
 
     /// <a href=""></a> //#TBD#//
@@ -52,18 +55,19 @@
       while (!Error && !Dismissed) yield return null;
     }
 
-    /// <a href=""></a> //#TBD#//
-    public void OnEnable() {
+    /// <a href=""></a><inheritdoc/> //#TBD#//
+    protected override void OnEnable() {
+      base.OnEnable();
       name     = GetType().Name;
       Location = "Default";
 
       foreach (Key appKey in appKeys) {
-        if (!(enabled = Application.platform == appKey.Platform)) continue;
+        if (!(enabled = Application.platform == appKey.platform)) continue;
 
-        AppKey = appKey.Value;
+        AppKey = appKey.value;
         string[] separators = {";", " ", ",", ":"};
 
-        string[] parts = appKey.Value.Split(
+        string[] parts = appKey.value.Split(
           separator: separators,
           options: StringSplitOptions.RemoveEmptyEntries);
 
@@ -84,9 +88,12 @@
       Error = true;
     }
 
-    public void OnDisable() { Destroy(); }
+    protected override void OnDisable() {
+      base.OnDisable();
+      Destroy();
+    }
 
-    private Log.MessageRecorder log = Log.Messages();
+    private readonly Log.MessageRecorder log = Log.Messages();
 
 //    // ReSharper disable once MemberCanBePrivate.Global
 //    protected void Log(string action, string result, [NotNull] params object[] more) {
@@ -98,9 +105,12 @@
 //      log.Error("Adze", message, name, Mode, "Location=", Location);
 //    }
 
+    /// <a href=""></a> //#TBD#//
     [Serializable] public struct Key {
-      public RuntimePlatform Platform;
-      public string          Value;
+      /// <a href=""></a> //#TBD#//
+      public RuntimePlatform platform;
+      /// <a href=""></a> //#TBD#//
+      public string value;
     }
   }
 }

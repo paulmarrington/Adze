@@ -111,12 +111,13 @@ namespace Adze {
   using UnityEngine;
 
   // so we can create asset and still install Appodeal later
+  /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/AdMob", fileName = "AdMob")]
   public sealed class AdzeAdMob : AdzeServer {
-    protected override void Initialise() {
-      Debug.LogWarning("*** Install AdMob unity package from" +
-                       " https://github.com/googleads/googleads-mobile-plugins/releases/latest");
-    }
+    protected override void Initialise() =>
+      Debug.LogWarning(
+        "*** Install AdMob unity package from" +
+        " https://github.com/googleads/googleads-mobile-plugins/releases/latest");
   }
 }
 #endif

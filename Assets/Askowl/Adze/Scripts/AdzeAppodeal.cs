@@ -1,26 +1,27 @@
-﻿namespace Adze {
-  using System.Collections.Generic;
-  using JetBrains.Annotations;
-  using UnityEngine;
-#if AdzeAppodeal
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace Adze {
+  #if AdzeAppodeal
   using AppodealAds.Unity.Api;
   using AppodealAds.Unity.Common;
-#endif
+  #endif
 
+  /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/Appodeal", fileName = "AdzeAppodeal")]
-#if AdzeAppodeal
+  #if AdzeAppodeal
   public sealed class AdzeAppodeal : AdzeServer, IInterstitialAdListener,
                                      INonSkippableVideoAdListener, IBannerAdListener {
     private static bool initialised;
     private        int  appodealMode = -1;
-#else
+  #else
   public sealed class AdzeAppodeal : AdzeServer {
-#endif
+    #endif
 
     private static Dictionary<Mode, int> appodealModes;
 
     protected override void Initialise() {
-#if AdzeAppodeal
+      #if AdzeAppodeal
 #if (UNITY_ANDROID || UNITY_IPHONE)
       int NON_SKIPPABLE_VIDEO = Appodeal.NON_SKIPPABLE_VIDEO;
 #else
@@ -42,13 +43,14 @@
           Appodeal.setNonSkippableVideoCallbacks(listener: this);
           break;
       }
-#else
-      Debug.LogWarning("*** Install Appodeal unity package from" +
-                       " https://www.appodeal.com/sdk/unity2");
-#endif
+      #else
+      Debug.LogWarning(
+        "*** Install Appodeal unity package from" +
+        " https://www.appodeal.com/sdk/unity2");
+      #endif
     }
 
-#if AdzeAppodeal
+    #if AdzeAppodeal
     private void InitialiseAppodealOnce(int modes) {
       if (initialised) return;
 
@@ -108,56 +110,34 @@
     public void onBannerShown() { }
 
     public void onBannerClicked() { AdActionTaken = true; }
-#endif
+    #endif
 
+    /// <a href=""></a> //#TBD#//
     public enum Network {
-      // ReSharper disable InconsistentNaming
       // ReSharper disable UnusedMember.Global
-
-      adcolony,
-      admob,
-      amazon_ads,
-      appgrowth,
-      applovin,
-      axonix,
-      avocarrot,
-      chartboost,
-      clickky,
-      facebook,
-      flurry,
-      fractional,
-      inmobi,
-      inneractive,
-      ironsource,
-      liquidm,
-      mobvista,
-      mopub,
-      mytarget,
-      ogury,
-      openx,
-      pubnative,
-      smaato,
-      startapp,
-      tapjoy,
-      unity_ads,
-      vungle,
-      yandex
-
+      // ReSharper disable MissingXmlDoc
+      adcolony, admob, amazon_ads, appgrowth, applovin
+    , axonix, avocarrot, chartboost, clickky, facebook
+    , flurry, fractional, inmobi, inneractive, ironsource
+    , liquidm, mobvista, mopub, mytarget, ogury
+    , openx, pubnative, smaato, startapp, tapjoy
+    , unity_ads, vungle, yandex
+      // ReSharper restore MissingXmlDoc
       // ReSharper restore UnusedMember.Global
-      // ReSharper restore InconsistentNaming
     }
 
-    public Network[] DisabledNetworks = {
+    /// <a href=""></a> //#TBD#//
+    public Network[] disabledNetworks = {
       Network.pubnative
     };
 
-    
+// ReSharper disable once UnusedMember.Local
     private void DisableNetworksWeDoNotWantToUse() {
       // ReSharper disable once UnusedVariable
-      foreach (Network disabledNetwork in DisabledNetworks) {
-#if AdzeAppodeal
+      foreach (Network disabledNetwork in disabledNetworks) {
+        #if AdzeAppodeal
         Appodeal.disableNetwork(network: disabledNetwork.ToString());
-#endif
+        #endif
       }
     }
   }

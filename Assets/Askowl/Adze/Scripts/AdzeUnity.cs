@@ -3,6 +3,7 @@
   using UnityEngine;
   using UnityEngine.Advertisements;
 
+  /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/Unity", fileName = "AdzeUnity")]
   public sealed class AdzeUnity : AdzeServer {
     private ShowOptions options;
@@ -22,8 +23,7 @@
           case Mode.Reward:
             Location = "video";
             break;
-          default:
-            throw new ArgumentOutOfRangeException();
+          default: throw new ArgumentOutOfRangeException();
         }
       }
 

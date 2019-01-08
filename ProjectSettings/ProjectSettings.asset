@@ -490,7 +490,7 @@ PlayerSettings:
   webGLLinkerTarget: 0
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: 
+    1: TextMeshPro;Adze;PackageAdze
     4: Askowl;AdzeChartboost
   platformArchitecture: {}
   scriptingBackend: {}
