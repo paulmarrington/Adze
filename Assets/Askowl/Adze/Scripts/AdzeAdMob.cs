@@ -1,5 +1,7 @@
-﻿#if AdzeAdMob
-namespace Adze {
+﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+#if AdzeAdMob
+namespace Askowl.Adze {
   using System;
   using UnityEngine;
   using JetBrains.Annotations;
@@ -107,7 +109,7 @@ namespace Adze {
 }
 
 #else
-namespace Adze {
+namespace Askowl.Adze {
   using UnityEngine;
 
   // so we can create asset and still install Appodeal later

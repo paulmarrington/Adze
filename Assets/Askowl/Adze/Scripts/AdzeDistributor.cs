@@ -1,10 +1,13 @@
-﻿using System;
+﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using System;
 using System.Collections;
 using Askowl;
+using CustomAsset;
 using CustomAsset.Constant;
 using UnityEngine;
 
-namespace Adze {
+namespace Askowl.Adze {
   /// <a href=""></a> //#TBD#//
   public enum Mode {
     //    Banner,
@@ -15,13 +18,10 @@ namespace Adze {
 
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/Distributor", fileName = "AdzeDistributor")]
-  public sealed class AdzeDistributor : OfType<AdzeDistributor> {
+  public sealed class AdzeDistributor : Manager {
     [SerializeField] private Mode         defaultMode = Mode.Reward;
     [SerializeField] private bool         roundRobin  = true;
     [SerializeField] private AdzeServer[] servers;
-
-    /// <a href=""></a> //#TBD#//
-    public new static AdzeDistributor Instance(string assetName) => OfType<AdzeDistributor>.Instance(assetName);
 
     /// <a href=""></a> //#TBD#//
     public bool AdShown { get; private set; }
@@ -30,11 +30,11 @@ namespace Adze {
     /// <a href=""></a> //#TBD#//
     public bool Error { get; private set; }
 
-    private          int                 currentServer, lastServer;
-    private          int[]               usages;
-    private          Mode                currentMode;
-    private readonly Log.EventRecorder   error = Log.Errors();
-    private readonly Log.MessageRecorder log   = Log.Messages();
+    private int                 currentServer, lastServer;
+    private int[]               usages;
+    private Mode                currentMode;
+    private Log.EventRecorder   error;
+    private Log.MessageRecorder log;
 
     /// <a href=""></a> //#TBD#//
     public IEnumerator Show(string location = "") { yield return Show(defaultMode, location); }
@@ -95,6 +95,8 @@ namespace Adze {
     /// <a href=""></a> //#TBD#//
     protected override void OnEnable() {
       if (servers == null) {
+        error = Log.Errors();
+        log   = Log.Messages();
         error("No advertising servers in Adze Distributor Custom Asset");
         servers = new AdzeServer[0];
       }

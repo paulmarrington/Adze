@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Adze {
+namespace Askowl.Adze {
   #if AdzeAppodeal
   using AppodealAds.Unity.Api;
   using AppodealAds.Unity.Common;

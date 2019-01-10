@@ -1,14 +1,17 @@
-﻿using System;
+﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using System;
 using System.Collections;
 using Askowl;
+using CustomAsset;
 using CustomAsset.Constant;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Adze {
+namespace Askowl.Adze {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "AdzeReward")]
-  public sealed class AdzeReward : OfType<AdzeReward> {
+  public sealed class AdzeReward : Manager {
     /// <a href=""></a> //#TBD#//
     [Serializable] public struct Prompt {
       [TextArea, SerializeField] internal string message;
@@ -16,16 +19,16 @@ namespace Adze {
       [SerializeField]           internal string refuseButton;
     }
 
-    [SerializeField] private Prompt[]        prompts, thanks;
+    [SerializeField] private Prompt[]        prompts               = default, thanks = default;
     [SerializeField] private int             adsShownBetweenQuotes = 2;
-    [SerializeField] private AdzeDistributor distributor;
-    [SerializeField] private Quotes          quotes, facts;
+    [SerializeField] private AdzeDistributor distributor           = default;
+    [SerializeField] private Quotes          quotes                = default, facts = default;
 
     private Selector<Prompt> prompt, thank;
     private int              count;
 
-    private readonly Log.EventRecorder log   = Log.Events("Content");
-    private readonly Log.EventRecorder error = Log.Errors();
+    private Log.EventRecorder log;
+    private Log.EventRecorder error;
 
     /// <a href=""></a> //#TBD#//
     [HideInInspector] public bool adWatched, adRequested;
@@ -34,10 +37,10 @@ namespace Adze {
     public AdzeDistributor Distributor => distributor;
 
     /// <a href=""></a> //#TBD#//
-    public new static AdzeReward Instance(string assetName) => Instance<AdzeReward>(assetName);
-
-    /// <a href=""></a> //#TBD#//
     protected override void OnEnable() {
+      base.OnEnable();
+      log    = Log.Events("Content");
+      error  = Log.Errors();
       prompt = new Selector<Prompt> {Choices = prompts};
       thank  = new Selector<Prompt> {Choices = thanks};
       count  = 0;

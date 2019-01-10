@@ -3,17 +3,19 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aaf8e45f5bea5416bb4ae7bb31554b96, type: 3}
-  m_Name: AdMobRewardServer
+  m_Name: AdzeAdMob
   m_EditorClassIdentifier: 
+  description: 
   appKeys:
-  - Platform: 8
-    Value: ca-app-pub-3940256099942544/1712485313
-  Mode: 1
-  Priority: 1
-  UsageBalance: 1
+  - platform: 0
+    value: 
+  mode: 1
+  priority: 1
+  usageBalance: 1

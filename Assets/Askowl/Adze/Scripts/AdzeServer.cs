@@ -1,18 +1,18 @@
-﻿using System;
+﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Askowl;
-using CustomAsset.Constant;
+using CustomAsset;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Adze {
+namespace Askowl.Adze {
   /// <a href=""></a> //#TBD#//
-  public abstract class AdzeServer : OfType<AdzeServer> {
+  public abstract class AdzeServer : Manager {
     /// <a href=""></a> //#TBD#//
     protected string AppKey;
     /// <a href=""></a> //#TBD#//
-    // ReSharper disable once NotAccessedField.Global
     protected string AppSignature;
     /// <a href=""></a> //#TBD#//
     protected string Location;
@@ -58,31 +58,30 @@ namespace Adze {
     /// <a href=""></a><inheritdoc/> //#TBD#//
     protected override void OnEnable() {
       base.OnEnable();
+      log      = Log.Messages();
+      error    = Log.Errors();
       name     = GetType().Name;
       Location = "Default";
 
       foreach (Key appKey in appKeys) {
         if (!(enabled = Application.platform == appKey.platform)) continue;
-
-        AppKey = appKey.value;
         string[] separators = {";", " ", ",", ":"};
+        string[] parts      = appKey.value.Split(separator: separators, options: StringSplitOptions.RemoveEmptyEntries);
 
-        string[] parts = appKey.value.Split(
-          separator: separators,
-          options: StringSplitOptions.RemoveEmptyEntries);
-
-        AppKey       = parts[0];
-        AppSignature = (parts.Length > 1) ? parts[1] : "";
-        Location     = (parts.Length > 2) ? parts[2] : "";
+        if (parts.Length < 1) {
+          error($"{name} application key required. Can be of form key;signature;location");
+        } else {
+          AppKey       = parts[0];
+          AppSignature = (parts.Length > 1) ? parts[1] : "";
+          Location     = (parts.Length > 2) ? parts[2] : "";
+        }
 
         Initialise();
         return;
       }
 
       if (Application.platform != RuntimePlatform.OSXEditor) {
-        Debug.LogWarning(
-          "**** No viable platform to enable " + name +
-          " on "                               + Application.platform);
+        Debug.LogWarning($"**** No viable platform to enable {name} on {Application.platform}");
       }
 
       Error = true;
@@ -93,7 +92,10 @@ namespace Adze {
       Destroy();
     }
 
-    private readonly Log.MessageRecorder log = Log.Messages();
+    /// <a href=""></a> //#TBD#//
+    protected Log.MessageRecorder log;
+    /// <a href=""></a> //#TBD#//
+    protected Log.EventRecorder error;
 
 //    // ReSharper disable once MemberCanBePrivate.Global
 //    protected void Log(string action, string result, [NotNull] params object[] more) {

@@ -1495,6 +1495,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d92496b9fd34a788c35845c71a16f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  adMobDistributor: {fileID: 0}
+  appodealDistributor: {fileID: 0}
+  chartboostDistributor: {fileID: 11400000, guid: 410247e62834d49228b3088d20cadac8, type: 2}
+  unityDistributor: {fileID: 11400000, guid: fabdef3969094408c8c996d110aeffc4, type: 2}
+  rewardedVideoAllNetworks: {fileID: 11400000, guid: 8def246a841714d33bfcb1b814b39654, type: 2}
 --- !u!1 &1108205003
 GameObject:
   m_ObjectHideFlags: 0
@@ -1592,7 +1597,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1189387138
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2631,7 +2636,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1944262972
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2997,7 +3002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6255016209392015436, guid: 65f3ccf46ab9e476486534325092ee51, type: 3}
       propertyPath: m_Name
-      value: DialogSkeleton
+      value: AdzeReward
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65f3ccf46ab9e476486534325092ee51, type: 3}

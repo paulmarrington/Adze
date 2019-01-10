@@ -1,16 +1,17 @@
-﻿namespace Adze {
-  using System;
-  using UnityEngine;
-  using UnityEngine.Advertisements;
+﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
+using UnityEngine;
+using UnityEngine.Advertisements;
+
+namespace Askowl.Adze {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Adze/Unity", fileName = "AdzeUnity")]
   public sealed class AdzeUnity : AdzeServer {
     private ShowOptions options;
 
     protected override void Initialise() {
-      Advertisement.Initialize(gameId: AppKey);
-
+      Advertisement.Initialize(gameId: AppKey, Application.isEditor);
       options = new ShowOptions {resultCallback = HandleShowResult};
     }
 
