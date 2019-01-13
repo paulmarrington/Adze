@@ -1,21 +1,27 @@
 ﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
-using System;
-using UnityEngine;
+using Decoupled.Adze;
+#if UNITY_EDITOR
+using UnityEditor;
+
+#endif
+
+#if AdzeUnity
 using UnityEngine.Advertisements;
+#endif
 
 namespace Askowl.Adze {
   /// <a href=""></a> //#TBD#//
-  [CreateAssetMenu(menuName = "Adze/Unity", fileName = "AdzeUnity")]
-  public sealed class AdzeUnity : AdzeServer {
+  public sealed class Unity : AdzeService {
+    #if AdzeUnity
     private ShowOptions options;
 
+    /// <inheritdoc />
     protected override void Initialise() {
-      Advertisement.Initialize(gameId: AppKey, Application.isEditor);
+      base.Initialise();
+      Advertisement.Initialize(gameId: key, Application.isEditor);
       options = new ShowOptions {resultCallback = HandleShowResult};
-    }
 
-    protected override bool ShowNow() {
       if (string.IsNullOrEmpty(Location)) {
         switch (mode) {
           case Mode.Interstitial:
@@ -27,7 +33,10 @@ namespace Askowl.Adze {
           default: throw new ArgumentOutOfRangeException();
         }
       }
+    }
 
+    /// <inheritdoc />
+    protected override bool Display() {
       Advertisement.Show(placementId: Location, showOptions: options);
       return true;
     }
@@ -35,7 +44,7 @@ namespace Askowl.Adze {
     private void HandleShowResult(ShowResult result) {
       switch (result) {
         case ShowResult.Failed:
-          Error = true;
+          ServiceError = true;
           break;
         case ShowResult.Skipped:
           AdActionTaken = false;
@@ -46,6 +55,21 @@ namespace Askowl.Adze {
       }
 
       Dismissed = true;
+      Emitter.Fire();
     }
+    #else
+    /// <inheritdoc />
+    protected override bool Display() => true;
+    #endif
+
+    #if UNITY_EDITOR
+    /// <a href=""></a> //#TBD#//
+    [InitializeOnLoad] public sealed class DetectAdMob : DefineSymbols {
+      static DetectAdMob() {
+        bool usable = HasPackage("com.unity.ads");
+        AddOrRemoveDefines(addDefines: usable, named: "AdzeUnity");
+      }
+    }
+    #endif
   }
 }

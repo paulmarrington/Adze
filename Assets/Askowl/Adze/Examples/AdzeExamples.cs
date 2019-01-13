@@ -22,6 +22,7 @@ namespace Askowl.Examples {
                  distributor.Error);
 
     private IEnumerator Show([NotNull] AdzeDistributor distributor, Mode mode, string location) {
+      Debug.Log($"Show '{distributor}, {mode}, {location}'"); //#DM#// 
       // location is optional - defaults to "Default"
       yield return distributor.Show(mode: mode, location: location);
 

@@ -22,7 +22,7 @@ MonoBehaviour:
     refuseButton: Not this time
   thanks: []
   adsShownBetweenQuotes: 2
-  distributor: {fileID: 11400000, guid: 410247e62834d49228b3088d20cadac8, type: 2}
+  distributor: {fileID: 11400000, guid: fabdef3969094408c8c996d110aeffc4, type: 2}
   quotes: {fileID: 11400000, guid: a116263870a8446e5b74c8df0ade75a5, type: 2}
   facts: {fileID: 11400000, guid: d1e6ddab821024dd8929b3ae6400e74e, type: 2}
   adWatched: 0

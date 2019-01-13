@@ -17,7 +17,7 @@ namespace Askowl.Adze {
     /// <a href=""></a> //#TBD#//
     protected string Location;
 
-    [SerializeField] private List<Key> appKeys;
+    [SerializeField] private List<Key> appKeys = default;
     /// <a href=""></a> //#TBD#//
     [SerializeField] protected Mode mode = Mode.Reward;
     /// <a href=""></a> //#TBD#//
@@ -40,7 +40,6 @@ namespace Askowl.Adze {
     protected virtual bool ShowNow() => false;
 
     /// <a href=""></a> //#TBD#//
-    // ReSharper disable once VirtualMemberNeverOverridden.Global
     protected virtual bool Dismissed { get; set; }
 
     /// <a href=""></a> //#TBD#//

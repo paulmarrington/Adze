@@ -1,0 +1,16 @@
+{
+    "name": "Adze",
+    "references": [
+        "CustomAssets",
+        "Able",
+        "UI"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

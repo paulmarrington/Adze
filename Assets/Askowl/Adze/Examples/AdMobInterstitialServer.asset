@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aaf8e45f5bea5416bb4ae7bb31554b96, type: 3}
-  m_Name: AdzeAdMob
+  m_Name: AdMobInterstitialServer
   m_EditorClassIdentifier: 
   description: 
   appKeys:

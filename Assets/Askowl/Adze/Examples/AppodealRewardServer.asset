@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 692a40a66f2de43cba19c9426da28899, type: 3}
-  m_Name: AdzeAppodeal
+  m_Name: AppodealRewardServer
   m_EditorClassIdentifier: 
   description: 
   appKeys:

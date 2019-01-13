@@ -1323,7 +1323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1036686701
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1497,8 +1497,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   adMobDistributor: {fileID: 0}
   appodealDistributor: {fileID: 0}
-  chartboostDistributor: {fileID: 11400000, guid: 410247e62834d49228b3088d20cadac8, type: 2}
-  unityDistributor: {fileID: 11400000, guid: fabdef3969094408c8c996d110aeffc4, type: 2}
+  chartboostDistributor: {fileID: 0}
+  unityDistributor: {fileID: 0}
   rewardedVideoAllNetworks: {fileID: 11400000, guid: 8def246a841714d33bfcb1b814b39654, type: 2}
 --- !u!1 &1108205003
 GameObject:

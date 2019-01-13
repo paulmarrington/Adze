@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using Askowl;
 using CustomAsset;
 using CustomAsset.Constant;
 using JetBrains.Annotations;
@@ -13,10 +12,10 @@ namespace Askowl.Adze {
   [CreateAssetMenu(menuName = "Adze/Rewarded", fileName = "AdzeReward")]
   public sealed class AdzeReward : Manager {
     /// <a href=""></a> //#TBD#//
-    [Serializable] public struct Prompt {
-      [TextArea, SerializeField] internal string message;
-      [SerializeField]           internal string acceptButton;
-      [SerializeField]           internal string refuseButton;
+    [Serializable] public class Prompt {
+      [TextArea, SerializeField] internal string message      = default;
+      [SerializeField]           internal string acceptButton = default;
+      [SerializeField]           internal string refuseButton = default;
     }
 
     [SerializeField] private Prompt[]        prompts               = default, thanks = default;
