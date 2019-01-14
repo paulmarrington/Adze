@@ -1,18 +1,19 @@
 ﻿// Copyright 2019 (C) paul@marrington.net http://www.askowl.net/unity-packages
 
+using System;
 using Decoupled.Adze;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
-
 #endif
-
 #if AdzeUnity
 using UnityEngine.Advertisements;
+
 #endif
 
 namespace Askowl.Adze {
   /// <a href=""></a> //#TBD#//
-  public sealed class Unity : AdzeService {
+  public class Unity : Service {
     #if AdzeUnity
     private ShowOptions options;
 
