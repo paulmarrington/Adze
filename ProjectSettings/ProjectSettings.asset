@@ -592,7 +592,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
     1: TextMeshPro;Adze;PackageAdze
-    4: Askowl;Adze
+    4: Askowl;Adze;AdzeUnity
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

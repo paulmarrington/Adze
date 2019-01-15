@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaf8e45f5bea5416bb4ae7bb31554b96, type: 3}
-  m_Name: AdMobRewardServer
+  m_Script: {fileID: 11500000, guid: 36f27d2ef03574f609b3df2a7b3c805b, type: 3}
+  m_Name: UnityRewardIos
   m_EditorClassIdentifier: 
-  description: 
-  appKeys:
-  - platform: 8
-    value: ca-app-pub-9888417618584929~4065878263
-  mode: 1
+  description: Unity reward videos for Apple iOS platform
   priority: 1
   usageBalance: 1
+  platform: 8
+  mode: 2
+  key: 
+  signature: 
+  location: 

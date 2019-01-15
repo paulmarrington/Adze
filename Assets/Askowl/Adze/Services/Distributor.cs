@@ -22,7 +22,7 @@ namespace Decoupled.Adze {
     /// <a href=""></a> //#TBD#//
     [SerializeField] public RuntimePlatform platform;
     /// <a href=""></a> //#TBD#//
-    [SerializeField] public Mode mode;
+    [SerializeField] public Mode mode = Mode.Reward;
     /// <a href=""></a> //#TBD#//
     [SerializeField] public string key;
     /// <a href=""></a> //#TBD#//

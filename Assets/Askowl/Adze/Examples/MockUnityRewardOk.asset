@@ -9,14 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 692a40a66f2de43cba19c9426da28899, type: 3}
-  m_Name: AppodealInterstitialServer
+  m_Script: {fileID: 11500000, guid: b0e9c21aac64f4a818d9e695e6c091fa, type: 3}
+  m_Name: MockUnityRewardOk
   m_EditorClassIdentifier: 
   description: 
-  appKeys:
-  - platform: 0
-    value: 
-  mode: 1
   priority: 1
   usageBalance: 1
-  disabledNetworks: 15000000
+  platform: 0
+  mode: 2
+  key: 
+  signature: 
+  location: 
+  failOnDisplay: 0
+  adActionIsTaken: 0
+  adDismissed: 0
+  adServiceError: 0

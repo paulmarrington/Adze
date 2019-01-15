@@ -13,6 +13,7 @@ using UnityEngine.Advertisements;
 
 namespace Askowl.Adze {
   /// <a href=""></a> //#TBD#//
+  [CreateAssetMenu(menuName = "Adze/Unity", fileName = "AdzeUnity")]
   public class Unity : Service {
     #if AdzeUnity
     private ShowOptions options;
