@@ -3,7 +3,8 @@
     "references": [
         "CustomAssets",
         "Able",
-        "UI"
+        "UI",
+        "Fibers"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
