@@ -4,7 +4,8 @@
         "CustomAssets",
         "Able",
         "UI",
-        "Fibers"
+        "Fibers",
+        "AbleEditor"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

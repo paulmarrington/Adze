@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
-  [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Service", fileName = "AdzeSelector")]
-  public class AdzeServiceAdapterForMock : AdzeServiceAdapter {
+  [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/ServiceForMock", fileName = "AdzeServiceForMock")]
+  public class AdzeServiceForMock : AdzeServiceAdapter {
     /// <inheritdoc />
     protected override void Prepare() { }
 
@@ -16,5 +16,8 @@ namespace CustomAsset.Services {
       emitter.Fire();
       return default;
     }
+
+    /// <inheritdoc />
+    public override bool IsExternalServiceAvailable() => true;
   }
 }
