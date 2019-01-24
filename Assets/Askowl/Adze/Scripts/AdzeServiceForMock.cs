@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Service", fileName = "AdzeSelector")]
-  public class AdzeServiceConnectorForMock : AdzeServiceConnector {
+  public class AdzeServiceAdapterForMock : AdzeServiceAdapter {
     /// <inheritdoc />
     protected override void Prepare() { }
 

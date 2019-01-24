@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Context", fileName = "AdzeContext")]
-  public class AdzeContext : Services<AdzeServiceConnector, AdzeContext>.Context {
+  public class AdzeContext : Services<AdzeServiceAdapter, AdzeContext>.Context {
     #region Context Equality
     /// <a href=""></a> //#TBD#//
     // ReSharper disable MissingXmlDoc

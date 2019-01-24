@@ -7,7 +7,7 @@ using UnityEngine;
 namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Service", fileName = "AdzeSelector")]
-  public abstract class AdzeServiceConnector : Services<AdzeServiceConnector, AdzeContext>.ServiceConnector {
+  public abstract class AdzeServiceAdapter : Services<AdzeServiceAdapter, AdzeContext>.ServiceAdapter {
     /// <a href="">Did the player take an action proposed by the advertisement?</a> //#TBD#//
     [NonSerialized] public bool AdActionTaken;
     /// <a href="">Did the player dismiss the advertisement without watching it?</a> //#TBD#//
