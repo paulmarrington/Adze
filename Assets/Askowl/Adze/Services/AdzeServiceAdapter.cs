@@ -14,19 +14,20 @@ namespace CustomAsset.Services {
   public class AdzeServiceAdapter : Services<AdzeServiceAdapter, AdzeContext>.ServiceAdapter {
     #region Service Support
     // Code that is common to all services belongs here
-    public class Result {
+    /// <a href=""></a> //#TBD#//
+    [Serializable] public class Result {
       /// <a href="">Did the player take an action proposed by the advertisement?</a> //#TBD#//
-      public bool AdActionTaken;
+      public bool adActionTaken;
       /// <a href="">Did the player dismiss the advertisement without watching it?</a> //#TBD#//
-      public bool Dismissed;
+      public bool dismissed;
       /// <a href="">Is default for no error, empty for no logging of a message else error message</a> //#TBD#//
-      public string ServiceError;
+      public string serviceError;
 
       internal static Result Instance(Emitter emitter) => Result<Result>(emitter);
 
       internal Result Clear() {
-        AdActionTaken = Dismissed = default;
-        ServiceError  = default;
+        adActionTaken = dismissed = default;
+        serviceError  = default;
         return this;
       }
     }
@@ -37,12 +38,12 @@ namespace CustomAsset.Services {
     // Registered with Emitter to provide common logging
     protected override void LogOnResponse(Emitter emitter) {
       var result = Result.Instance(emitter);
-      if (result.ServiceError != default) {
-        if (!string.IsNullOrEmpty(result.ServiceError)) Error($"Service Error: {result.ServiceError}");
-      } else if (result.Dismissed) {
+      if (result.serviceError != default) {
+        if (!string.IsNullOrEmpty(result.serviceError)) Error($"Service Error: {result.serviceError}");
+      } else if (result.dismissed) {
         Log("Dismissed", "By Player");
       } else {
-        Log("Action", result.AdActionTaken ? "Taken" : "Not Taken");
+        Log("Action", result.adActionTaken ? "Taken" : "Not Taken");
       }
     }
     #endregion
@@ -54,7 +55,7 @@ namespace CustomAsset.Services {
       var emitter = GetAnEmitter<Result>();
       var result  = Result.Instance(emitter).Clear();
       Display(emitter, result);
-      return result.ServiceError == default ? emitter : null;
+      return result.serviceError == default ? emitter : null;
     }
     #endregion
 

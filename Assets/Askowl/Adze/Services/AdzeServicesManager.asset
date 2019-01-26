@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: AdzeServicesManager
   m_EditorClassIdentifier: 
   description: 
-  context: {fileID: 11400000, guid: 2cb3defd053e04344b49c3b19d188325, type: 2}
   services:
   - {fileID: 11400000, guid: b81e1188bf5ab4fbfac05ac8a83e0d8a, type: 2}
+  - {fileID: 11400000, guid: 07e92bc435adf4f8fa047457aa7c3573, type: 2}
+  - {fileID: 11400000, guid: a24a565b69c934fa2b4641cdc179d549, type: 2}
+  - {fileID: 11400000, guid: ab179d9860f9c408e93d09afb9756ec5, type: 2}
+  context: {fileID: 11400000, guid: 2cb3defd053e04344b49c3b19d188325, type: 2}
   order: 0
+  usagesRemaining: 0
+  currentService: {fileID: 0}

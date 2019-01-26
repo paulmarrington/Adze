@@ -7,18 +7,18 @@ namespace CustomAsset.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/ServiceForMock", fileName = "AdzeServiceForMock")]
   public class AdzeServiceForMock : AdzeServiceAdapter {
+    /// <a href=""></a> //#TBD#//
+    [SerializeField] public Result mockResult;
+    [SerializeField] private float secondsDelay = 0.1f;
     /// <inheritdoc />
     protected override string Display(Emitter emitter, Result result) {
       Log("Mocking", "Display Advertisement");
-      emitter.Fire();
+      result.dismissed     = mockResult.dismissed;
+      result.adActionTaken = mockResult.adActionTaken;
+      result.serviceError  = mockResult.serviceError;
+      Fiber.Start.WaitFor(secondsDelay).Fire(emitter);
       return default;
     }
-
-    /// <a href="">Prepare the mock service for operations</a> //#TBD#//
-    protected override void Prepare() => base.Prepare();
-
-    /// <a href="">Use Log and Error to record analytics based on service responses</a> //#TBD#//
-    protected override void LogOnResponse(Emitter emitter) => base.LogOnResponse(emitter);
 
     /// <inheritdoc />
     public override bool IsExternalServiceAvailable() => true;

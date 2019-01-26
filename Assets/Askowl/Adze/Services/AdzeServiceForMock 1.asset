@@ -15,3 +15,8 @@ MonoBehaviour:
   description: 
   priority: 1
   usageBalance: 1
+  mockResult:
+    adActionTaken: 1
+    dismissed: 0
+    serviceError: 
+  secondsDelay: 0.1
