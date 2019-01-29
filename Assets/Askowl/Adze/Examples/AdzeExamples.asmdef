@@ -2,6 +2,9 @@
     "name": "AdzeTest",
     "references": [
         "Adze",
+        "BDD",
+        "PlayMode",
+        "Able",
         "CustomAssets"
     ],
     "optionalUnityReferences": [],
