@@ -2,8 +2,8 @@
 
 using UnityEngine;
 
-namespace CustomAsset.Services {
+namespace Decoupler.Services {
   /// <inheritdoc />
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/ServicesManager", fileName = "AdzeServicesManager")]
-  public class AdzeServicesManager : Services<AdzeServiceAdapter, AdzeContext> { }
+  public class Adze1ServicesManager : Services<Adze1ServiceAdapter, Adze1Context> { }
 }

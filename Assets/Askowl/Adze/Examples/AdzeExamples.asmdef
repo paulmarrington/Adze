@@ -3,7 +3,6 @@
     "references": [
         "Adze",
         "BDD",
-        "PlayMode",
         "Able",
         "CustomAssets"
     ],

@@ -4,14 +4,14 @@ using System;
 using Askowl;
 using UnityEditor;
 using UnityEngine;
-#if AdzeServiceFor
-// Add using statements for service library here
-#endif
+//#if AdzeServiceFor.Services
+//// Add using statements for service library here
+//#endif
 
-namespace CustomAsset.Services {
+namespace Decoupler.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Service", fileName = "AdzeServiceAdapter")]
-  public class AdzeServiceAdapter : Services<AdzeServiceAdapter, AdzeContext>.ServiceAdapter {
+  public class Adze1ServiceAdapter : Services<Adze1ServiceAdapter, Adze1Context>.ServiceAdapter {
     #region Service Support
     // Code that is common to all services belongs here
     /// <a href=""></a> //#TBD#//
@@ -23,7 +23,7 @@ namespace CustomAsset.Services {
       /// <a href="">Is default for no error, empty for no logging of a message else error message</a> //#TBD#//
       public string serviceError;
 
-      internal static Result Instance(Emitter emitter) => Result<Result>(emitter);
+      internal static Result Instance(Emitter emitter) { return null; } //return Result(emitter); }
 
       internal Result Clear() {
         adActionTaken = dismissed = default;
@@ -52,7 +52,7 @@ namespace CustomAsset.Services {
     /// <a href="">Ask for advert and returns emitter to wait on completion or null on service error</a> //#TBD#//
     public Emitter Show() {
       Log(action: "Show", message: "Now");
-      var emitter = GetAnEmitter<Result>();
+      var emitter = Emitter.Instance; //GetAnEmitter<Result>();
       var result  = Result.Instance(emitter).Clear();
       Display(emitter, result);
       return result.serviceError == default ? emitter : null;

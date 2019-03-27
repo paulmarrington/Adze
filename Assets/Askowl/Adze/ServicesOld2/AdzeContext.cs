@@ -2,10 +2,10 @@
 
 using UnityEngine;
 
-namespace CustomAsset.Services {
+namespace Decoupler.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/Context", fileName = "AdzeContext")]
-  public class AdzeContext : Services<AdzeServiceAdapter, AdzeContext>.Context {
+  public class Adze1Context : Services<Adze1ServiceAdapter, Adze1Context>.Context {
     #region Context Equality
     /// <a href=""></a> //#TBD#//
     // ReSharper disable MissingXmlDoc
@@ -28,7 +28,7 @@ namespace CustomAsset.Services {
     #endregion
 
     /// <a href=""></a> //#TBD#//
-    protected bool Equals(AdzeContext other) =>
+    protected bool Equals(Adze1Context other) =>
       base.Equals(other) && Equals(platform, other.platform) && Equals(mode, other.mode);
   }
 }

@@ -3,16 +3,16 @@
 using Askowl;
 using UnityEngine;
 
-namespace CustomAsset.Services {
+namespace Decoupler.Services {
   /// <a href=""></a> //#TBD#//
   [CreateAssetMenu(menuName = "Custom Assets/Services/Adze/ServiceForMock", fileName = "AdzeServiceForMock")]
-  public class AdzeServiceForMock : AdzeServiceAdapter {
+  public class Adze1ServiceForMock : Adze1ServiceAdapter {
     /// <a href=""></a> //#TBD#//
     [SerializeField] public Result mockResult;
     [SerializeField] private float secondsDelay = 0.1f;
     /// <inheritdoc />
     protected override string Display(Emitter emitter, Result result) {
-      Log("Mocking", "Display Advertisement");
+//      Log("Mocking", "Display Advertisement");
       result.dismissed     = mockResult.dismissed;
       result.adActionTaken = mockResult.adActionTaken;
       result.serviceError  = mockResult.serviceError;
