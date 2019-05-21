@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bdbef0b78c224cab957db6f2ca6a62d, type: 3}
+  m_Name: AdzeServiceForChartboost
+  m_EditorClassIdentifier: 
+  description: 
+  priority: 1
+  usageBalance: 1
+  context: {fileID: 11400000, guid: ef90fe2ac17634f2f93931a3933d1834, type: 2}

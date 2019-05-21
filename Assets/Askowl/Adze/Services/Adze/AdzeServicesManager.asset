@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231c6452429cb44868b714bebc031922, type: 3}
+  m_Name: AdzeServicesManager
+  m_EditorClassIdentifier: 
+  description: 
+  services:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  context: {fileID: 11400000, guid: b72e037f7e13544059d9999835c226b7, type: 2}
+  order: 0
+  usagesRemaining: 0
+  currentService: {fileID: 0}

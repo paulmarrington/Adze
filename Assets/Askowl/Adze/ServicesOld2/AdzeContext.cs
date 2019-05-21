@@ -19,11 +19,8 @@ namespace Decoupler.Services {
     #endregion
 
     #region Connection Data
-    /// <a href=""></a> //#TBD#//
     [SerializeField] public string key = default;
-    /// <a href=""></a> //#TBD#//
     [SerializeField] public string signature = default;
-    /// <a href=""></a> //#TBD#//
     [SerializeField] public string location = "Default";
     #endregion
 

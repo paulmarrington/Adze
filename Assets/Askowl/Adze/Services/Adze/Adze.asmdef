@@ -1,12 +1,13 @@
 {
     "name": "Adze",
     "references": [
-        "CustomAssets",
+        "Decoupler",
         "Able",
-        "UI",
+        "CustomAssets",
         "Fibers",
+        "CustomAssetsEditor",
         "AbleEditor",
-        "Decoupler"
+        "Chartboost"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

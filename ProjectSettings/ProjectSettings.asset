@@ -239,6 +239,7 @@ PlayerSettings:
   tvOSManualSigningProvisioningProfileType: 0
   appleEnableAutomaticSigning: 0
   iOSRequireARKit: 0
+  iOSAutomaticallyDetectAndAddCapabilities: 1
   appleEnableProMotion: 0
   clonedFromGUID: 00000000000000000000000000000000
   templatePackageId: 
@@ -599,8 +600,9 @@ PlayerSettings:
   webGLLinkerTarget: 0
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: Adze;PackageAdze
+    1: 
     4: Askowl;Adze
+    7: AdzeChartboost;AdzeServiceForChartboost
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c185db1e96c7d45df803be1b96457d34, type: 3}
+  m_Name: AdzeMockContext
+  m_EditorClassIdentifier: 
+  description: 
+  environment: {fileID: 11400000, guid: 9e4edb4dbb8a34b1eba8bc288818dd00, type: 2}
+  platform: 0
+  mode: 2
+  key: 
+  signature: 
+  location: Default

@@ -36,7 +36,7 @@ namespace Decoupler.Services {
     protected override void Prepare() { }
 
     // Registered with Emitter to provide common logging
-    protected override void LogOnResponse(Emitter emitter) {
+    protected void LogOnResponse(Emitter emitter) {
       var result = Result.Instance(emitter);
       if (result.serviceError != default) {
         if (!string.IsNullOrEmpty(result.serviceError)) Error($"Service Error: {result.serviceError}");

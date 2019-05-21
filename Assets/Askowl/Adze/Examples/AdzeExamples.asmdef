@@ -1,10 +1,13 @@
 {
-    "name": "AdzeTest",
+    "name": "AdzeExamples",
     "references": [
-        "Adze",
         "BDD",
         "Able",
-        "CustomAssets"
+        "CustomAssets",
+        "Fibers",
+        "CustomAssetsEditor",
+        "Adze",
+        "Decoupler"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
